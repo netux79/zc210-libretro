@@ -1,0 +1,29 @@
+ifeq ($(LIBRETRO_COMM_DIR),)
+	LIBRETRO_COMM_DIR = $(CORE_DIR)/libretro-common
+endif
+
+INCFLAGS = -I$(LIBRETRO_COMM_DIR)/include -I$(CORE_DIR)/alport -I$(CORE_DIR) -I$(CORE_DIR)/zc
+
+ifneq (,$(findstring msvc2003,$(platform)))
+INCFLAGS += -I$(LIBRETRO_COMM_DIR)/include/compat/msvc
+endif
+
+SOURCES_C   := $(LIBRETRO_COMM_DIR)/rthreads/rthreads.c
+SOURCES_CXX := $(CORE_DIR)/zc/zelda.cpp \
+				 $(CORE_DIR)/zc/zc_sys.cpp \
+				 $(CORE_DIR)/zc/weapons.cpp \
+				 $(CORE_DIR)/zc/title.cpp \
+				 $(CORE_DIR)/zc/tiles.cpp \
+				 $(CORE_DIR)/zc/subscr.cpp \
+				 $(CORE_DIR)/zc/sprite.cpp \
+				 $(CORE_DIR)/zc/qst.cpp \
+				 $(CORE_DIR)/zc/particles.cpp \
+				 $(CORE_DIR)/zc/pal.cpp \
+				 $(CORE_DIR)/zc/maps.cpp \
+				 $(CORE_DIR)/zc/link.cpp \
+				 $(CORE_DIR)/zc/items.cpp \
+				 $(CORE_DIR)/zc/guys.cpp \
+				 $(CORE_DIR)/zc/ending.cpp \
+				 $(CORE_DIR)/zc/defdata.cpp \
+				 $(CORE_DIR)/zc/decorations.cpp \
+				 $(CORE_DIR)//libretro.cpp

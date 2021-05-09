@@ -17,20 +17,20 @@ endif
 # system platform
 system_platform = unix
 ifeq ($(shell uname -a),)
-	EXE_EXT = .exe
-	system_platform = win
+   EXE_EXT = .exe
+   system_platform = win
 else ifneq ($(findstring Darwin,$(shell uname -a)),)
-	system_platform = osx
-	arch = intel
+   system_platform = osx
+   arch = intel
 ifeq ($(shell uname -p),powerpc)
-	arch = ppc
+   arch = ppc
 endif
 else ifneq ($(findstring MINGW,$(shell uname -a)),)
-	system_platform = win
+   system_platform = win
 endif
 
 TARGET_NAME := zc210
-LIBM		= -lm
+LIBM= -lm
 
 ifeq ($(ARCHFLAGS),)
 ifeq ($(archs),ppc)
@@ -52,7 +52,7 @@ EXT := a
 endif
 
 ifeq ($(platform), unix)
-	EXT ?= so
+   EXT ?= so
    TARGET := $(TARGET_NAME)_libretro.$(EXT)
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
@@ -61,35 +61,35 @@ else ifeq ($(platform), linux-portable)
    TARGET := $(TARGET_NAME)_libretro.$(EXT)
    fpic := -fPIC -nostdlib
    SHARED := -shared -Wl,--version-script=link.T
-	LIBM :=
+   LIBM :=
 else ifneq (,$(findstring osx,$(platform)))
    TARGET := $(TARGET_NAME)_libretro.dylib
    fpic := -fPIC
    SHARED := -dynamiclib
 else ifneq (,$(findstring ios,$(platform)))
    TARGET := $(TARGET_NAME)_libretro_ios.dylib
-	fpic := -fPIC
-	SHARED := -dynamiclib
+   fpic := -fPIC
+   SHARED := -dynamiclib
 
 ifeq ($(IOSSDK),)
    IOSSDK := $(shell xcodebuild -version -sdk iphoneos Path)
 endif
 
-	DEFINES := -DIOS
+DEFINES := -DIOS
 ifeq ($(platform), ios-arm64)
-CC = cc -arch arm64 -isysroot $(IOSSDK)
+   CC = cc -arch arm64 -isysroot $(IOSSDK)
 else
-CC = cc -arch armv7 -isysroot $(IOSSDK)
+   CC = cc -arch armv7 -isysroot $(IOSSDK)
 endif
 ifeq ($(platform),$(filter $(platform),ios9 ios-arm64))
-CC     += -miphoneos-version-min=8.0
-CFLAGS += -miphoneos-version-min=8.0
+   CC     += -miphoneos-version-min=8.0
+   CFLAGS += -miphoneos-version-min=8.0
 else
-CC     += -miphoneos-version-min=5.0
-CFLAGS += -miphoneos-version-min=5.0
+   CC     += -miphoneos-version-min=5.0
+   CFLAGS += -miphoneos-version-min=5.0
 endif
 else ifneq (,$(findstring qnx,$(platform)))
-	TARGET := $(TARGET_NAME)_libretro_qnx.so
+   TARGET := $(TARGET_NAME)_libretro_qnx.so
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
 else ifeq ($(platform), emscripten)
@@ -101,26 +101,26 @@ else ifeq ($(platform), vita)
    CC = arm-vita-eabi-gcc
    AR = arm-vita-eabi-ar
    CFLAGS += -Wl,-q -Wall -O3
-	STATIC_LINKING = 1
+   STATIC_LINKING = 1
 # CTR (3DS)
 else ifeq ($(platform), ctr)
-	TARGET := $(TARGET_NAME)_libretro_$(platform).a
-	CC = $(DEVKITARM)/bin/arm-none-eabi-gcc$(EXE_EXT)
-	CXX = $(DEVKITARM)/bin/arm-none-eabi-g++$(EXE_EXT)
-	AR = $(DEVKITARM)/bin/arm-none-eabi-ar$(EXE_EXT)
-	CFLAGS += -D_3DS -DARM11 -march=armv6k -mtune=mpcore -mfloat-abi=hard
-	STATIC_LINKING = 1
+   TARGET := $(TARGET_NAME)_libretro_$(platform).a
+   CC = $(DEVKITARM)/bin/arm-none-eabi-gcc$(EXE_EXT)
+   CXX = $(DEVKITARM)/bin/arm-none-eabi-g++$(EXE_EXT)
+   AR = $(DEVKITARM)/bin/arm-none-eabi-ar$(EXE_EXT)
+   CFLAGS += -D_3DS -DARM11 -march=armv6k -mtune=mpcore -mfloat-abi=hard
+   STATIC_LINKING = 1
 # Nintendo Switch (libnx)
 else ifeq ($(platform), libnx)
-    include $(DEVKITPRO)/libnx/switch_rules
-    EXT=a
-    TARGET := $(TARGET_NAME)_libretro_$(platform).$(EXT)
-    DEFINES := -DSWITCH=1 -D__SWITCH__=1 -DHAVE_LIBNX=1
-    CFLAGS	:=	 $(DEFINES) -g -fPIE -I$(LIBNX)/include/ -I$(PORTLIBS)/include/ -ffunction-sections -fdata-sections -ftls-model=local-exec
-    CFLAGS += $(INCDIRS) -I$(CORE_DIR)/zlib -I$(CORE_DIR)/libogg/include -I$(CORE_DIR)/libvorbis/include \
-		-I$(CORE_DIR)/jpeg-8c -fvisibility=hidden
-    CFLAGS	+= -march=armv8-a -mtune=cortex-a57 -mtp=soft -mcpu=cortex-a57+crc+fp+simd -Dstricmp=strcasecmp -Dstrnicmp=strncasecmp
-    STATIC_LINKING = 1
+   include $(DEVKITPRO)/libnx/switch_rules
+   EXT=a
+   TARGET := $(TARGET_NAME)_libretro_$(platform).$(EXT)
+   DEFINES := -DSWITCH=1 -D__SWITCH__=1 -DHAVE_LIBNX=1
+   CFLAGS := $(DEFINES) -g -fPIE -I$(LIBNX)/include/ -I$(PORTLIBS)/include/ -ffunction-sections -fdata-sections -ftls-model=local-exec
+   CFLAGS += $(INCDIRS) -I$(CORE_DIR)/zlib -I$(CORE_DIR)/libogg/include -I$(CORE_DIR)/libvorbis/include \
+         -I$(CORE_DIR)/jpeg-8c -fvisibility=hidden
+   CFLAGS += -march=armv8-a -mtune=cortex-a57 -mtp=soft -mcpu=cortex-a57+crc+fp+simd -Dstricmp=strcasecmp -Dstrnicmp=strncasecmp
+   STATIC_LINKING = 1
 else ifeq ($(platform), psp1)
    TARGET := $(TARGET_NAME)_libretro_psp1.a
    CC = psp-gcc
@@ -179,20 +179,20 @@ else
    CFLAGS += -O3
 endif
 
-OBJECTS :=  libretro.o \
-            libretro-common/rthreads/rthreads.o
+CORE_DIR := .
 
-CFLAGS += -Ilibretro-common/include -Wall -pedantic $(fpic)
-CXXFLAGS = -Ilibretro-common/include -Wall -pedantic $(fpic) -std=gnu++11
+include Makefile.common
+
+OBJECTS := $(SOURCES_CXX:.cpp=.o) $(SOURCES_C:.c=.o)
+
+CFLAGS += -Wall -pedantic
+CXXFLAGS = -Wall -pedantic -std=gnu++11
 
 ifneq (,$(findstring qnx,$(platform)))
 CFLAGS += -Wc,-std=c99
 else
 CFLAGS += -std=gnu99
 endif
-
-CFLAGS += -I./alport
-CXXFLAGS += -I./alport
 
 all: $(TARGET)
 
@@ -204,9 +204,9 @@ else
 endif
 
 %.o: %.c
-	$(CC) $(CFLAGS) $(fpic) -c -o $@ $<
+	$(CC) $(INCFLAGS) $(CFLAGS) $(fpic) -c -o $@ $<
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(fpic) -c -o $@ $<
+	$(CXX) $(INCFLAGS) $(CXXFLAGS) $(fpic) -c -o $@ $<
 
 clean:
 	rm -f $(OBJECTS) $(TARGET)
