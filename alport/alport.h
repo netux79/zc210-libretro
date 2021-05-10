@@ -3,6 +3,7 @@
 
 #include "packfile.h"
 #include "lzss.h"
+#include "file.h"
 #include "datafile.h"
 #include "bitmap.h"
 #include "font.h"
@@ -24,7 +25,14 @@
 
 #define int32_t signed int
 
+#ifdef _WIN32
 #define OTHER_PATH_SEPARATOR  '\\'
+#define DEVICE_SEPARATOR      ':'
+#else
+#define OTHER_PATH_SEPARATOR  '/'
+#define DEVICE_SEPARATOR      '\0'
+#endif
+
 #define EMPTY_STRING          "\0"
 
 #endif          /* ifndef ALPORT_H */

@@ -1,5 +1,5 @@
-#ifndef ALPORT_FILE_H
-#define ALPORT_FILE_H
+#ifndef ALPORT_PACKFILE_H
+#define ALPORT_PACKFILE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,21 +37,21 @@ struct LZSS_UNPACK_DATA;
 
 struct _al_normal_packfile_details
 {
-   int hndl;                           /* DOS file handle */
-   int flags;                          /* PACKFILE_FLAG_* constants */
-   unsigned char *buf_pos;             /* position in buffer */
-   int buf_size;                       /* number of bytes in the buffer */
-   long todo;                          /* number of bytes still on the disk */
-   struct PACKFILE *parent;            /* nested, parent file */
-   struct LZSS_PACK_DATA *pack_data;   /* for LZSS compression */
-   struct LZSS_UNPACK_DATA *unpack_data; /* for LZSS decompression */
-   char *filename;                     /* name of the file */
-   char *passdata;                     /* encryption key data */
-   char *passpos;                      /* current key position */
-   unsigned char buf[F_BUF_SIZE];      /* the actual data buffer */
+   int hndl;                              /* DOS file handle */
+   int flags;                             /* PACKFILE_FLAG_* constants */
+   unsigned char *buf_pos;                /* position in buffer */
+   int buf_size;                          /* # of bytes in the buffer */
+   long todo;                             /* # of bytes still on the disk */
+   struct PACKFILE *parent;               /* nested, parent file */
+   struct LZSS_PACK_DATA *pack_data;      /* for LZSS compression */
+   struct LZSS_UNPACK_DATA *unpack_data;  /* for LZSS decompression */
+   char *filename;                        /* name of the file */
+   char *passdata;                        /* encryption key data */
+   char *passpos;                         /* current key position */
+   unsigned char buf[F_BUF_SIZE];         /* the actual data buffer */
 };
 
-struct PACKFILE                        /* our very own FILE structure... */
+struct PACKFILE
 {
    const PACKFILE_VTABLE *vtable;
    void *userdata;
@@ -109,4 +109,4 @@ void *pack_get_userdata(PACKFILE *f);
 }
 #endif
 
-#endif          /* ifndef ALLEGRO_FILE_H */
+#endif          /* ifndef ALPORT_PACKFILE_H */
