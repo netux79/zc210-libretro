@@ -8,13 +8,12 @@
 //
 //--------------------------------------------------------
 
+#include <stdio.h>
 #include "subscr.h"
 #include "zelda.h"
 #include "tiles.h"
 #include "guys.h"
 #include "link.h"
-#include <stdio.h>
-#include <string.h>
 
 bool show_subscreen_dmap_dots = true;
 bool show_subscreen_numbers = true;
@@ -522,7 +521,7 @@ void putBmap(BITMAP *dest)
    }
    else
    {
-      BITMAP *bmp = create_bitmap_ex(8, 8, 8);
+      BITMAP *bmp = create_bitmap(8, 8);
       if (!bmp)
          return;
 
@@ -892,9 +891,9 @@ void dosubscr()
 
    load_Sitems();
 
-   pause_sfx(WAV_BRANG);
-   adjust_sfx(WAV_ER, 128, false);
-   adjust_sfx(WAV_MSG, 128, false);
+   pause_sfx(SFX_BRANG);
+   adjust_sfx(SFX_ER, 128, false);
+   adjust_sfx(SFX_MSG, 128, false);
 
    if (COOLSCROLL)
    {
@@ -962,7 +961,7 @@ void dosubscr()
          selectBwpn(1, 0);
 
       if (pos != Bpos)
-         sfx(WAV_CHIME);
+         sfx(SFX_CHIME);
 
       domoney();
       Link.refill();
@@ -1028,7 +1027,7 @@ void dosubscr()
    }
 
    Sitems.clear();
-   resume_sfx(WAV_BRANG);
+   resume_sfx(SFX_BRANG);
 }
 
 /*** end of subscr.cpp ***/

@@ -6,8 +6,6 @@
 //
 //  Tile drawing routines for ZC.
 //
-//  !! Don't use them on "screen"; use memory BITMAPs only.
-//
 //--------------------------------------------------------
 
 #ifndef _ZC_TILES_H_

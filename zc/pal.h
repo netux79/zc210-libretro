@@ -37,6 +37,7 @@
 #define psTOTAL  ((newpdTOTAL<<4)*3)
 
 extern const byte nes_pal[];
+extern COLOR_MAP trans_table;
 
 #define CSET_SIZE 16                                        // this is only changed to 4 in the NES title screen
 #define CSET_SHFT 4                                         // log2 of CSET_SIZE

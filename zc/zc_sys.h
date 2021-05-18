@@ -14,24 +14,15 @@
 
 #include "zdefs.h"
 
-bool game_vid_mode(int mode, int wait);
-void Z_init_timers();
 void Z_init_sound();
-
-void load_game_configs();
-void save_game_configs();
-
 void draw_lens_under();
 void draw_lens_over();
 void f_Quit(int type);
 void advanceframe();
 void updatescr();
 void syskeys();
-void LogVidMode();
 
-bool ReadKey(int k);
 void eat_buttons();
-bool joybtn(int b);
 
 bool Up();
 bool Down();
@@ -78,9 +69,6 @@ bool DrunkrSbtn();
 bool DrunkrLbtn();
 bool DrunkrRbtn();
 bool DrunkrMbtn();
-
-void show_fps();
-bool game_vid_mode(int mode, int wait);
 
 void zapout();
 void zapin();
@@ -138,8 +126,6 @@ char *time_str(dword time);
 
 int  vbound(int x, int low, int high);
 float vbound(float x, float low, float high);
-int  used_switch(int argc, char *argv[], const char *s);
-char *get_cmd_arg(int argc, char *argv[]);
 bool isinRect(int x, int y, int rx1, int ry1, int rx2, int ry2);
 
 extern char datapwd[8];

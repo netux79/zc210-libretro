@@ -57,7 +57,7 @@ void fix_maps(mapscr *buf, int cnt);
 void reset_midi(music *m);
 void reset_midis(music *m);
 void reset_scr(int scr);
-void get_qst_buffers();
+int alloc_qst_buffers();
 void free_qst_buffers();
 int count_dmaps();
 int count_shops(miscQdata *misc);
@@ -67,8 +67,6 @@ int count_palcycles(miscQdata *misc);
 int count_windwarps(miscQdata *misc);
 int loadquest(char *filename, zquestheader *Header, miscQdata *Misc,
               music *midis);
-
-char *byte_conversion(int number1, int number2, int format1, int format2);
 
 int readheader(PACKFILE *f, zquestheader *header, bool keepdata);
 int readrules(PACKFILE *f, zquestheader *header, bool keepdata);
@@ -82,8 +80,8 @@ int readweapons(PACKFILE *f, zquestheader *header, bool keepdata);
 int readguys(PACKFILE *f, zquestheader *header, bool keepdata);
 int readmapscreen(PACKFILE *f, zquestheader *header, mapscr *temp_mapscr);
 int readmaps(PACKFILE *f, zquestheader *header, bool keepdata);
-int readcombos(PACKFILE *f, zquestheader *header, word version, word build,
-               word start_combo, word max_combos, bool keepdata);
+int readcombos(PACKFILE *f, word version, word build, word start_combo, 
+               word max_combos, bool keepdata);
 int readcolordata(PACKFILE *f, miscQdata *misc, word version, word build,
                   bool keepdata);
 int readtiles(PACKFILE *f, byte *buf, zquestheader *header, word version,

@@ -10,12 +10,11 @@
 //
 //--------------------------------------------------------
 
-#include <string.h>
+#include <stdio.h>
 #include "link.h"
 #include "guys.h"
 #include "subscr.h"
 #include "decorations.h"
-#include <stdio.h>
 
 extern int draw_screen_clip_rect_x1;
 extern int draw_screen_clip_rect_x2;
@@ -756,7 +755,7 @@ void LinkClass::draw(BITMAP *dest)
             overtile16(dest, t, x + wx, y + yofs + wy, cs, f);
 
          if (attackclk == 15)
-            sfx(WAV_HAMMER, pan(int(x)));
+            sfx(SFX_HAMMER, pan(int(x)));
          return;
       }
    }
@@ -1215,7 +1214,7 @@ void LinkClass::check_slash_block(int bx, int by)
       s->cset[i] = s->secretcset[sSTAIRS];
       s->sflag[i] = s->secretflag[sSTAIRS];
       if (!nosecretsounds)
-         sfx(WAV_SECRET);
+         sfx(SFX_SECRET);
    }
    else if ((flag >= mfSWORD && flag <= mfXSWORD) || (flag == mfSTRIKE))
    {
@@ -1236,7 +1235,7 @@ void LinkClass::check_slash_block(int bx, int by)
       items.add(new item((fix)bx, (fix)by, tmpscr->catchall,
                          ipONETIME + ipBIGRANGE + ipHOLDUP, 0));
       if (!nosecretsounds)
-         sfx(WAV_SECRET);
+         sfx(SFX_SECRET);
    }
    else if (type == cSLASHITEM || type == cBUSH || type == cFLOWERS
             || type == cTALLGRASS)
@@ -1326,7 +1325,7 @@ void LinkClass::check_pound_block(int bx, int by)
       s->cset[i] = s->secretcset[sSTAIRS];
       s->sflag[i] = s->secretflag[sSTAIRS];
       if (!nosecretsounds)
-         sfx(WAV_SECRET);
+         sfx(SFX_SECRET);
    }
    else if (flag == mfHAMMER || flag == mfSTRIKE)
    {
@@ -1344,7 +1343,7 @@ void LinkClass::check_pound_block(int bx, int by)
       items.add(new item((fix)bx, (fix)by, tmpscr->catchall,
                          ipONETIME + ipBIGRANGE + ipHOLDUP, 0));
       if (!nosecretsounds)
-         sfx(WAV_SECRET);
+         sfx(SFX_SECRET);
    }
    putcombo(scrollbuf, (i & 15) << 4, i & 0xF0, s->data[i], s->cset[i]);
    return;
@@ -1420,7 +1419,7 @@ int LinkClass::EwpnHit()
             ew->ignorecombo = -1;
          }
 
-         sfx(WAV_CHINK, pan(int(x)));
+         sfx(SFX_CHINK, pan(int(x)));
       }
    return -1;
 }
@@ -1478,7 +1477,7 @@ int LinkClass::LwpnHit()                                    //only here to check
             lw->ignorecombo = -1;
          }
 
-         sfx(WAV_CHINK, pan(int(x)));
+         sfx(SFX_CHINK, pan(int(x)));
       }
    return -1;
 }
@@ -1562,7 +1561,7 @@ void LinkClass::checkhit()
             if (action == swimming || hopclk == 0xFF)
                action = swimhit;
             hclk = 48;
-            sfx(WAV_OUCH, pan(int(x)));
+            sfx(SFX_OUCH, pan(int(x)));
             return;
          }
       }
@@ -1686,7 +1685,7 @@ void LinkClass::checkhit()
             if (action == swimming || hopclk == 0xFF)
                action = swimhit;
             hclk = 48;
-            sfx(WAV_OUCH, pan(int(x)));
+            sfx(SFX_OUCH, pan(int(x)));
             return;
          }
       }
@@ -1724,7 +1723,7 @@ void LinkClass::checkhit()
       else
          action = gothit;
       hclk = 48;
-      sfx(WAV_OUCH, pan(int(x)));
+      sfx(SFX_OUCH, pan(int(x)));
       return;
    }
 
@@ -1742,7 +1741,7 @@ void LinkClass::checkhit()
       else
          action = gothit;
       hclk = 48;
-      sfx(WAV_OUCH, pan(int(x)));
+      sfx(SFX_OUCH, pan(int(x)));
       return;
    }
 
@@ -1764,7 +1763,7 @@ void LinkClass::checkhit()
          if (action == swimming || hopclk == 0xFF)
             action = swimhit;
          hclk = 48;
-         sfx(WAV_OUCH, pan(int(x)));
+         sfx(SFX_OUCH, pan(int(x)));
          return;
       }
       else if (get_bit(quest_rules, qr_MAGICBOOTS))
@@ -1794,7 +1793,7 @@ void LinkClass::hitlink(int hit)
    else
       action = gothit;
    hclk = 48;
-   sfx(WAV_OUCH, pan(int(x)));
+   sfx(SFX_OUCH, pan(int(x)));
    enemy_scored(hit);
    switch (guys.spr(hit)->id)
    {
@@ -1969,7 +1968,7 @@ bool LinkClass::animate(int index)
       {
          Lwpns.add(new weapon((fix)wand_x, (fix)wand_y, wFire, 2, 1 * DAMAGE_MULTIPLIER,
                               0));
-         sfx(WAV_FIRE, pan(wand_x));
+         sfx(SFX_FIRE, pan(wand_x));
       }
    }
 
@@ -2229,7 +2228,7 @@ bool LinkClass::animate(int index)
       hclk = 0;
       drawguys = false;
       if ((dtype == dWALK) && (!nosecretsounds))
-         sfx(WAV_SECRET);
+         sfx(SFX_SECRET);
       stepforward(29);
       action = scrolling;
       pushing = false;
@@ -2238,7 +2237,7 @@ bool LinkClass::animate(int index)
    if (game.life <= (HP_PER_HEART))
    {
       if (HeartBeep)
-         cont_sfx(WAV_ER);
+         cont_sfx(SFX_ER);
 
       else
       {
@@ -2247,16 +2246,16 @@ bool LinkClass::animate(int index)
          if (heart_beep_timer > 0)
          {
             --heart_beep_timer;
-            cont_sfx(WAV_ER);
+            cont_sfx(SFX_ER);
          }
          else
-            stop_sfx(WAV_ER);
+            stop_sfx(SFX_ER);
       }
    }
    else
    {
       heart_beep_timer = -1;
-      stop_sfx(WAV_ER);
+      stop_sfx(SFX_ER);
    }
    /*
      if(rSbtn())
@@ -2339,7 +2338,7 @@ bool LinkClass::startwpn(int wpn)                           // an item index
          return false;
 
       case iWhistle:
-         sfx(WAV_WHISTLE);
+         sfx(SFX_WHISTLE);
          if (dir == up || dir == right)
             ++blowcnt;
 
@@ -2387,7 +2386,7 @@ bool LinkClass::startwpn(int wpn)                           // an item index
          if (isdungeon())
             wy = max(wy, 16);
          Lwpns.add(new weapon((fix)wx, (fix)wy, wBomb, 0, 4 * DAMAGE_MULTIPLIER, dir));
-         sfx(WAV_PLACE, pan(wx));
+         sfx(SFX_PLACE, pan(wx));
       }
       break;
 
@@ -2398,7 +2397,7 @@ bool LinkClass::startwpn(int wpn)                           // an item index
          --game.items[itype_sbomb];
          selectBwpn(8, 8);
          Lwpns.add(new weapon((fix)wx, (fix)wy, wSBomb, 0, 16 * DAMAGE_MULTIPLIER, dir));
-         sfx(WAV_PLACE, pan(wx));
+         sfx(SFX_PLACE, pan(wx));
       }
       break;
 
@@ -2414,7 +2413,7 @@ bool LinkClass::startwpn(int wpn)                           // an item index
          Lwpns.add(new weapon((fix)wx, (fix)wy, wMagic, 0, 2 * DAMAGE_MULTIPLIER, dir));
          if (get_bit(quest_rules, qr_MAGICWAND))
             game.magic -= (WANDDRAINAMOUNT * game.magicdrainrate);
-         sfx(WAV_WAND, pan(wx));
+         sfx(SFX_WAND, pan(wx));
 
          /* Fireball Wand
            Lwpns.add(new weapon((fix)wx,(fix)wy,ewFireball,0,2*DAMAGE_MULTIPLIER,dir));
@@ -2442,7 +2441,7 @@ bool LinkClass::startwpn(int wpn)                           // an item index
          Lwpns.spr(Lwpns.Count()-1)->dummy_bool[0]=true; //homing
          if (get_bit(quest_rules,qr_MAGICWAND))
          game.magic-=(WANDDRAINAMOUNT*game.magicdrainrate);
-         sfx(WAV_WAND,pan(wx));
+         sfx(SFX_WAND,pan(wx));
          */
          break;
 
@@ -2454,7 +2453,7 @@ bool LinkClass::startwpn(int wpn)                           // an item index
          temppower = temppower * zinit.beam_power[current_item(itype_sword, true) - 1];
          temppower = temppower / 100;
          Lwpns.add(new weapon((fix)wx, (fix)wy, wBeam, 0, int(temppower), dir));
-         sfx(WAV_BEAM, pan(wx));
+         sfx(SFX_BEAM, pan(wx));
          break;
 
       case iBCandle:
@@ -2472,7 +2471,7 @@ bool LinkClass::startwpn(int wpn)                           // an item index
                               1 * DAMAGE_MULTIPLIER, dir));
          if (get_bit(quest_rules, qr_MAGICCANDLE))
             game.magic -= (CANDLEDRAINAMOUNT * game.magicdrainrate);
-         sfx(WAV_FIRE, pan(wx));
+         sfx(SFX_FIRE, pan(wx));
          attack = wFire;
          break;
 
@@ -2487,7 +2486,7 @@ bool LinkClass::startwpn(int wpn)                           // an item index
          Lwpns.add(new weapon((fix)wx, (fix)wy, wArrow, current_item(itype_arrow, true),
                               (1 * DAMAGE_MULTIPLIER) << current_item(itype_arrow, true), dir));
          ((weapon *)Lwpns.spr(Lwpns.Count() - 1))->step *= current_item(itype_bow, true);
-         sfx(WAV_ARROW, pan(wx));
+         sfx(SFX_ARROW, pan(wx));
          break;
 
       case iBait:
@@ -2506,7 +2505,7 @@ bool LinkClass::startwpn(int wpn)                           // an item index
             game.items[itype_bait] = 0;
             selectBwpn(0, 0);
             if (!nosecretsounds)
-               sfx(WAV_SECRET);
+               sfx(SFX_SECRET);
             return false;
          }
          Lwpns.add(new weapon((fix)wx, (fix)wy, wBait, 0, 0, dir));
@@ -2953,7 +2952,7 @@ void LinkClass::movelink()
       action = attacking;
       attack = wSword;
       attackclk = 0;
-      sfx(WAV_SWORD, pan(int(x)));
+      sfx(SFX_SWORD, pan(int(x)));
    }
    int wx = x;
    int wy = y;
@@ -3637,7 +3636,7 @@ void LinkClass::checklockblock()
       return;
    setmapflag(mLOCKBLOCK);
    remove_lockblocks((currscr >= 128) ? 1 : 0, true);
-   sfx(WAV_DOOR);
+   sfx(SFX_DOOR);
 }
 
 void LinkClass::checkbosslockblock()
@@ -3690,7 +3689,7 @@ void LinkClass::checkbosslockblock()
       return;
    setmapflag(mBOSSLOCKBLOCK);
    remove_bosslockblocks((currscr >= 128) ? 1 : 0, true);
-   sfx(WAV_DOOR);
+   sfx(SFX_DOOR);
 }
 
 void LinkClass::checklocked()
@@ -3820,7 +3819,7 @@ void LinkClass::checklocked()
                return;
          }
    }
-   sfx(WAV_DOOR);
+   sfx(SFX_DOOR);
    markBmap(-1);
 }
 
@@ -4075,7 +4074,7 @@ void LinkClass::checkspecial()
          if (Item)
          {
             if (hasitem == 1)
-               sfx(WAV_CLEARED);
+               sfx(SFX_CLEARED);
             additem(tmpscr->itemx, tmpscr->itemy + 1, Item, ipONETIME + ipBIGRANGE +
                     ((Item == iTriforce || (tmpscr->flags3 & fHOLDITEM)) ? ipHOLDUP : 0));
          }
@@ -4087,7 +4086,7 @@ void LinkClass::checkspecial()
       {
          hidden_entrance(0, true, true);
          if (!nosecretsounds)
-            sfx(WAV_SECRET);
+            sfx(SFX_SECRET);
          did_secret = true;
       }
    }
@@ -4116,9 +4115,9 @@ void LinkClass::checkspecial()
    if (loaded_enemies && tmpscr->enemyflags & efBOSS && !hasmainguy)
    {
       game.lvlitems[dlevel] |= liBOSS;
-      stop_sfx(WAV_ROAR);
-      stop_sfx(WAV_VADER);
-      stop_sfx(WAV_DODONGO);
+      stop_sfx(SFX_ROAR);
+      stop_sfx(SFX_VADER);
+      stop_sfx(SFX_DODONGO);
    }
 
    // check if he's standing on a warp he just came out of
@@ -4188,7 +4187,7 @@ void LinkClass::checkspecial()
                additem(x, y, tmpscr->catchall,
                        ipONETIME + ipBIGRANGE + ipHOLDUP + ipNODRAW);
                if (!nosecretsounds)
-                  sfx(WAV_SECRET);
+                  sfx(SFX_SECRET);
             }
             return;
 
@@ -4202,7 +4201,7 @@ void LinkClass::checkspecial()
                {
                   action = rafting;
                   if (!nosecretsounds)
-                     sfx(WAV_SECRET);
+                     sfx(SFX_SECRET);
                }
             }
             return;
@@ -4344,9 +4343,9 @@ bool LinkClass::dowarp(int type)
          }
          else                                                  // item room
          {
-            stop_sfx(WAV_ROAR);
-            stop_sfx(WAV_VADER);
-            stop_sfx(WAV_DODONGO);
+            stop_sfx(SFX_ROAR);
+            stop_sfx(SFX_VADER);
+            stop_sfx(SFX_DODONGO);
             draw_screen(tmpscr, 0, 0);
             fade(DMaps[currdmap].color, true, false, false);
             blackscr(30, true);
@@ -4373,9 +4372,9 @@ bool LinkClass::dowarp(int type)
 
       case wtPASS:                                            // passageway
       {
-         stop_sfx(WAV_ROAR);
-         stop_sfx(WAV_VADER);
-         stop_sfx(WAV_DODONGO);
+         stop_sfx(SFX_ROAR);
+         stop_sfx(SFX_VADER);
+         stop_sfx(SFX_DODONGO);
          ALLOFF();
          homescr = currscr;
          currscr = 0x81;
@@ -4792,8 +4791,8 @@ void LinkClass::walkdown()   //entering cave
    if (COOLSCROLL)
       close_black_opening(x + 8, y + 8 + 56, false);
    hclk = 0;
-   stop_sfx(WAV_BRANG);
-   sfx(WAV_STAIRS, pan(int(x)));
+   stop_sfx(SFX_BRANG);
+   sfx(SFX_STAIRS, pan(int(x)));
    clk = 0;
    action = climbcoverbottom;
    climb_cover_x = int(x) & 0xF0;
@@ -4823,8 +4822,8 @@ void LinkClass::walkdown2()   //exiting cave 2
    if (COOLSCROLL)
       open_black_opening(x + 8, y + 8 + 56 + 16, false);
    hclk = 0;
-   stop_sfx(WAV_BRANG);
-   sfx(WAV_STAIRS, pan(int(x)));
+   stop_sfx(SFX_BRANG);
+   sfx(SFX_STAIRS, pan(int(x)));
    clk = 0;
    action = climbcovertop;
    climb_cover_x = int(x) & 0xF0;
@@ -4854,8 +4853,8 @@ void LinkClass::walkup()   //exiting cave
    if (COOLSCROLL)
       open_black_opening(x + 8, y + 8 + 56 - 16, false);
    hclk = 0;
-   stop_sfx(WAV_BRANG);
-   sfx(WAV_STAIRS, pan(int(x)));
+   stop_sfx(SFX_BRANG);
+   sfx(SFX_STAIRS, pan(int(x)));
    dir = down;
    clk = 0;
    action = climbcoverbottom;
@@ -4888,8 +4887,8 @@ void LinkClass::walkup2()   //entering cave2
    if (COOLSCROLL)
       close_black_opening(x + 8, y + 8 + 56, false);
    hclk = 0;
-   stop_sfx(WAV_BRANG);
-   sfx(WAV_STAIRS, pan(int(x)));
+   stop_sfx(SFX_BRANG);
+   sfx(SFX_STAIRS, pan(int(x)));
    dir = up;
    clk = 0;
    action = climbcovertop;
@@ -5121,12 +5120,12 @@ bool LinkClass::checkmaze(mapscr *scr)
       if (lastdir[i] != scr->path[i])
          return false;
    if (!nosecretsounds)
-      sfx(WAV_SECRET);
+      sfx(SFX_SECRET);
    return true;
 }
 
-int LinkClass::lookahead(int
-                         destscr)                       // Helper for scrollscr that gets next combo on next screen.
+/* Helper for scrollscr that gets next combo on next screen. */
+int LinkClass::lookahead(int destscr)
 {
    // Can use destscr for scrolling warps,
    // but assumes currmap is correct.
@@ -5325,12 +5324,12 @@ void LinkClass::scrollscr(int dir, int destscr, int destdmap)
    fixed_door = false;
    lighting(2, dir);
    if (!(newscr->flags & fSEA))
-      adjust_sfx(WAV_SEA, 128, false);
+      adjust_sfx(SFX_SEA, 128, false);
    if (!(newscr->flags & fROAR))
    {
-      adjust_sfx(WAV_ROAR, 128, false);
-      adjust_sfx(WAV_VADER, 128, false);
-      adjust_sfx(WAV_DODONGO, 128, false);
+      adjust_sfx(SFX_ROAR, 128, false);
+      adjust_sfx(SFX_VADER, 128, false);
+      adjust_sfx(SFX_DODONGO, 128, false);
    }
 
    while (cx > 0)
@@ -5442,7 +5441,7 @@ void LinkClass::scrollscr(int dir, int destscr, int destdmap)
    if (MAPFLAG(x, y) == mfRAFT && action != rafting && hopclk == 0)
    {
       if (!nosecretsounds)
-         sfx(WAV_SECRET);
+         sfx(SFX_SECRET);
       action = rafting;
    }
 
@@ -5463,7 +5462,7 @@ void LinkClass::scrollscr(int dir, int destscr, int destdmap)
             stepforward(24);
             putdoor(0, dir ^ 1, tmpscr->door[dir ^ 1]);
             opendoors = -4;
-            sfx(WAV_DOOR);
+            sfx(SFX_DOOR);
             break;
          default:
             stepforward(24);
@@ -5475,7 +5474,7 @@ void LinkClass::scrollscr(int dir, int destscr, int destdmap)
 
    map_bkgsfx();
    if (newscr->flags2 & fSECRET)
-      sfx(WAV_SECRET);
+      sfx(SFX_SECRET);
 
    newscr_clk = frame;
    activated_timed_warp = false;
@@ -6274,17 +6273,17 @@ void getitem(int id)
    {
       case iRupy:
       case i5Rupies:
-         sfx(WAV_CHIME);
+         sfx(SFX_CHIME);
          break;
       case iHeart:
       case iKey:
-         sfx(WAV_PLINK);
+         sfx(SFX_PLINK);
          break;
       case iTriforce:
       case iBigTri:
          break;
       default:
-         sfx(WAV_SCALE);
+         sfx(SFX_SCALE);
    }
 }
 
@@ -6366,8 +6365,7 @@ void LinkClass::checkitems()
             break;
       }
 
-   if (pickup &
-         ipONETIME)                                   // set screen item flag for one-time-only items
+   if (pickup & ipONETIME) /* set screen item flag for one-time-only items */
       setmapflag();
 
    getitem(id);
@@ -6409,7 +6407,7 @@ void LinkClass::checkitems()
       }
 
       if (id != iTriforce)
-         sfx(WAV_PICKUP);
+         sfx(SFX_PICKUP);
       items.del(index);
       for (int i = 0; i < Lwpns.Count(); i++)
       {
@@ -6470,8 +6468,8 @@ void LinkClass::StartRefill(int refill_why)
    if (!refilling)
    {
       refillclk = 21;
-      stop_sfx(WAV_ER);
-      sfx(WAV_REFILL, 128, true);
+      stop_sfx(SFX_ER);
+      sfx(SFX_REFILL, 128, true);
       refilling = true;
       if ((refill_why == REFILL_POTION)
             && (!get_bit(quest_rules, qr_NONBUBBLEMEDICINE)))
@@ -6501,7 +6499,7 @@ bool LinkClass::refill()
             {
                game.life = game.maxlife;
                kill_sfx();
-               sfx(WAV_MSG);
+               sfx(SFX_MSG);
                refilling = false;
                return false;
             }
@@ -6512,7 +6510,7 @@ bool LinkClass::refill()
             {
                game.magic = game.maxmagic;
                kill_sfx();
-               sfx(WAV_MSG);
+               sfx(SFX_MSG);
                refilling = false;
                return false;
             }
@@ -6525,7 +6523,7 @@ bool LinkClass::refill()
                game.life = game.maxlife;
                game.magic = game.maxmagic;
                kill_sfx();
-               sfx(WAV_MSG);
+               sfx(SFX_MSG);
                refilling = false;
                return false;
             }
@@ -6551,7 +6549,7 @@ void LinkClass::getTriforce(int id)
    chainlinks.clear();
    decorations.clear();
 
-   sfx(WAV_SCALE);
+   sfx(SFX_SCALE);
    jukebox(MUSIC_TRIFORCE);
    if (id == iTriforce)
       game.lvlitems[dlevel] |= liTRIFORCE;
@@ -6565,7 +6563,7 @@ void LinkClass::getTriforce(int id)
       if (f == 40)
       {
          ALLOFF();
-         action = holding2;                                    // have to reset this flag
+         action = holding2;   // have to reset this flag
       }
       if (f >= 40 && f < 88)
       {
@@ -6658,7 +6656,7 @@ void LinkClass::getTriforce(int id)
       advanceframe();
       ++f;
    }
-   while ((f < 408) || (midi_pos > 0));
+   while ((f < 408) || (midi_isplaying()));
 
    action = none;
    draw_screen_clip_rect_x1 = 0;
@@ -6917,13 +6915,13 @@ void LinkClass::gameover()
       switch (f)
       {
          case   0:
-            sfx(WAV_OUCH, pan(int(x)));
+            sfx(SFX_OUCH, pan(int(x)));
             break;
          case  60:
-            sfx(WAV_SPIRAL);
+            sfx(SFX_SPIRAL);
             break;
          case 194:
-            sfx(WAV_MSG);
+            sfx(SFX_MSG);
             break;
       }
 
@@ -6968,9 +6966,9 @@ void LinkClass::ganon_intro()
       if (f == 47)
       {
          music_stop();
-         stop_sfx(WAV_ROAR);
-         sfx(WAV_GASP);
-         sfx(WAV_GANON);
+         stop_sfx(SFX_ROAR);
+         sfx(SFX_GASP);
+         sfx(SFX_GANON);
          if (current_item(itype_ring, true))
             addenemy(160, 96, eGANON, 0);
 
@@ -7011,7 +7009,7 @@ void LinkClass::ganon_intro()
       play_DmapMusic();
    currcset = DMaps[currdmap].color;
    dointro();
-   cont_sfx(WAV_ROAR);
+   cont_sfx(SFX_ROAR);
 }
 
 void LinkClass::saved_Zelda()

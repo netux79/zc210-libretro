@@ -175,8 +175,10 @@ LDFLAGS += $(LIBM) -L./alport -lalport
 
 ifeq ($(DEBUG), 1)
    CFLAGS += -O0 -g
+   CXXFLAGS += -O0 -g
 else
    CFLAGS += -O3
+   CXXFLAGS += -O3
 endif
 
 CORE_DIR := .
@@ -186,7 +188,7 @@ include Makefile.common
 OBJECTS := $(SOURCES_CXX:.cpp=.o) $(SOURCES_C:.c=.o)
 
 CFLAGS += -Wall -pedantic
-CXXFLAGS = -Wall -pedantic -std=gnu++11
+CXXFLAGS += -Wall -pedantic -std=gnu++11
 
 ifneq (,$(findstring qnx,$(platform)))
 CFLAGS += -Wc,-std=c99

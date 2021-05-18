@@ -8,6 +8,7 @@
 //
 //--------------------------------------------------------
 
+#include <stdio.h>
 #include "ending.h"
 #include "zelda.h"
 #include "sprite.h"
@@ -17,8 +18,6 @@
 #include "guys.h"
 #include "title.h"
 #include "subscr.h"
-#include <string.h>
-#include <stdio.h>
 
 extern LinkClass   Link;
 extern sprite_list  guys, items, Ewpns, Lwpns, Sitems, chainlinks, decorations;
@@ -28,8 +27,6 @@ extern int draw_screen_clip_rect_y1;
 extern int draw_screen_clip_rect_y2;
 extern bool draw_screen_clip_rect_show_link;
 extern bool draw_screen_clip_rect_show_guys;
-
-void noproc() {}
 
 void put_triforce()
 {
@@ -57,11 +54,14 @@ void putendmsg(const char *s, int x, int y, int speed, void(proc)())
       if ((f % speed) == 0)
       {
          if (s[i] != ' ')
-            sfx(WAV_MSG);
+            sfx(SFX_MSG);
          textprintf_ex(framebuf, zfont, x + (i << 3), y, WHITE, 0, "%c", s[i]);
          ++i;
       }
-      proc();
+      
+      if (proc)
+         proc();
+      
       advanceframe();
    }
 }
@@ -134,8 +134,10 @@ void ending()
 
    music_stop();
    kill_sfx();
-   sfx(WAV_ZELDA);
+   sfx(SFX_ZELDA);
    Status = 0;
+   
+   BITMAP *tmp_bmp = create_bitmap(32, 32);
 
    game.cheat |= (cheat > 1) ? 1 : 0;
 
@@ -188,14 +190,14 @@ void ending()
 
    if (QMisc.endstring == 0)
    {
-      putendmsg("THANKS LINK,YOU'RE", 32, 96, 6, noproc);
-      putendmsg("THE HERO OF HYRULE.", 32, 112, 6, noproc);
+      putendmsg("THANKS LINK,YOU'RE", 32, 96, 6, NULL);
+      putendmsg("THE HERO OF HYRULE.", 32, 112, 6, NULL);
    }
    else
    {
-      putendmsg(tmpmsg[0], 32, 80, 6, noproc);
-      putendmsg(tmpmsg[1], 32, 96, 6, noproc);
-      putendmsg(tmpmsg[2], 32, 112, 6, noproc);
+      putendmsg(tmpmsg[0], 32, 80, 6, NULL);
+      putendmsg(tmpmsg[1], 32, 96, 6, NULL);
+      putendmsg(tmpmsg[2], 32, 112, 6, NULL);
    }
    for (int f = 408; f < 927; f++)
    {
@@ -212,7 +214,7 @@ void ending()
       */
       if (f == 668)
       {
-         rectfill(framebuf, 120, 129, 152, 145, 0);
+         rectfill(framebuf, 120, 127, 152, 144, 0);
          blit(framebuf, tmp_bmp, 120, 113, 0, 0, 32, 32);
       }
       if (f == 860)
@@ -270,9 +272,9 @@ void ending()
    }
    else
    {
-      putendmsg(tmpmsg[3], 32, 160, 6, noproc);
-      putendmsg(tmpmsg[4], 32, 176, 6, noproc);
-      putendmsg(tmpmsg[5], 32, 200, 6, noproc);
+      putendmsg(tmpmsg[3], 32, 160, 6, NULL);
+      putendmsg(tmpmsg[4], 32, 176, 6, NULL);
+      putendmsg(tmpmsg[5], 32, 200, 6, NULL);
    }
 
    for (int f = 1336; f < 1492; f++)
@@ -406,10 +408,9 @@ void ending()
    }
    while (!rSbtn());
 
+   destroy_bitmap(tmp_bmp);
    reset_status();
    ringcolor();
-   load_game(&game);
-   load_game_icon(&game);
    game.continue_dmap = zinit.start_dmap;
    game.continue_scrn = 0xFF;
    saves[currgame] = game;

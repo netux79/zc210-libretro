@@ -10,16 +10,7 @@
 //--------------------------------------------------------
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <ctype.h>
 #include <stdarg.h>
-
-#ifdef ALLEGRO_DOS
-#include <unistd.h>
-#endif
-
 #include "zdefs.h"
 #include "zelda.h"
 #include "tiles.h"
@@ -42,227 +33,14 @@ extern sprite_list  guys, items, Ewpns, Lwpns, Sitems, chainlinks, decorations,
 /******** System functions ********/
 /**********************************/
 
-static char cfg_sect[] = "zeldadx";
-
 void load_game_configs()
 {
-   Akey = get_config_int(cfg_sect, "key_a", KEY_Z);
-   Bkey = get_config_int(cfg_sect, "key_b", KEY_X);
-   Lkey = get_config_int(cfg_sect, "key_l", KEY_A);
-   Rkey = get_config_int(cfg_sect, "key_r", KEY_S);
-   Ekey = get_config_int(cfg_sect, "key_select", KEY_ESC);
-   Skey = get_config_int(cfg_sect, "key_start", KEY_ENTER);
-   Mkey = get_config_int(cfg_sect, "key_map", KEY_SPACE);
-
-   DUkey = get_config_int(cfg_sect, "key_up",   KEY_UP);
-   DDkey = get_config_int(cfg_sect, "key_down", KEY_DOWN);
-   DLkey = get_config_int(cfg_sect, "key_left", KEY_LEFT);
-   DRkey = get_config_int(cfg_sect, "key_right", KEY_RIGHT);
-
-   JoyN = get_config_int(cfg_sect, "joy_idx", 0);
-   Abtn = get_config_int(cfg_sect, "joy_a", 0);
-   Bbtn = get_config_int(cfg_sect, "joy_b", 1);
-   Lbtn = get_config_int(cfg_sect, "joy_l", 6);
-   Rbtn = get_config_int(cfg_sect, "joy_r", 7);
-   Ebtn = get_config_int(cfg_sect, "joy_select", 10);
-   Sbtn = get_config_int(cfg_sect, "joy_start", 11);
-   Mbtn = get_config_int(cfg_sect, "joy_map", 3);
-
-   digi_volume = get_config_int(cfg_sect, "sfx", 255);
+   /*digi_volume = get_config_int(cfg_sect, "sfx", 255);
    midi_volume = get_config_int(cfg_sect, "music", 255);
    pan_style = get_config_int(cfg_sect, "pan", 1);
-
-   Capfps = (bool)get_config_int(cfg_sect, "capfps", 1);
    TransLayers = (bool)get_config_int(cfg_sect, "translayers", 1);
-   ShowFPS = (bool)get_config_int(cfg_sect, "showfps", 0);
-
-#ifdef ALLEGRO_DOS
-   VidMode = get_config_int(cfg_sect, "vid_mode", GFX_AUTODETECT);
-#else
-   VidMode = get_config_int(cfg_sect, "vid_mode", GFX_AUTODETECT_FULLSCREEN);
-#endif
-   resx = get_config_int(cfg_sect, "resx", 320);
-   resy = get_config_int(cfg_sect, "resy", 240);
-   sbig = get_config_int(cfg_sect, "sbig", 0);
-   scanlines = get_config_int(cfg_sect, "scanlines", 0);
-   HeartBeep = get_config_int(cfg_sect, "heartbeep", 1);
-
-   strcpy(qstpath, get_config_string(cfg_sect, "qst_path", ""));
+   HeartBeep = get_config_int(cfg_sect, "heartbeep", 1);*/
 }
-
-void save_game_configs()
-{
-   set_config_int(cfg_sect, "key_a", Akey);
-   set_config_int(cfg_sect, "key_b", Bkey);
-   set_config_int(cfg_sect, "key_l", Lkey);
-   set_config_int(cfg_sect, "key_r", Rkey);
-   set_config_int(cfg_sect, "key_select", Ekey);
-   set_config_int(cfg_sect, "key_start", Skey);
-   set_config_int(cfg_sect, "key_map", Mkey);
-
-   set_config_int(cfg_sect, "key_up",   DUkey);
-   set_config_int(cfg_sect, "key_down", DDkey);
-   set_config_int(cfg_sect, "key_left", DLkey);
-   set_config_int(cfg_sect, "key_right", DRkey);
-
-   set_config_int(cfg_sect, "joy_idx", JoyN);
-   set_config_int(cfg_sect, "joy_a", Abtn);
-   set_config_int(cfg_sect, "joy_b", Bbtn);
-   set_config_int(cfg_sect, "joy_l", Lbtn);
-   set_config_int(cfg_sect, "joy_r", Rbtn);
-   set_config_int(cfg_sect, "joy_select", Ebtn);
-   set_config_int(cfg_sect, "joy_start", Sbtn);
-   set_config_int(cfg_sect, "joy_map", Mbtn);
-
-   set_config_int(cfg_sect, "sfx", digi_volume);
-   set_config_int(cfg_sect, "music", midi_volume);
-   set_config_int(cfg_sect, "pan", pan_style);
-   set_config_int(cfg_sect, "capfps", (int)Capfps);
-   set_config_int(cfg_sect, "translayers", (int)TransLayers);
-   set_config_int(cfg_sect, "showfps", (int)ShowFPS);
-   set_config_int(cfg_sect, "vid_mode", VidMode);
-   set_config_int(cfg_sect, "resx", resx);
-   set_config_int(cfg_sect, "resy", resy);
-   set_config_int(cfg_sect, "sbig", sbig);
-   set_config_int(cfg_sect, "scanlines", scanlines);
-   set_config_string(cfg_sect, "qst_path", qstpath);
-   set_config_int(cfg_sect, "heartbeep", HeartBeep);
-}
-
-//----------------------------------------------------------------
-
-// Timers
-
-void fps_callback()
-{
-   lastfps = framecnt;
-   avgfps = ((long double)avgfps * fps_secs + lastfps) / (fps_secs + 1);
-   ++fps_secs;
-   framecnt = 0;
-}
-
-END_OF_FUNCTION(fps_callback)
-
-void myvsync_callback()
-{
-   ++myvsync;
-}
-
-END_OF_FUNCTION(myvsync_callback)
-
-void Z_init_timers()
-{
-   const char *err_str = "Couldn't install timer";
-
-   if (install_timer() < 0)
-      Z_error(err_str);
-
-   LOCK_VARIABLE(lastfps);
-   LOCK_VARIABLE(framecnt);
-   LOCK_FUNCTION(fps_callback);
-   if (install_int_ex(fps_callback, SECS_TO_TIMER(1)))
-      Z_error(err_str);
-
-   LOCK_VARIABLE(myvsync);
-   LOCK_FUNCTION(myvsync_callback);
-   if (install_int_ex(myvsync_callback, BPS_TO_TIMER(60)))
-      Z_error(err_str);
-}
-
-//----------------------------------------------------------------
-
-void show_fps()
-{
-   char buf[16];
-
-   sprintf(buf, "%2d/60", lastfps);
-
-   if (sbig)
-      textout_ex(screen, zfont, buf, scrx + 40 - 120, scry + 216 + 104, 1, -1);
-
-   else
-      textout_ex(screen, zfont, buf, scrx + 40, scry + 216, 1, -1);
-}
-
-//----------------------------------------------------------------
-
-// sets the video mode and initializes the palette
-bool game_vid_mode(int mode, int wait)
-{
-
-   request_refresh_rate(60);
-
-#ifdef ALLEGRO_DOS
-   switch (mode)
-   {
-      case GFX_AUTODETECT:
-      case GFX_VESA3:
-         if (set_gfx_mode(GFX_VESA3, resx, resy, 0, 0) == 0)
-         {
-            VidMode = GFX_VESA3;
-            break;
-         }
-      case GFX_VESA2L:
-         if (set_gfx_mode(GFX_VESA2L, resx, resy, 0, 0) == 0)
-         {
-            VidMode = GFX_VESA2L;
-            break;
-         }
-      case GFX_VESA2B:
-         if (set_gfx_mode(GFX_VESA2B, resx, resy, 0, 0) == 0)
-         {
-            VidMode = GFX_VESA2B;
-            break;
-         }
-      case GFX_VESA1:
-         if (set_gfx_mode(GFX_VESA1, resx, resy, 0, 0) == 0)
-         {
-            VidMode = GFX_VESA1;
-            break;
-         }
-      case GFX_MODEX:
-         if (set_gfx_mode(GFX_MODEX, 320, 240, 0, 0) == 0)
-         {
-            VidMode = GFX_MODEX;
-            resx = 320;
-            resy = 240;
-            sbig = false;
-            break;
-         }
-      default:
-         return false;
-         break;
-   }
-#else
-   switch (mode)
-   {
-      case GFX_AUTODETECT_FULLSCREEN:
-         if (set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, resx, resy, 0, 0) == 0)
-            VidMode = GFX_AUTODETECT_FULLSCREEN;
-         break;
-      case GFX_AUTODETECT_WINDOWED:
-         if (set_gfx_mode(GFX_AUTODETECT_WINDOWED, resx, resy, 0, 0) == 0)
-            VidMode = GFX_AUTODETECT_WINDOWED;
-         break;
-      default:
-         return false;
-         break;
-   }
-#endif
-   // wait a bit after setting the video mode
-   rest(wait);
-
-   scrx = (resx - 320) >> 1;
-   scry = (resy - 240) >> 1;
-
-   rgb_map = &rgb_table;
-
-   clear_to_color(screen, BLACK);
-
-   return true;
-}
-
-//----------------------------------------------------------------
 
 int black_opening_count = 0;
 int black_opening_x, black_opening_y;
@@ -311,15 +89,14 @@ void open_black_opening(int x, int y, bool wait)
 
 void black_opening(BITMAP *dest, int x, int y, int a, int max_a)
 {
-   clear_to_color(tmp_scr, BLACK);
+   clear_to_color(tempbuf, BLACK);
    int w = 256, h = 224;
 
    double new_w = (w / 2) + abs(w / 2 - x);
    double new_h = (h / 2) + abs(h / 2 - y);
    int r = int(sqrt((new_w * new_w) + (new_h * new_h)) * a / max_a);
-   circlefill(tmp_scr, x, y, r, 0);
-
-   masked_blit(tmp_scr, dest, 0, 0, 0, 0, w, h);
+   circlefill(tempbuf, x, y, r, 0);
+   masked_blit(tempbuf, dest, 0, 0, 0, 0, w, h);
 }
 
 //----------------------------------------------------------------
@@ -458,7 +235,7 @@ bool has_item(int item_type,
          it = (1 << (it - 1));
          if (item_type >= itype_max)
          {
-            Z_message("Error - has_item() exception.");
+            Z_error("Error - has_item() exception.");
             return false;
          }
          if (game.items[item_type]&it)
@@ -1978,18 +1755,18 @@ void draw_lens_under()
 
 void draw_lens_over()
 {
-   clear_to_color(tmp_scr, BLACK);
-   circlefill(tmp_scr, LinkX() + 8, LinkY() + 8 + 56, 60, 0);
-   circle(tmp_scr, LinkX() + 8, LinkY() + 8 + 56, 62, 0);
-   circle(tmp_scr, LinkX() + 8, LinkY() + 8 + 56, 65, 0);
-   masked_blit(tmp_scr, framebuf, 0, 56, 0, 56, 256, 168);
+   clear_to_color(tempbuf, BLACK);
+   circlefill(tempbuf, LinkX() + 8, LinkY() + 8 + 56, 60, 0);
+   circle(tempbuf, LinkX() + 8, LinkY() + 8 + 56, 62, 0);
+   circle(tempbuf, LinkX() + 8, LinkY() + 8 + 56, 65, 0);
+   masked_blit(tempbuf, framebuf, 0, 56, 0, 56, 256, 168);
 }
 
 //----------------------------------------------------------------
 
 void draw_wavy(int amplitude)
 {
-   BITMAP *wavebuf = create_bitmap_ex(8, 288, 224);
+   BITMAP *wavebuf = create_bitmap(288, 224);
    clear_to_color(wavebuf, 0);
    blit(framebuf, wavebuf, 0, 0, 16, 0, 256, 224);
 
@@ -2070,17 +1847,6 @@ void draw_fuzzy(int fuzz)
    }
 }
 
-void waitvsync()
-{
-   if (Capfps)
-   {
-      while (!myvsync)
-         rest(1);
-   }
-
-   myvsync = 0;
-}
-
 void updatescr()
 {
    if (!Playing)
@@ -2094,66 +1860,32 @@ void updatescr()
    }
    else if (black_opening_count > 0)     //shape is closing
    {
-      black_opening(framebuf, black_opening_x, black_opening_y, black_opening_count,
-                    66);
+      black_opening(framebuf, black_opening_x, black_opening_y, 
+                    black_opening_count, 66);
       --black_opening_count;
    }
-
-   waitvsync();
 
    if (refreshpal)
    {
       refreshpal = false;
       RAMpal[253] = _RGB(0, 0, 0);
       RAMpal[254] = _RGB(63, 63, 63);
-      set_palette_range(RAMpal, 0, 255, false);
+      set_palette(RAMpal);
    }
 
    if (Link.DrunkClock())
       draw_wavy(Link.DrunkClock() / (MAXDRUNKCLOCK / 32));
-   BITMAP *panorama = NULL;
 
-   bool nosubscr = (tmpscr->flags3 & fNOSUBSCR) != 0;
-
-   if (nosubscr)
+   /* Don't show subscreen */
+   if (tmpscr->flags3 & fNOSUBSCR)
    {
-      panorama = create_bitmap_ex(8, 256, 224);
-      rectfill(panorama, 0, 0, 255, 56 / 2, 0);
-      rectfill(panorama, 0, 168 + 56 / 2, 255, 168 + 56 - 1, 0);
-      blit(framebuf, panorama, 0, 56, 0, 56 / 2, 256, 224 - 56);
-   }
-
-   if (scanlines && sbig)
-   {
-      BITMAP *scanlinesbmp = create_bitmap_ex(8, 512, 448);
-      stretch_blit(nosubscr ? panorama : framebuf, scanlinesbmp, 0, 0, 256, 224, 0, 0,
-                   512, 448);
-      for (int i = 0; i < 224; ++i)
-         hline(scanlinesbmp, 0, i * 2 + 1, 512, BLACK);
-      blit(scanlinesbmp, screen, 0, 0, scrx + 32 - 128, scry + 8 - 112, 512, 448);
-
-      destroy_bitmap(scanlinesbmp);
-   }
-   else if (sbig)
-   {
-      BITMAP *tempscreen = create_bitmap_ex(8, 512, 448);
-      clear_bitmap(tempscreen);
-      stretch_blit(nosubscr ? panorama : framebuf, tempscreen, 0, 0, 256, 224, 0, 0,
-                   512, 448);
-      blit(tempscreen, screen, 0, 0, scrx + 32 - 128, scry + 8 - 112, 512, 448);
-      destroy_bitmap(tempscreen);
+      clear_bitmap(tempbuf);
+      blit(framebuf, tempbuf, 0, 56, 0, 56 / 2, 256, 224 - 56);
+      
+      canvas = tempbuf;
    }
    else
-      blit(nosubscr ? panorama : framebuf, screen, 0, 0, scrx + 32, scry + 8, 256,
-           224);
-
-   if (ShowFPS)
-      show_fps();
-
-   if (panorama != NULL)
-      destroy_bitmap(panorama);
-
-   ++framecnt;
+      canvas = framebuf;
 }
 
 //----------------------------------------------------------------
@@ -2172,23 +1904,13 @@ void f_Quit(int type)
 
 void syskeys()
 {
-   // Update joystick state
-   poll_joystick();
-
-   if (ReadKey(KEY_F1))
-      Capfps = !Capfps;
-   if (ReadKey(KEY_F2))
-      ShowFPS = !ShowFPS;
    bool eBtn = rEbtn();
-   if ((ReadKey(KEY_F6) || eBtn) && Playing)
+   if (eBtn && Playing)
       f_Quit(qQUIT);
-   if (ReadKey(KEY_F7))
-      f_Quit(qRESET);
-   if (ReadKey(KEY_ESC) || (eBtn && !Playing))
+   /*if (ReadKey(KEY_F7))
+      f_Quit(qRESET);*/
+   if (eBtn && !Playing)
       f_Quit(qEXIT);
-
-   while (Playing && keypressed())
-      readkey();
 }
 
 // 99*360 + 59*60
@@ -2249,7 +1971,7 @@ void wavyout()
    draw_screen(tmpscr, 0, 0);
    putsubscr(framebuf, 0, 0);
 
-   BITMAP *wavebuf = create_bitmap_ex(8, 288, 224);
+   BITMAP *wavebuf = create_bitmap(288, 224);
    clear_to_color(wavebuf, 0);
    blit(framebuf, wavebuf, 0, 0, 16, 0, 256, 224);
 
@@ -2271,12 +1993,13 @@ void wavyout()
          wavepal[l].b = vbound(int(RAMpal[l].b + ((palpos / palstop) *
                                    (63 - RAMpal[l].b))), 0, 63);
       }
+
       palpos += palstep;
       if (palpos >= 0)
          set_palette(wavepal);
-
       else
          set_palette(RAMpal);
+
       for (int j = 0; j < 168; j++)
       {
          for (int k = 0; k < 256; k++)
@@ -2301,7 +2024,7 @@ void wavyin()
    draw_screen(tmpscr, 0, 0);
    putsubscr(framebuf, 0, 0);
 
-   BITMAP *wavebuf = create_bitmap_ex(8, 288, 224);
+   BITMAP *wavebuf = create_bitmap(288, 224);
    clear_to_color(wavebuf, 0);
    blit(framebuf, wavebuf, 0, 0, 16, 0, 256, 224);
 
@@ -2329,9 +2052,9 @@ void wavyin()
 
       if (palpos >= 0)
          set_palette(wavepal);
-
       else
          set_palette(RAMpal);
+
       for (int j = 0; j < 168; j++)
       {
          for (int k = 0; k < 256; k++)
@@ -2418,88 +2141,6 @@ int TriforceCount()
    return c;
 }
 
-/*
-char *key_str[] =
-{
-  "(none)",         "a",              "b",              "c",
-  "d",              "e",              "f",              "g",
-  "h",              "i",              "j",              "k",
-  "l",              "m",              "n",              "o",
-  "p",              "q",              "r",              "s",
-  "t",              "u",              "v",              "w",
-  "x",              "y",              "z",              "0",
-  "1",              "2",              "3",              "4",
-  "5",              "6",              "7",              "8",
-  "9",              "num 0",          "num 1",          "num 2",
-  "num 3",          "num 4",          "num 5",          "num 6",
-  "num 7",          "num 8",          "num 9",          "f1",
-  "f2",             "f3",             "f4",             "f5",
-  "f6",             "f7",             "f8",             "f9",
-  "f10",            "f11",            "f12",            "esc",
-  "~",              "-",              "=",              "backspace",
-  "tab",            "{",              "}",              "enter",
-  ":",              "quote",          "\\",             "\\ (2)",
-  ",",              ".",              "/",              "space",
-  "insert",         "delete",         "home",           "end",
-  "page up",        "page down",      "left",           "right",
-  "up",             "down",           "num /",          "num *",
-  "num -",          "num +",          "num delete",     "num enter",
-  "print screen",   "pause",          "abnt c1",        "yen",
-  "kana",           "convert",        "no convert",     "at",
-  "circumflex",     ": (2)",          "kanji",          "num =",
-  "back quote",     ";",              "command",        "unknown (0)",
-  "unknown (1)",    "unknown (2)",    "unknown (3)",    "unknown (4)",
-  "unknown (5)",    "unknown (6)",    "unknown (7)",    "left shift",
-  "right shift",    "left control",   "right control",  "alt",
-  "alt gr",         "left win",       "right win",      "menu",
-  "scroll lock",    "number lock",    "caps lock",      "MAX"
-};
-*/
-
-void LogVidMode()
-{
-   char str_a[44], str_b[44];
-#ifdef ALLEGRO_DOS
-   switch (VidMode)
-   {
-      case GFX_MODEX:
-         sprintf(str_a, "VGA Mode X");
-         break;
-      case GFX_VESA1:
-         sprintf(str_a, "VESA 1.x");
-         break;
-      case GFX_VESA2B:
-         sprintf(str_a, "VESA2 Banked");
-         break;
-      case GFX_VESA2L:
-         sprintf(str_a, "VESA2 Linear");
-         break;
-      case GFX_VESA3:
-         sprintf(str_a, "VESA3");
-         break;
-      default:
-         sprintf(str_a, "Unknown...");
-         break;
-   }
-#else
-   switch (VidMode)
-   {
-      case GFX_AUTODETECT_FULLSCREEN:
-         sprintf(str_a, "Autodetect Fullscreen");
-         break;
-      case GFX_AUTODETECT_WINDOWED:
-         sprintf(str_a, "Autodetect Windowed");
-         break;
-      default:
-         sprintf(str_a, "Unknown...");
-         break;
-   }
-#endif
-
-   sprintf(str_b, "%dx%d %d-bit", resx, resy, get_color_depth());
-   Z_message("Video Mode set: %s (%s)\n", str_a, str_b);
-}
-
 void color_layer(RGB *src, RGB *dest, char r, char g, char b, char pos,
                  int from, int to)
 {
@@ -2525,7 +2166,7 @@ void music_resume()
 
 void music_stop()
 {
-   stop_midi();
+   midi_stop();
 }
 
 /*****************************/
@@ -2546,13 +2187,14 @@ void jukebox(int index, int loop)
       index = 0;
 
    music_stop();
-   set_volume(-1, mixvol(tunes[index].volume, midi_volume >> 1));
-   play_midi(tunes[index].midi, loop);
+   midi_set_volume(mixvol(tunes[index].volume, midi_volume >> 1));
+   midi_play(tunes[index].midi, loop);
    if (tunes[index].start > 0)
       midi_seek(tunes[index].start);
 
-   midi_loop_end = tunes[index].loop_end;
-   midi_loop_start = tunes[index].loop_start;
+   /* This functionality is no supported :( 
+    * midi_loop_end = tunes[index].loop_end;
+   midi_loop_start = tunes[index].loop_start;*/
 
    currmidi = index;
    master_volume(digi_volume, midi_volume);
@@ -2566,7 +2208,7 @@ void jukebox(int index)
       index = 0;
 
    // do nothing if it's already playing
-   if (index == currmidi && midi_pos >= 0)
+   if (index == currmidi && midi_isplaying() >= 0)
       return;
 
    jukebox(index, tunes[index].loop);
@@ -2602,7 +2244,10 @@ void master_volume(int dv, int mv)
    if (mv >= 0)
       midi_volume = max(min(mv, 255), 0);
    int i = min(max(currmidi, 0), MAXMUSIC - 1);
-   set_volume(digi_volume, mixvol(tunes[i].volume, midi_volume));
+   midi_set_volume(mixvol(tunes[i].volume, midi_volume));
+   /* here we set volume for sfx, now I just set the master volume
+    * but we might need to change it later on */
+   mixer_set_volume(digi_volume);
 }
 
 /*****************/
@@ -2612,21 +2257,21 @@ void master_volume(int dv, int mv)
 // array of voices, one for each sfx sample in the data file
 // 0+ = voice #
 // -1 = voice not allocated
-static int sfx_voice[WAV_COUNT];
+static int sfx_voice[SFX_COUNT];
 
 void Z_init_sound()
 {
-   for (int i = 0; i < WAV_COUNT; i++)
+   for (int i = 0; i < SFX_COUNT; i++)
       sfx_voice[i] = -1;
    for (int i = 0; i < MUSIC_COUNT; i++)
-      tunes[i].midi = (MIDI *)mididata[i].dat;
+      tunes[i].midi = (void *)mididata[i].dat;
    master_volume(digi_volume, midi_volume);
 }
 
 // clean up finished samples
 void sfx_cleanup()
 {
-   for (int i = 0; i < WAV_COUNT; i++)
+   for (int i = 0; i < SFX_COUNT; i++)
       if (sfx_voice[i] != -1 && voice_get_position(sfx_voice[i]) < 0)
       {
          deallocate_voice(sfx_voice[i]);
@@ -2641,7 +2286,7 @@ void sfx_cleanup()
 bool sfx_init(int index)
 {
    // check index
-   if (index < 0 || index >= WAV_COUNT)
+   if (index < 0 || index >= SFX_COUNT)
       return false;
 
    if (sfx_voice[index] == -1)
@@ -2686,7 +2331,7 @@ void cont_sfx(int index)
 // adjust parameters while playing
 void adjust_sfx(int index, int pan, bool loop)
 {
-   if (index < 0 || index >= WAV_COUNT || sfx_voice[index] == -1)
+   if (index < 0 || index >= SFX_COUNT || sfx_voice[index] == -1)
       return;
 
    voice_set_playmode(sfx_voice[index], loop ? PLAYMODE_LOOP : PLAYMODE_PLAY);
@@ -2696,21 +2341,21 @@ void adjust_sfx(int index, int pan, bool loop)
 // pauses a voice
 void pause_sfx(int index)
 {
-   if (index >= 0 && index < WAV_COUNT && sfx_voice[index] != -1)
+   if (index >= 0 && index < SFX_COUNT && sfx_voice[index] != -1)
       voice_stop(sfx_voice[index]);
 }
 
 // resumes a voice
 void resume_sfx(int index)
 {
-   if (index >= 0 && index < WAV_COUNT && sfx_voice[index] != -1)
+   if (index >= 0 && index < SFX_COUNT && sfx_voice[index] != -1)
       voice_start(sfx_voice[index]);
 }
 
 // pauses all active voices
 void pause_all_sfx()
 {
-   for (int i = 0; i < WAV_COUNT; i++)
+   for (int i = 0; i < SFX_COUNT; i++)
       if (sfx_voice[i] != -1)
          voice_stop(sfx_voice[i]);
 }
@@ -2718,7 +2363,7 @@ void pause_all_sfx()
 // resumes all paused voices
 void resume_all_sfx()
 {
-   for (int i = 0; i < WAV_COUNT; i++)
+   for (int i = 0; i < SFX_COUNT; i++)
       if (sfx_voice[i] != -1)
          voice_start(sfx_voice[i]);
 }
@@ -2726,7 +2371,7 @@ void resume_all_sfx()
 // stops an sfx and deallocates the voice
 void stop_sfx(int index)
 {
-   if (index < 0 || index >= WAV_COUNT)
+   if (index < 0 || index >= SFX_COUNT)
       return;
 
    if (sfx_voice[index] != -1)
@@ -2738,7 +2383,7 @@ void stop_sfx(int index)
 
 void kill_sfx()
 {
-   for (int i = 0; i < WAV_COUNT; i++)
+   for (int i = 0; i < SFX_COUNT; i++)
       if (sfx_voice[i] != -1)
       {
          deallocate_voice(sfx_voice[i]);
@@ -2748,16 +2393,19 @@ void kill_sfx()
 
 int pan(int x)
 {
+   int p = 128; /* MONO */
+
    switch (pan_style)
    {
-      case 0:
-         return 128;
-      case 1:
-         return vbound((x >> 1) + 68, 0, 255);
-      case 2:
-         return vbound(((x * 3) >> 2) + 36, 0, 255);
+      case 1:  /* 1/2 */
+         p = vbound((x >> 1) + 68, 0, 255); break;
+      case 2:  /* 3/4 */
+         p = vbound(((x * 3) >> 2) + 36, 0, 255);  break;
+      case 3:  /* FULL */
+         p = vbound(x, 0, 255);  break;
    }
-   return vbound(x, 0, 255);
+
+   return p;
 }
 
 /*******************************/
@@ -2779,47 +2427,47 @@ static bool rButton(bool(proc)(), bool &flag)
 
 bool Up()
 {
-   return key[DUkey] || joy[JoyN].stick[0].axis[1].d1;
+   return DUkey;
 }
 bool Down()
 {
-   return key[DDkey] || joy[JoyN].stick[0].axis[1].d2;
+   return DDkey;
 }
 bool Left()
 {
-   return key[DLkey] || joy[JoyN].stick[0].axis[0].d1;
+   return DLkey;
 }
 bool Right()
 {
-   return key[DRkey] || joy[JoyN].stick[0].axis[0].d2;
+   return DRkey;
 }
 bool cAbtn()
 {
-   return key[Akey] || joybtn(Abtn);
+   return Akey;
 }
 bool cBbtn()
 {
-   return key[Bkey] || joybtn(Bbtn);
+   return Bkey;
 }
 bool cEbtn()
 {
-   return key[Ekey] || joybtn(Ebtn);
+   return Ekey;
 }
 bool cSbtn()
 {
-   return key[Skey] || joybtn(Sbtn);
+   return Skey;
 }
 bool cLbtn()
 {
-   return key[Lkey] || joybtn(Lbtn);
+   return Lkey;
 }
 bool cRbtn()
 {
-   return key[Rkey] || joybtn(Rbtn);
+   return Rkey;
 }
 bool cMbtn()
 {
-   return key[Mkey] || joybtn(Mbtn);
+   return Mkey;
 }
 
 bool rUp()
@@ -2965,21 +2613,6 @@ void eat_buttons()
    rMbtn();
 }
 
-bool ReadKey(int k)
-{
-   if (key[k])
-   {
-      key[k] = 0;
-      return true;
-   }
-   return false;
-}
-
-bool joybtn(int b)
-{
-   return joy[JoyN].button[b].b;
-}
-
 char *time_str(dword time)
 {
    static char s[32];
@@ -3008,25 +2641,6 @@ float vbound(float x, float low, float high)
    if (x > high)
       x = high;
    return x;
-}
-
-int used_switch(int argc, char *argv[], const char *s)
-{
-   // assumes a switch won't be in argv[0]
-   for (int i = 1; i < argc; i++)
-      if (stricmp(argv[i], s) == 0)
-         return i;
-   return 0;
-}
-
-// Returns the first no switch (-) argv param
-char *get_cmd_arg(int argc, char *argv[])
-{
-   // assumes a switch won't be in argv[0] since it is the exe name.
-   for (int i = 1; i < argc; i++)
-      if (argv[i][0] != '-')
-         return argv[i];
-   return NULL;
 }
 
 char datapwd[8] = { char('l' + 11), char('o' + 22), char('n' + 33), char('g' + 44), char('t' + 55), char('a' + 66), char('n' + 77), char(0 + 88) };
@@ -3063,12 +2677,8 @@ void Z_error(const char *format, ...)
    va_start(ap, format);
    vsprintf(buf, format, ap);
    va_end(ap);
-
-#ifdef ALLEGRO_DOS
-   printf("%s", buf);
-#endif
-   al_trace("%s", buf);
-   exit(1);
+   /* printf now, change to libretro log later on */
+   printf("%s\n", buf);
 }
 
 void Z_message(const char *format, ...)
@@ -3079,11 +2689,8 @@ void Z_message(const char *format, ...)
    va_start(ap, format);
    vsprintf(buf, format, ap);
    va_end(ap);
-
-#ifdef ALLEGRO_DOS
-   printf("%s", buf);
-#endif
-   al_trace("%s", buf);
+   /* printf now, change to libretro log later on */
+   printf("%s\n", buf);
 }
 
 int anim_3_4(int clk, int speed)
@@ -3221,14 +2828,13 @@ int decode_file_007(const char *srcfile, const char *destfile,
    short c1 = 0, c2 = 0, check1, check2;
 
    // open files
-#ifdef ALLEGRO_DOS
    size = file_size(srcfile);
-#else
-   size = file_size_ex(srcfile);
-#endif
+   
    if (size < 1)
       return 1;
+   
    size -= 8;                                                // get actual data size, minus key and checksums
+   
    if (size < 1)
       return 3;
 
@@ -3241,10 +2847,12 @@ int decode_file_007(const char *srcfile, const char *destfile,
    else
    {
       packed_src = pack_fopen(srcfile, F_READ_PACKED);
-      if (errno == EDOM)
-         packed_src = pack_fopen(srcfile, F_READ);
       if (!packed_src)
-         return 1;
+      {
+         packed_src = pack_fopen(srcfile, F_READ);
+         if (!packed_src)
+            return 1;
+      }
    }
 
    dest = fopen(destfile, "wb");

@@ -1,6 +1,9 @@
 #ifndef ALPORT_H
 #define ALPORT_H
 
+#include <stddef.h>
+#include <stdint.h>
+
 #include "packfile.h"
 #include "lzss.h"
 #include "file.h"
@@ -11,6 +14,7 @@
 #include "palette.h"
 #include "sound.h"
 #include "midi.h"
+#include "fix.h"
 
 #ifndef TRUE
 #define TRUE         -1
@@ -22,8 +26,6 @@
 #define MIN(x,y)     (((x) < (y)) ? (x) : (y))
 #define MAX(x,y)     (((x) > (y)) ? (x) : (y))
 #define CLAMP(x,y,z) MAX((x), MIN((y), (z)))
-
-#define int32_t signed int
 
 #ifdef _WIN32
 #define OTHER_PATH_SEPARATOR  '\\'

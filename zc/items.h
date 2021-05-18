@@ -10,7 +10,6 @@
 #define _ITEMS_H_
 
 #include "sprite.h"
-#include "sfx.h"
 #include "zc_sys.h"
 #include "zdefs.h"
 

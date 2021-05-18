@@ -40,7 +40,7 @@ static retro_input_state_t input_state_cb;
 
 static char save_path[4096];
 static char game_path[4096];
-static char system_path[4096];
+static char system_path[4080];
 static bpp_t *framebuf;
 static short *soundbuf;
 static struct retro_log_callback logging;
@@ -55,12 +55,13 @@ static unsigned y_coord;
 static bool butA = FALSE, butB = FALSE, butX = FALSE, butY = FALSE;
 static bool butL = FALSE, butR = FALSE, butR2 = FALSE, butL2 = FALSE;
 
+/* Visible in ZC code */
+BITMAP *canvas;
 static FONT *font;
 static DATAFILE *systemdf;
 static DATAFILE *mididf;
 static DATAFILE *sfxdf;
 static RGB *pal;
-static BITMAP *canvas;
 static const char *midi_name = NULL;
 static const char *sfx_name = NULL;
 static int midiId = 0;
@@ -334,7 +335,6 @@ static void check_variables(bool firsttime = false)
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       enable_audio = !strcmp(var.value, "true") ? true : false;
-      log_cb(RETRO_LOG_INFO, "Key -> Val: %s -> %s.\n", var.key, var.value);
    }
 
    if (firsttime)

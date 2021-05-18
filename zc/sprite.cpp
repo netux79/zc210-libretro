@@ -631,7 +631,7 @@ bool movingblock::animate(int index)
          if (hiddenstair(0, true))
          {
             if (!nosecretsounds)
-               sfx(WAV_SECRET, 128);
+               sfx(SFX_SECRET, 128);
          }
          else
          {
@@ -640,7 +640,7 @@ bool movingblock::animate(int index)
                   (combobuf[bcombo].type == cPUSH_HW) ||
                   (combobuf[bcombo].type == cPUSH_HW2) || trigger) &&
                   (!nosecretsounds))
-               sfx(WAV_SECRET, 128);
+               sfx(SFX_SECRET, 128);
          }
 
          if (isdungeon() && tmpscr->flags & fSHUTTERS)

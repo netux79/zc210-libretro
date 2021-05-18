@@ -10,9 +10,6 @@
 //--------------------------------------------------------
 
 #include <stdio.h>
-#include <ctype.h>
-#include <string.h>
-
 #include "zdefs.h"
 #include "zelda.h"
 #include "qst.h"
@@ -148,7 +145,7 @@ int load_savedgames()
    word section_cversion;
 
    // Create the save file path by replacing the ext of qstpath
-   replace_extension(SAVE_FILE, qstpath, "sav", sizeof(SAVE_FILE));
+   replace_extension(SAVE_FILE, qstpath, "sav");
 
    if (saves == NULL)
    {
@@ -158,15 +155,8 @@ int load_savedgames()
    }
 
    // see if it's there
-#ifdef ALLEGRO_DOS
-   if (file_size(SAVE_FILE) == 0)
-   {
-#else
-   if (file_size_ex(SAVE_FILE) == 0)
-   {
-#endif
+   if (!file_exists(SAVE_FILE))
       goto newdata;
-   }
 
    // decode to temp file
    ret = decode_file_007(SAVE_FILE, tmpfilename, SAVE_HEADER, ENC_METHOD_MAX - 1,
@@ -211,7 +201,7 @@ newdata:
 reset:
    pack_fclose(f);
    delete_file(tmpfilename);
-   Z_message("Format error.  Resetting game data...");
+   Z_error("Format error.  Resetting game data...");
 
 init:
    int *di = (int *)saves;
@@ -501,7 +491,6 @@ static bool register_name()
    int spos = 0;
    char name[9] = "        ";
 
-   clear_keybuf();
    refreshpal = true;
    bool done = false;
    bool cancel = false;
@@ -550,7 +539,7 @@ static bool register_name()
             if (grid_y < 0)
                grid_y = letter_grid_height - 1;
          }
-         sfx(WAV_CHIME);
+         sfx(SFX_CHIME);
       }
       else if (rRight())
       {
@@ -562,21 +551,21 @@ static bool register_name()
             if (grid_y >= letter_grid_height)
                grid_y = 0;
          }
-         sfx(WAV_CHIME);
+         sfx(SFX_CHIME);
       }
       else if (rUp())
       {
          --grid_y;
          if (grid_y < 0)
             grid_y = letter_grid_height - 1;
-         sfx(WAV_CHIME);
+         sfx(SFX_CHIME);
       }
       else if (rDown())
       {
          ++grid_y;
          if (grid_y >= letter_grid_height)
             grid_y = 0;
-         sfx(WAV_CHIME);
+         sfx(SFX_CHIME);
       }
       else if (rBbtn())
       {
@@ -590,7 +579,7 @@ static bool register_name()
          ++x;
          if (x >= 8)
             x = 0;
-         sfx(WAV_PLACE);
+         sfx(SFX_PLACE);
       }
       else if (rSbtn())
       {
@@ -679,7 +668,7 @@ static bool copy_file(int file)
       saves[savecnt] = saves[file];
       ++savecnt;
       listpos = ((savecnt - 1) / 3) * 3;
-      sfx(WAV_SCALE);
+      sfx(SFX_SCALE);
       select_mode();
       return true;
    }
@@ -698,7 +687,7 @@ static bool delete_save(int file)
       --savecnt;
       if (listpos > savecnt - 1)
          listpos = max(listpos - 3, 0);
-      sfx(WAV_OUCH);
+      sfx(SFX_OUCH);
       select_mode();
       return true;
    }
@@ -710,7 +699,7 @@ static int game_details(int file)
    int pos = file % 3;
    if (saves[file].quest == 0)
       return 0;
-   BITMAP *info = create_bitmap_ex(8, 160, 26);
+   BITMAP *info = create_bitmap(160, 26);
    blit(framebuf, info, 48, pos * 24 + 70, 0, 0, 160, 26);
    rectfill(framebuf, 40, 60, 216, 192, 0);
    blueframe(framebuf, 24, 48, 26, 20);
@@ -855,25 +844,25 @@ static void select_game()
          --pos;
          if (pos < 0)
             pos = (mode) ? 2 : 5;
-         sfx(WAV_CHIME);
+         sfx(SFX_CHIME);
       }
       if (rDown())
       {
          ++pos;
          if (pos > ((mode) ? 2 : 5))
             pos = 0;
-         sfx(WAV_CHIME);
+         sfx(SFX_CHIME);
       }
       if (rLeft() && listpos > 2)
       {
          listpos -= 3;
-         sfx(WAV_CHIME);
+         sfx(SFX_CHIME);
          refreshpal = true;
       }
       if (rRight() && listpos + 3 < savecnt)
       {
          listpos += 3;
-         sfx(WAV_CHIME);
+         sfx(SFX_CHIME);
          refreshpal = true;
       }
       if (rBbtn() && mode)
@@ -953,12 +942,12 @@ int selection_menu()
       {
          if (rUp())
          {
-            sfx(WAV_CHINK);
+            sfx(SFX_CHINK);
             pos = (pos == 0) ? 3 : pos - 1;
          }
          if (rDown())
          {
-            sfx(WAV_CHINK);
+            sfx(SFX_CHINK);
             pos = (pos + 1) % 4;
          }
          if (rSbtn())
@@ -1011,7 +1000,6 @@ void game_over()
    music_stop();
    jukebox(MUSIC_GAMEOVER);
 
-   clear_to_color(screen, BLACK);
    loadfullpal();
    clear_bitmap(framebuf);
 
@@ -1046,7 +1034,6 @@ void game_over()
 
 void go_quit()
 {
-   clear_to_color(screen, BLACK);
    clear_bitmap(framebuf);
 
    int pos = selection_menu();

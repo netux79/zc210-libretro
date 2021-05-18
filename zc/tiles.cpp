@@ -6,18 +6,12 @@
 //
 //  Tile drawing routines for ZC.
 //
-//  !! Don't use them on "screen"; use memory BITMAPs only.
-//
 //--------------------------------------------------------
-
-#include <string.h>
 
 #include "zdefs.h"
 #include "tiles.h"
 #include "pal.h"
 
-extern RGB_MAP rgb_table;
-extern COLOR_MAP trans_table;
 extern byte *tilebuf;
 extern newcombo *combobuf;
 extern word

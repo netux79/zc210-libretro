@@ -68,7 +68,7 @@ void putdoor(int t, int side, int door, bool redraw = true);
 void showbombeddoor(int side);
 void openshutters();
 void loadscr(int tmp, int scr, int ldir);
-void putscr(BITMAP *dest, int x, int y, mapscr *screen);
+void putscr(BITMAP *dest, int x, int y, mapscr *ms);
 bool _walkflag(int x, int y, int cnt);
 bool water_walkflag(int x, int y, int cnt);
 bool hit_walkflag(int x, int y, int cnt);

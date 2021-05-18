@@ -14,6 +14,9 @@
 #include "pal.h"
 #include "subscr.h"
 
+RGB_MAP rgb_table;
+COLOR_MAP trans_table;
+
 const byte nes_pal[] =
 {
    31, 31, 31,                                               //  0
@@ -114,7 +117,7 @@ void loadfullpal()
  *  r, g, and b parameters specifiy the solidity of each color component,
  *  ranging from 0 (totally transparent) to 255 (totally solid).
  */
-void create_zc_trans_table(COLOR_MAP *table, AL_CONST PALETTE pal, int r, int g,
+void create_zc_trans_table(COLOR_MAP *table, const PALETTE pal, int r, int g,
                            int b)
 {
    int tmp[768], *q;
@@ -180,7 +183,8 @@ void loadlvlpal(int level)
    if (!get_bit(quest_rules, qr_NOLEVEL3FIX) && level == 3)
       RAMpal[CSET(6) + 2] = NESpal(0x37);
 
-   create_rgb_table(&rgb_table, RAMpal, NULL);
+   create_rgb_table(&rgb_table, RAMpal);
+   rgb_map = &rgb_table;
    create_zc_trans_table(&trans_table, RAMpal, 128, 128, 128);
 
    refreshpal = true;
@@ -357,7 +361,7 @@ void dryuplake()
    else
    {
       if ((hiddenstair(0, true)) && (!nosecretsounds))
-         sfx(WAV_SECRET);
+         sfx(SFX_SECRET);
    }
 }
 

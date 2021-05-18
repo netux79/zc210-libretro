@@ -15,7 +15,6 @@
 #include "subscr.h"
 #include "link.h"
 #include "guys.h"
-#include <string.h>
 #include "particles.h"
 
 extern sprite_list  guys, items, Ewpns, Lwpns, Sitems, chainlinks, decorations,
@@ -612,7 +611,7 @@ bool findentrance(int x, int y, int flag, bool setflag)
       setmapflag(mSECRET);
    hidden_entrance(0, true);
    if (!nosecretsounds)
-      sfx(WAV_SECRET);
+      sfx(SFX_SECRET);
    return true;
 }
 
@@ -1512,7 +1511,7 @@ void openshutters()
          putdoor(0, i, dOPENSHUTTER);
          tmpscr->door[i] = dOPENSHUTTER;
       }
-   sfx(WAV_DOOR, 128);
+   sfx(SFX_DOOR, 128);
 }
 
 void loadscr(int tmp, int scr, int ldir)
@@ -1682,25 +1681,25 @@ void loadscr2(int tmp, int scr, int ldir)
    }
 }
 
-void putscr(BITMAP *dest, int x, int y, mapscr *screen)
+void putscr(BITMAP *dest, int x, int y, mapscr *ms)
 {
-   if (screen->valid == 0)
+   if (ms->valid == 0)
    {
       rectfill(dest, x, y, x + 255, y + 175, 0);
       return;
    }
    for (int i = 0; i < 176; i++)
-      putcombo(dest, ((i & 15) << 4) + x, (i & 0xF0) + y, screen->data[i],
-               screen->cset[i]);
+      putcombo(dest, ((i & 15) << 4) + x, (i & 0xF0) + y, ms->data[i],
+               ms->cset[i]);
 
-   if (screen->door[0] == dBOMBED)
+   if (ms->door[0] == dBOMBED)
       over_door(0, 39, up);
-   if (screen->door[1] == dBOMBED)
+   if (ms->door[1] == dBOMBED)
       over_door(0, 135, down);
-   if (screen->door[2] == dBOMBED)
+   if (ms->door[2] == dBOMBED)
       over_door(0, 66, left);
 
-   if (screen->door[3] == dBOMBED)
+   if (ms->door[3] == dBOMBED)
       over_door(0, 77, right);
 
 }
@@ -1824,17 +1823,17 @@ bool hit_walkflag(int x, int y, int cnt)
 void map_bkgsfx()
 {
    if (tmpscr->flags & fSEA)
-      cont_sfx(WAV_SEA);
+      cont_sfx(SFX_SEA);
    if (tmpscr->flags & fROAR && !(game.lvlitems[dlevel]&liBOSS))
    {
       if (tmpscr->flags3 & fDODONGO)
-         cont_sfx(WAV_DODONGO);
+         cont_sfx(SFX_DODONGO);
 
       else if (tmpscr->flags2 & fVADER)
-         cont_sfx(WAV_VADER);
+         cont_sfx(SFX_VADER);
 
       else
-         cont_sfx(WAV_ROAR);
+         cont_sfx(SFX_ROAR);
    }
 }
 
@@ -1868,11 +1867,11 @@ void ViewMap()
 
    bool done = false, redraw = true;
 
-   mappic = create_bitmap_ex(8, (256 * 16) >> mapres, (176 * 8) >> mapres);
+   mappic = create_bitmap((256 * 16) >> mapres, (176 * 8) >> mapres);
 
    if (!mappic)
    {
-      Z_message("View Map: Not enough memory.");
+      Z_error("Error in View Map, Not enough memory.");
       return;
    }
 
@@ -1914,7 +1913,6 @@ void ViewMap()
                       (y * 176) >> mapres, 256 >> mapres, 176 >> mapres);
       }
    }
-   clear_keybuf();
 
    // view it
    int delay = 0;

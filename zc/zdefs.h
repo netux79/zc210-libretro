@@ -4,83 +4,16 @@
 //
 //  zdefs.h
 //
-//  Data formats, definitions, and a few small functions
-//  for zelda.cpp and zquest.cpp
-//
+//  Data formats, definitions, and a few small functions.
 //--------------------------------------------------------
-
-/*
-//DOS Graphics Modes
-   GFX_TEXT
-   GFX_AUTODETECT
-   GFX_AUTODETECT_FULLSCREEN
-   GFX_AUTODETECT_WINDOWED
-   GFX_SAFE
-   GFX_VGA
-   GFX_MODEX
-   GFX_VESA1
-   GFX_VESA2B
-   GFX_VESA2L
-   GFX_VESA3
-   GFX_VBEAF
-
-//Windows Graphics Modes
-   GFX_TEXT
-   GFX_AUTODETECT
-   GFX_AUTODETECT_FULLSCREEN
-   GFX_AUTODETECT_WINDOWED
-   GFX_SAFE
-   GFX_DIRECTX
-   GFX_DIRECTX_ACCEL
-   GFX_DIRECTX_SOFT
-   GFX_DIRECTX_SAFE
-   GFX_DIRECTX_WIN
-   GFX_DIRECTX_OVL
-   GFX_GDI
-
-//Linux Graphics Modes
-   GFX_TEXT
-   GFX_AUTODETECT
-   GFX_AUTODETECT_FULLSCREEN
-   GFX_AUTODETECT_WINDOWED
-   GFX_SAFE
-   GFX_FBCON
-   GFX_VBEAF
-   GFX_SVGALIB
-   GFX_VGA
-   GFX_MODEX
-
-//X-Window Graphics Modes
-   GFX_TEXT
-   GFX_AUTODETECT
-   GFX_AUTODETECT_FULLSCREEN
-   GFX_AUTODETECT_WINDOWED
-   GFX_SAFE
-   GFX_XWINDOWS
-   GFX_XWINDOWS_FULLSCREEN
-   GFX_XDGA2
-   GFX_XDGA2_SOFT
-
-//MacOS X Drivers
-   GFX_TEXT
-   GFX_AUTODETECT
-   GFX_AUTODETECT_FULLSCREEN
-   GFX_AUTODETECT_WINDOWED
-   GFX_SAFE
-   GFX_QUARTZ_FULLSCREEN
-   GFX_QUARTZ_WINDOW
-*/
-
-
-
-
 
 #ifndef _ZDEFS_H_
 #define _ZDEFS_H_
 
 #include <math.h>
-#include <allegro.h>
 #include <string.h>
+#include <alport.h>
+#include "zcdata.h"
 
 #define ZELDA_VERSION       0x0210                          //version of the program
 #define VERSION_BUILD       1                               //build number of this version
@@ -88,32 +21,12 @@
 
 #define MIN_VERSION         0x0184
 
-#define ZELDADAT_VERSION      0x0210                        //version of zelda.dat
-#define ZELDADAT_BUILD        1                             //build of zelda.dat
-#define SFXDAT_VERSION        0x0210                        //version of sfx.dat
-#define SFXDAT_BUILD          1                             //build of sfx.dat
-#define FONTSDAT_VERSION      0x0210                        //version of fonts.dat
-#define FONTSDAT_BUILD        1                             //build of fonts.dat
-#define QSTDAT_VERSION        0x0210                        //version of fonts.dat
-#define QSTDAT_BUILD          1                             //build of fonts.dat
-#define ZQUESTDAT_VERSION     0x0210                        //version of fonts.dat
-#define ZQUESTDAT_BUILD       1                             //build of fonts.dat
+#define ZELDADAT_VERSION      0x0210                        //version of zcdata.dat
+#define ZELDADAT_BUILD        1                             //build of zcdata.dat
 
 enum {ENC_METHOD_192B104 = 0, ENC_METHOD_192B105, ENC_METHOD_192B185, ENC_METHOD_MAX};
 
-
-#ifdef ALLEGRO_MACOSX
-#define KEY_ZC_LCONTROL KEY_COMMAND
-#define KEY_ZC_RCONTROL KEY_COMMAND
-#else
-#define KEY_ZC_LCONTROL KEY_LCONTROL
-#define KEY_ZC_RCONTROL KEY_RCONTROL
-#endif
-
-#ifndef ALLEGRO_DOS
-//already defined in DOS
 #define PI 3.14159265358979323846
-#endif
 
 #define HP_PER_HEART          16
 #define DAMAGE_MULTIPLIER     2
@@ -194,28 +107,17 @@ enum {ENC_METHOD_192B104 = 0, ENC_METHOD_192B105, ENC_METHOD_192B185, ENC_METHOD
 #define CV_CHEATS       1
 #define CV_SAVEGAME     1
 
-typedef unsigned char
-byte;                              //0-                       255  ( 8 bits)
-typedef unsigned short
-word;                              //0-                    65,535  (16 bits)
-typedef unsigned int
-dword;                              //0-             4,294,967,295  (32 bits)
-typedef int
-long32;                              //0-             4,294,967,295  (32 bits)
-typedef unsigned long long
-qword;                              //0-18,446,744,073,709,551,616  (64 bits)
+typedef unsigned char      byte;    //0-                       255  ( 8 bits)
+typedef unsigned short     word;    //0-                    65,535  (16 bits)
+typedef unsigned int       dword;   //0-             4,294,967,295  (32 bits)
+typedef int                long32;  //0-             4,294,967,295  (32 bits)
+typedef unsigned long long qword;   //0-18,446,744,073,709,551,616  (64 bits)
 
 extern int readsize, writesize;
 
 // system colors
-#define lc1(x) ((x)+192)                                    // offset to 'level bg color' x (row 12)
-#define lc2(x) ((x)+208)                                    // offset to 'level fg color' x (row 13)
-#define vc(x)  ((x)+224)                                    // offset to 'VGA color' x (row 14)
-#define dvc(x) ((x)+240)                                    // offset to dark 'VGA color' x (row 15)
-#define BLACK         253
-#define WHITE         254
-
-#define BYTE_FILTER 0xFF
+#define BLACK  253
+#define WHITE  254
 
 #define SINGLE_TILE_SIZE    128
 #define TILES_PER_ROW       20
@@ -1120,7 +1022,7 @@ typedef struct music
    short loop;
    short volume;
    //36
-   MIDI *midi;
+   void *midi;
    //40
 } music;
 
@@ -1293,7 +1195,7 @@ static inline void swap(T &a, T &b)
    b = c;
 }
 
-INLINE bool pfwrite(void *p, long n, PACKFILE *f)
+inline bool pfwrite(void *p, long n, PACKFILE *f)
 {
    bool success = (pack_fwrite(p, n, f) == n);
    if (success)
@@ -1301,7 +1203,7 @@ INLINE bool pfwrite(void *p, long n, PACKFILE *f)
    return success;
 }
 
-INLINE bool pfread(void *p, long n, PACKFILE *f, bool keepdata)
+inline bool pfread(void *p, long n, PACKFILE *f, bool keepdata)
 {
    bool success;
    if (keepdata == true)
@@ -1320,23 +1222,17 @@ INLINE bool pfread(void *p, long n, PACKFILE *f, bool keepdata)
    }
 }
 
-INLINE bool p_getc(void *p, PACKFILE *f, bool keepdata)
+inline bool p_getc(void *p, PACKFILE *f, bool keepdata)
 {
    unsigned char *cp = (unsigned char *)p;
    int c;
    if (!f)
       return false;
-#ifdef ALLEGRO_DOS
-   if (f->flags & PACKFILE_FLAG_WRITE)
-   {
-      return false;    //must not be writing to file
-   }
-#else
+
    if (f->normal.flags & PACKFILE_FLAG_WRITE)
    {
       return false;    //must not be writing to file
    }
-#endif
 
    if (pack_feof(f))
       return false;
@@ -1349,21 +1245,15 @@ INLINE bool p_getc(void *p, PACKFILE *f, bool keepdata)
    return true;
 }
 
-INLINE bool p_putc(int c, PACKFILE *f)
+inline bool p_putc(int c, PACKFILE *f)
 {
    if (!f)
       return false;
-#ifdef ALLEGRO_DOS
-   if (!(f->flags & PACKFILE_FLAG_WRITE))
-   {
-      return false;    //must be writing to file
-   }
-#else
+
    if (!(f->normal.flags & PACKFILE_FLAG_WRITE))
    {
       return false;    //must be writing to file
    }
-#endif
 
    pack_putc(c, f);
    bool success = (pack_ferror(f) == 0);
@@ -1372,23 +1262,18 @@ INLINE bool p_putc(int c, PACKFILE *f)
    return success;
 }
 
-INLINE bool p_igetw(void *p, PACKFILE *f, bool keepdata)
+inline bool p_igetw(void *p, PACKFILE *f, bool keepdata)
 {
    short *cp = (short *)p;
    int c;
+   
    if (!f)
       return false;
-#ifdef ALLEGRO_DOS
-   if (f->flags & PACKFILE_FLAG_WRITE)
-   {
-      return false;    //must not be writing to file
-   }
-#else
+
    if (f->normal.flags & PACKFILE_FLAG_WRITE)
    {
       return false;    //must not be writing to file
    }
-#endif
 
    if (pack_feof(f))
       return false;
@@ -1401,21 +1286,15 @@ INLINE bool p_igetw(void *p, PACKFILE *f, bool keepdata)
    return true;
 }
 
-INLINE bool p_iputw(int c, PACKFILE *f)
+inline bool p_iputw(int c, PACKFILE *f)
 {
    if (!f)
       return false;
-#ifdef ALLEGRO_DOS
-   if (!(f->flags & PACKFILE_FLAG_WRITE))
-   {
-      return false;    //must be writing to file
-   }
-#else
+
    if (!(f->normal.flags & PACKFILE_FLAG_WRITE))
    {
       return false;    //must be writing to file
    }
-#endif
 
    pack_iputw(c, f);
    bool success = (pack_ferror(f) == 0);
@@ -1424,23 +1303,17 @@ INLINE bool p_iputw(int c, PACKFILE *f)
    return success;
 }
 
-INLINE bool p_igetl(void *p, PACKFILE *f, bool keepdata)
+inline bool p_igetl(void *p, PACKFILE *f, bool keepdata)
 {
    dword *cp = (dword *)p;
    long32 c;
    if (!f)
       return false;
-#ifdef ALLEGRO_DOS
-   if (f->flags & PACKFILE_FLAG_WRITE)
-   {
-      return false;    //must not be writing to file
-   }
-#else
+
    if (f->normal.flags & PACKFILE_FLAG_WRITE)
    {
       return false;    //must not be writing to file
    }
-#endif
 
    if (pack_feof(f))
       return false;
@@ -1453,21 +1326,15 @@ INLINE bool p_igetl(void *p, PACKFILE *f, bool keepdata)
    return true;
 }
 
-INLINE bool p_iputl(long c, PACKFILE *f)
+inline bool p_iputl(long c, PACKFILE *f)
 {
    if (!f)
       return false;
-#ifdef ALLEGRO_DOS
-   if (!(f->flags & PACKFILE_FLAG_WRITE))
-   {
-      return false;    //must be writing to file
-   }
-#else
+
    if (!(f->normal.flags & PACKFILE_FLAG_WRITE))
    {
       return false;    //must be writing to file
    }
-#endif
 
    pack_iputl(c, f);
    bool success = (pack_ferror(f) == 0);
@@ -1476,23 +1343,17 @@ INLINE bool p_iputl(long c, PACKFILE *f)
    return success;
 }
 
-INLINE bool p_mgetw(void *p, PACKFILE *f, bool keepdata)
+inline bool p_mgetw(void *p, PACKFILE *f, bool keepdata)
 {
    short *cp = (short *)p;
    int c;
    if (!f)
       return false;
-#ifdef ALLEGRO_DOS
-   if (f->flags & PACKFILE_FLAG_WRITE)
-   {
-      return false;    //must not be writing to file
-   }
-#else
+
    if (f->normal.flags & PACKFILE_FLAG_WRITE)
    {
       return false;    //must not be writing to file
    }
-#endif
 
    if (pack_feof(f))
       return false;
@@ -1505,21 +1366,15 @@ INLINE bool p_mgetw(void *p, PACKFILE *f, bool keepdata)
    return true;
 }
 
-INLINE bool p_mputw(int c, PACKFILE *f)
+inline bool p_mputw(int c, PACKFILE *f)
 {
    if (!f)
       return false;
-#ifdef ALLEGRO_DOS
-   if (!(f->flags & PACKFILE_FLAG_WRITE))
-   {
-      return false;    //must be writing to file
-   }
-#else
+
    if (!(f->normal.flags & PACKFILE_FLAG_WRITE))
    {
       return false;    //must be writing to file
    }
-#endif
 
    pack_mputw(c, f);
    bool success = (pack_ferror(f) == 0);
@@ -1528,23 +1383,18 @@ INLINE bool p_mputw(int c, PACKFILE *f)
    return success;
 }
 
-INLINE bool p_mgetl(void *p, PACKFILE *f, bool keepdata)
+inline bool p_mgetl(void *p, PACKFILE *f, bool keepdata)
 {
    dword *cp = (dword *)p;
    long32 c;
+   
    if (!f)
       return false;
-#ifdef ALLEGRO_DOS
-   if (f->flags & PACKFILE_FLAG_WRITE)
-   {
-      return false;    //must not be writing to file
-   }
-#else
+
    if (f->normal.flags & PACKFILE_FLAG_WRITE)
    {
       return false;    //must not be writing to file
    }
-#endif
 
    if (pack_feof(f))
       return false;
@@ -1557,21 +1407,15 @@ INLINE bool p_mgetl(void *p, PACKFILE *f, bool keepdata)
    return true;
 }
 
-INLINE bool p_mputl(long c, PACKFILE *f)
+inline bool p_mputl(long c, PACKFILE *f)
 {
    if (!f)
       return false;
-#ifdef ALLEGRO_DOS
-   if (!(f->flags & PACKFILE_FLAG_WRITE))
-   {
-      return false;    //must be writing to file
-   }
-#else
+
    if (!(f->normal.flags & PACKFILE_FLAG_WRITE))
    {
       return false;    //must be writing to file
    }
-#endif
 
    pack_mputl(c, f);
    bool success = (pack_ferror(f) == 0);

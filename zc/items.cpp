@@ -17,7 +17,7 @@ int fairy_cnt = 0;
 void addfairy(fix x, fix y, int id)
 {
    addenemy(x, y, eITEMFAIRY, id + 0x1000);
-   sfx(WAV_SCALE);
+   sfx(SFX_SCALE);
    movefairy(x, y, id);
 }
 

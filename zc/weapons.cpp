@@ -699,7 +699,7 @@ bool weapon::animate(int index)
          }
          if (clk == 49)
          {
-            sfx(WAV_BOMB, pan(int(x)));
+            sfx(SFX_BOMB, pan(int(x)));
             hxofs = hyofs = -8;
             hxsz = hysz = 32;
          }
@@ -803,7 +803,7 @@ bool weapon::animate(int index)
          }
          if (clk == 49)
          {
-            sfx(WAV_BOMB, pan(int(x)));
+            sfx(SFX_BOMB, pan(int(x)));
             for (int tx = -8; tx <= 8; tx += 16)
             {
                for (int ty = -16; ty <= 16; ty += 32)
@@ -886,7 +886,7 @@ bool weapon::animate(int index)
          if (clk == 0)                                         // delay a frame
          {
             ++clk;
-            sfx(WAV_BRANG, pan(int(x)), true);
+            sfx(SFX_BRANG, pan(int(x)), true);
             return false;
          }
 
@@ -927,7 +927,7 @@ bool weapon::animate(int index)
             if (abs((int)(LinkY() - y)) < 7 && abs((int)(LinkX() - x)) < 7)
             {
                CatchBrang();
-               stop_sfx(WAV_BRANG);
+               stop_sfx(SFX_BRANG);
                if (current_item(itype_brang, true) > 1)
                {
                   if (dummy_bool[0])
@@ -941,7 +941,7 @@ bool weapon::animate(int index)
             seekLink();
          }
 
-         adjust_sfx(WAV_BRANG, pan(int(x)), true);
+         adjust_sfx(SFX_BRANG, pan(int(x)), true);
 
          if ((get_bit(quest_rules, qr_MBSPARKLES + type - 2)) && (type >= 2))
          {
@@ -1014,7 +1014,7 @@ bool weapon::animate(int index)
          if (clk == 0)                                         // delay a frame
          {
             ++clk;
-            sfx(WAV_HOOKSHOT, pan(int(x)), true);
+            sfx(SFX_HOOKSHOT, pan(int(x)), true);
             return false;
          }
 
@@ -1033,7 +1033,7 @@ bool weapon::animate(int index)
                   hs_fix = true;
                pull_link = false;
                CatchBrang();
-               stop_sfx(WAV_HOOKSHOT);
+               stop_sfx(SFX_HOOKSHOT);
                if (dragging != -1)
                   getdraggeditem(dragging);
                return true;
@@ -1041,7 +1041,7 @@ bool weapon::animate(int index)
             seekLink();
          }
 
-         adjust_sfx(WAV_HOOKSHOT, pan(int(x)), true);
+         adjust_sfx(SFX_HOOKSHOT, pan(int(x)), true);
          break;
 
       case wHSHandle:
