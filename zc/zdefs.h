@@ -14,15 +14,17 @@
 #include <string.h>
 #include <alport.h>
 #include "zcdata.h"
+#include "zc_exports.h"
 
-#define ZELDA_VERSION       0x0210                          //version of the program
-#define VERSION_BUILD       1                               //build number of this version
-#define DATE_STR            "January 1, 2007"
+#define SYSTEM_FILE     "zcdata.dat"         /* system file required for ZC */
+#define ZELDA_VERSION   0x0210               /* version of the engine */
+#define VERSION_BUILD   1                    /* build number of this version */
+#define DATE_STR        "January 1, 2007"    /* Original ZC Engine Build Date */
 
-#define MIN_VERSION         0x0184
+#define MIN_VERSION     0x0184
 
-#define ZELDADAT_VERSION      0x0210                        //version of zcdata.dat
-#define ZELDADAT_BUILD        1                             //build of zcdata.dat
+#define ZCDAT_VERSION   0x0210               /* version of zcdata.dat */
+#define ZCDAT_BUILD     1                    /* build of zcdata.dat */
 
 enum {ENC_METHOD_192B104 = 0, ENC_METHOD_192B105, ENC_METHOD_192B185, ENC_METHOD_MAX};
 
@@ -31,6 +33,18 @@ enum {ENC_METHOD_192B104 = 0, ENC_METHOD_192B105, ENC_METHOD_192B185, ENC_METHOD
 #define HP_PER_HEART          16
 #define DAMAGE_MULTIPLIER     2
 
+#define RETURN_ERROR \
+{                    \
+   success = false;  \
+   goto error;       \
+}
+
+#define RETURN_ERROR_M(message)  \
+{                                \
+   success = false;              \
+   zc_error(message);            \
+   goto error;                   \
+}
 
 #define ZC_ID(a,b,c,d)  (((a)<<24) | ((b)<<16) | ((c)<<8) | (d))
 

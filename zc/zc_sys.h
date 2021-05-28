@@ -14,7 +14,8 @@
 
 #include "zdefs.h"
 
-void Z_init_sound();
+bool zc_initsound();
+void zc_deinitsound();
 void draw_lens_under();
 void draw_lens_over();
 void f_Quit(int type);
@@ -79,7 +80,7 @@ void black_opening(BITMAP *dest, int x, int y, int a, int max_a);
 void close_black_opening(int x, int y, bool wait);
 void open_black_opening(int x, int y, bool wait);
 void openscreen();
-int  TriforceCount();
+int TriforceCount();
 
 bool item_disabled(int item_type, int item);
 bool can_use_item(int item_type, int item);
@@ -92,12 +93,11 @@ int item_tile_mod();
 int dmap_tile_mod();
 
 void jukebox(int index);
-void jukebox(int index, int loop);
 void play_DmapMusic();
 void music_pause();
 void music_resume();
 void music_stop();
-void master_volume(int dv, int mv);
+void update_music_volume(void);
 void sfx_cleanup();
 bool sfx_init(int index);
 void sfx(int index, int pan, bool loop);
@@ -106,6 +106,7 @@ inline void sfx(int index)
 {
    sfx(index, 128, false);
 }
+
 inline void sfx(int index, int pan)
 {
    sfx(index, pan, false);
@@ -138,9 +139,6 @@ int decode_file_007(const char *srcfile, const char *destfile,
 
 int  get_bit(byte *bitstr, int bit);
 void set_bit(byte *bitstr, int bit, byte val);
-
-void Z_error(const char *format, ...);
-void Z_message(const char *format, ...);
 
 int anim_3_4(int clk, int speed);
 #endif                                                      // _ZC_SYS_H_

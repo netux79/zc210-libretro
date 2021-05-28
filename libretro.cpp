@@ -3,22 +3,15 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
-#include <math.h>
-#include <rthreads/rthreads.h>
 
 #include "libretro.h"
 #include "alport.h"
-#include "zc/zcdata.h"
+#include "zc/zc_exports.h"
 
-/* name of the system file required to run zelda classic */
-#define SYSTEM_FILE "zcdata.dat"
-
-#define TIMING_FPS   60.0
 #define SCR_WIDTH    256
 #define SCR_HEIGHT   224
 
 //#define WANT_BPP32
-
 #ifdef WANT_BPP32
    typedef uint32_t bpp_t;
    static unsigned STRIDE_SHIFT = 2;
@@ -37,41 +30,34 @@ static retro_audio_sample_batch_t audio_batch_cb;
 static retro_environment_t environ_cb;
 static retro_input_poll_t input_poll_cb;
 static retro_input_state_t input_state_cb;
-
-static char save_path[4096];
-static char game_path[4096];
-static char system_path[4080];
-static bpp_t *framebuf;
-static short *soundbuf;
-static struct retro_log_callback logging;
 static retro_log_printf_t log_cb;
-static float sampling_rate = 44100.0f;
-static bool enable_audio = true;
-static int music_vol = 255;
-static bpp_t lr_palette[PAL_SIZE];
 
-static unsigned x_coord;
-static unsigned y_coord;
-static bool butA = FALSE, butB = FALSE, butX = FALSE, butY = FALSE;
-static bool butL = FALSE, butR = FALSE, butR2 = FALSE, butL2 = FALSE;
-
-/* Visible in ZC code */
-BITMAP *canvas;
-static FONT *font;
-static DATAFILE *systemdf;
-static DATAFILE *mididf;
-static DATAFILE *sfxdf;
-static RGB *pal;
-static const char *midi_name = NULL;
-static const char *sfx_name = NULL;
-static int midiId = 0;
-static int sfxId = 0;
+float sampling_rate;
+char game_path[MAX_STRLEN];
+char *save_path;
+char *system_path;
 
 /* threads stuff*/
+static sthread_t *zc_thread;
 slock_t *mutex;
 scond_t *cond;
-sthread_t *video_thread;
-static bool running = false;
+
+static bool enable_audio = true;
+static bpp_t lr_palette[PAL_SIZE];
+static bpp_t *framebuf;
+static short *soundbuf;
+
+
+void zc_log(bool err, const char *format, ...)
+{
+   char buf[MAX_STRLEN];
+
+   va_list ap;
+   va_start(ap, format);
+   vsprintf(buf, format, ap);
+   va_end(ap);
+   log_cb(err ? RETRO_LOG_ERROR : RETRO_LOG_INFO, "%s\n", buf);
+}
 
 static void extract_directory(char* buf, const char* path, size_t size)
 {
@@ -97,11 +83,6 @@ static void fallback_log(enum retro_log_level level, const char *fmt, ...)
 
 void retro_init(void)
 {
-   /* Main libretro framebuffer */
-   framebuf = (bpp_t *)calloc(SCR_WIDTH * SCR_HEIGHT, sizeof(bpp_t));
-   /* working buffer for the allegro port library (8-bit depth) */
-   canvas = create_bitmap(SCR_WIDTH, SCR_HEIGHT);
-   
    mutex = slock_new();
    cond = scond_new();
 }
@@ -110,11 +91,6 @@ void retro_deinit(void)
 {
    scond_free(cond);
    slock_free(mutex);
-
-   free(framebuf);
-   framebuf = NULL;
-   
-   destroy_bitmap(canvas);
 }
 
 unsigned retro_api_version(void)
@@ -153,13 +129,20 @@ void retro_set_environment(retro_environment_t cb)
    environ_cb = cb;
 
    static const struct retro_variable vars[] = {
-      { "zc_musicvol", "Music Volume; 16|0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15" },
-      { "zc_samplerate", "Sample Rate (require restart); 22050|32000|44100" },
-      { "zc_audio_enable", "Enable Audio; true|false" },
+      { "zc_samplerate", "Sample Rate (requires restart); 22050|32000|44100" },
+      { "zc_mix_quality", "Sound Quality (requires restart); Normal|High|Low" },
+      { "zc_master_vol", "Master Volume; 16|0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15" },
+      { "zc_sfx_vol", "SFX Volume; 16|0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15" },
+      { "zc_music_vol", "Music Volume; 16|0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15" },
+      { "zc_pan_style", "Sound Pan Style; 1/2|3/4|Full|Mono" },
+      { "zc_heart_beep", "Enable Low Health Beep; true|false" },
+      { "zc_trans_layers", "Show Transparent layers; true|false" },
       { NULL, NULL },
    };
 
    cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)vars);
+   
+   static struct retro_log_callback logging;
 
    if (cb(RETRO_ENVIRONMENT_GET_LOG_INTERFACE, &logging))
       log_cb = logging.log;
@@ -207,47 +190,28 @@ void retro_set_video_refresh(retro_video_refresh_t cb)
 
 void retro_reset(void)
 {
-   x_coord = 0;
-   y_coord = 0;
 }
 
 static void update_input(void)
 {
-   int dir_x = 0;
-   int dir_y = 0;
-
    input_poll_cb();
    
-   if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP))
-      dir_y--;
-   if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN))
-      dir_y++;
-   if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT))
-      dir_x--;
-   if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT))
-      dir_x++;
+   DUkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP);
+   DDkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN);
+   DLkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT);
+   DRkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT);
    
-   /* A play selected sound, B stop sounds */
-   butA = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
-   butB = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
-   
-   /* X = play midi, Y = pause midi */
-   butX = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
-   butY = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
-   
-   /* L / R select midi music */
-   butL = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L);
-   butR = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R);
-
-   /* L2 / R2 select sfx sound */
-   butL2 = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2);
-   butR2 = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2);
-
-   x_coord = (x_coord + dir_x) & 31;
-   y_coord = (y_coord + dir_y) & 31;
+   Akey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
+   Bkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
+   Mkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
+   //butY = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
+   Lkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L);
+   Rkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R);
+   Ekey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT);
+   Skey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START);
 }
 
-static void set_alpalette(RGB *p)
+void set_alpalette(RGB *p)
 {
    int i;
 
@@ -261,8 +225,8 @@ static void set_alpalette(RGB *p)
        lr_palette[i] = ((p[i].r & 0x1F) << 11) | ((p[i].g & 0x3F) << 5) | (p[i].b & 0x1F);
 #endif
 }
-
-static void zc_gameloop(void *arg)
+/*
+static void tnread_loop(void *arg)
 {
    while (running) 
    {
@@ -275,19 +239,15 @@ static void zc_gameloop(void *arg)
          for (unsigned x = 0; x < SCR_WIDTH; x++)
          {
             unsigned index_x = ((x - x_coord) >> 4) & 1;
-            *(canvas->line[y] + x) = (index_y ^ index_x) ? 14 : 1;
+            *(zc_canvas->line[y] + x) = (index_y ^ index_x) ? 14 : 1;
          }
       }
-      // Write MIDI name
-      textout_ex(canvas, font, midi_name, 50, 50, 1, 3);
-      // Write SFX name
-      textout_ex(canvas, font, sfx_name, 50, 60, 1, 3);
 
       scond_wait(cond, mutex);
       slock_unlock(mutex);
    }
 }
-
+*/
 static void render_checkered(void)
 {
    /* Try rendering straight into VRAM if we can. */
@@ -309,7 +269,7 @@ static void render_checkered(void)
    }
    
    // Blit the canvas into the libretro framebuffer
-   unsigned char *canvp = (unsigned char *) canvas->dat;
+   unsigned char *canvp = (unsigned char *) zc_canvas->dat;
    for (unsigned x = 0; x < SCR_WIDTH * SCR_HEIGHT; x++)
    {
       buf[x] =  lr_palette[canvp[x]];
@@ -323,7 +283,23 @@ static void check_variables(bool firsttime = false)
    struct retro_variable var = {0};
    int old_mv = music_vol;
 
-   var.key = "zc_musicvol";
+   var.key = "zc_master_vol";
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
+      master_vol = atoi(var.value);
+      if (master_vol > 0)
+         master_vol = (master_vol << 4) - 1;
+   }
+
+   var.key = "zc_sfx_vol";
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
+      sfx_vol = atoi(var.value);
+      if (sfx_vol > 0)
+         sfx_vol = (sfx_vol << 4) - 1;
+   }
+
+   var.key = "zc_music_vol";
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       music_vol = atoi(var.value);
@@ -331,18 +307,48 @@ static void check_variables(bool firsttime = false)
          music_vol = (music_vol << 4) - 1;
    }
 
-   var.key = "zc_audio_enable";
+   var.key = "zc_pan_style";
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
-      enable_audio = !strcmp(var.value, "true") ? true : false;
+      if (!strcmp(var.value, "Mono"))
+         pan_style = 0;
+      else if (!strcmp(var.value, "3/4"))
+         pan_style = 2;
+      else if (!strcmp(var.value, "Full"))
+         pan_style = 3;
+      else
+         pan_style = 1; /* 1/2 */
+   }
+
+   var.key = "zc_heart_beep";
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
+      heart_beep = !strcmp(var.value, "true") ? true : false;
+   }
+
+   var.key = "zc_trans_layers";
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
+      trans_layers = !strcmp(var.value, "true") ? true : false;
    }
 
    if (firsttime)
    {
-      /* For this we require restart */
+      /* For these we require restart */
       var.key = "zc_samplerate";
       if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
          sampling_rate = strtof(var.value, NULL);
+
+      var.key = "zc_mix_quality";
+      if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+      {
+         if (!strcmp(var.value, "Low"))
+            mix_quality = 0;
+         else if (!strcmp(var.value, "High"))
+            mix_quality = 2;
+         else
+            mix_quality = 1; /* Normal */
+      }
    }
    else
    {
@@ -360,89 +366,8 @@ static void audio_callback(void)
 
    /* process midi music */
    midi_fill_buffer();
-
    mixer_mix(soundbuf);
-   
    audio_batch_cb(soundbuf, sampling_rate / TIMING_FPS);
-}
-
-static void play_sounds(void)
-{
-   static bool bA = FALSE, bX = FALSE, bY = FALSE;
-   static bool bL = FALSE, bR = FALSE, bL2 = FALSE, bR2 = FALSE;
-   static int oldMidiId = -1;
-   static int voc;
-   
-   // play de sounds when a button is pressed
-   if (bA != butA) {
-      if (butA) {
-         voc = allocate_voice((const SAMPLE *)sfxdf[sfxId].dat);
-         voice_start(voc);
-         release_voice(voc);
-      }
-      bA = butA;
-   }
-
-   if (bX != butX) {
-      if (butX) midi_pause();
-      bX = butX;
-   }
-   
-   if (bY != butY) {
-      if (butY) {
-         if (oldMidiId != midiId) {
-            midi_play(mididf[midiId].dat, TRUE);
-            oldMidiId = midiId;
-         } else {
-            midi_resume();
-         }
-      }
-      bY = butY;
-   }
-   
-   if (bL != butL) {
-      if (butL) {
-         midiId--;
-         if (midiId < 0) {
-            midiId = MUSIC_COUNT - 1;
-         }
-         midi_name = get_datafile_property(&mididf[midiId], DAT_NAME);
-      }
-      bL = butL;
-   }
-
-   if (bR != butR) {
-      if (butR) {
-         midiId++;
-         if (midiId >= MUSIC_COUNT) {
-            midiId = 0;
-         }
-         midi_name = get_datafile_property(&mididf[midiId], DAT_NAME);
-      }
-      bR = butR;
-   }
-   
-   if (bL2 != butL2) {
-      if (butL2) {
-         sfxId--;
-         if (sfxId < 0) {
-            sfxId = SFX_COUNT - 1;
-         }
-         sfx_name = get_datafile_property(&sfxdf[sfxId], DAT_NAME);
-      }
-      bL2 = butL2;
-   }
-
-   if (bR2 != butR2) {
-      if (butR2) {
-         sfxId++;
-         if (sfxId >= SFX_COUNT) {
-            sfxId = 0;
-         }
-         sfx_name = get_datafile_property(&sfxdf[sfxId], DAT_NAME);
-      }
-      bR2 = butR2;
-   }   
 }
 
 void retro_run(void)
@@ -452,7 +377,6 @@ void retro_run(void)
    slock_lock(mutex);
    
    update_input();
-   play_sounds();
    render_checkered();
    
    /* wake up core thread */
@@ -465,59 +389,21 @@ void retro_run(void)
       check_variables();
 }
 
-static bool load_system_file(const char * path)
-{
-   char sysfile[4096];
-   
-   /*  calculate the system file full path */
-   sprintf(sysfile, "%s/%s", path, SYSTEM_FILE);
-   
-   /* Load the system datafile */
-   packfile_password("longtan");
-   systemdf = load_datafile(sysfile);
-   if (!systemdf)
-   {
-      return false;
-   }
-   packfile_password(NULL);
-   
-   /* Set the palette */
-   pal = (RGB *)systemdf[PAL_GUI].dat;
-   /* Set the font */
-   font = (FONT *)systemdf[FONT_GUI].dat;
-   /* The MIDI list */
-   mididf = (DATAFILE *)systemdf[MUSIC].dat;
-   /* The SFX list */
-   sfxdf = (DATAFILE *)systemdf[SFX].dat;
-   
-   /* Get the first MIDI name */
-   midi_name = get_datafile_property(mididf, DAT_NAME);
-   /* Get the first SFX name */
-   sfx_name = get_datafile_property(sfxdf, DAT_NAME);
-
-   /* Setup our libretro palette */
-   set_alpalette(pal);
-   
-   return true;
-}
-
 bool retro_load_game(const struct retro_game_info *info)
 {
-   const char *dir = NULL;
-   
    struct retro_input_descriptor desc[] = {
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,  "Left" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,    "Up" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,  "Down" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT, "Right" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,     "B" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,     "A" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,     "Map" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,     "Y" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,     "L" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,     "R" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,    "L2" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,    "R2" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   "Left" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     "Up" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   "Down" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  "Right" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      "B" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      "A" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      "Map" },
+/*      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,     "Y" },*/
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      "L" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      "R" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  "Start" },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, "Select" },
       { 0 },
    };
 
@@ -531,55 +417,47 @@ bool retro_load_game(const struct retro_game_info *info)
    }
 
    extract_directory(game_path, info->path, sizeof(game_path));
-   if (environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY, &dir) && dir)
-      strcpy(save_path, dir);
-   else
-      strcpy(save_path, game_path);
-
-   if (environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &dir) && dir)
-      strcpy(system_path, dir);
-   else
-      strcpy(system_path, game_path);
    
+   if (!environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY, &save_path) || !save_path)
+   {
+      log_cb(RETRO_LOG_INFO, "Defaulting save directory to %s.\n", game_path);
+      save_path = game_path;
+   }
+
+   if (!environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &system_path) || !system_path)
+   {
+      log_cb(RETRO_LOG_INFO, "Defaulting system directory to %s.\n", game_path);
+      system_path = game_path;
+   }
+
    check_variables(true);
-   
-   soundbuf = (short *)malloc(sampling_rate / TIMING_FPS * 2 * sizeof(short));
-   
-   /* Init mixer */
-   if (!mixer_init(sampling_rate / TIMING_FPS, sampling_rate, 1, MIXER_MAX_SFX))
-   {
-      return false;
-   }
 
-   /* Setup the midi processor */
-   if (!midi_init(sampling_rate, 1 / TIMING_FPS))
-   {
+   /* Main libretro buffers setup, done after check_variables to respect settings */
+   framebuf = (bpp_t *)calloc(SCR_WIDTH * SCR_HEIGHT, sizeof(bpp_t));
+   soundbuf = (short *)malloc(sampling_rate / TIMING_FPS * 2 * sizeof(short));
+
+   /* init zelda classic engine */
+   if (!zc_init(info->path))
       return false;
-   }
-   /* Apply music volume */
-   midi_set_volume(music_vol);
    
-   /* load system file zcdata.dat from system folder */
-   load_system_file(system_path);
-   
-   /* Create a thread to generate 1-frame of video */
-   running = true;
-   video_thread = sthread_create(zc_gameloop, NULL);
-   sthread_detach(video_thread);
+   /* Create a thread to generate 1-frame of video & audio */
+   zc_state = qRUN;
+   zc_thread = sthread_create(zc_gameloop, NULL);
+   sthread_detach(zc_thread);
 
    return true;
 }
 
 void retro_unload_game(void)
 {
-   /* stop gameloop thread from running */
-   running = false;
+   /* stop zc game loop thread from running */
+   zc_state = qEXIT;
    scond_signal(cond);
 
-   midi_deinit();
-   unload_datafile(systemdf);
-   mixer_exit();
+   zc_deinit();
+
    free(soundbuf);
+   free(framebuf);
 }
 
 unsigned retro_get_region(void)

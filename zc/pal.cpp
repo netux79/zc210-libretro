@@ -294,7 +294,7 @@ void fade(int level, bool blackall, bool fromblack, bool total)
 
       putsubscr(framebuf, 0, 0);
       advanceframe();
-      if (Status)
+      if (zc_state)
          break;
       fromblack ? --cx : ++cx;
       if (get_bit(quest_rules, qr_FADE))
@@ -377,10 +377,10 @@ void rehydratelake()
       refreshpal = true;
       advanceframe();
       if (((whistleclk >> 3) & 3) == 1)
-         for (int i = 0; i < 4 && !Status; i++)
+         for (int i = 0; i < 4 && !zc_state; i++)
             advanceframe();
    }
-   while (whistleclk != 0 && !Status);
+   while (whistleclk != 0 && !zc_state);
    whistleclk = -1;
    loadpalset(3, 3);
 }

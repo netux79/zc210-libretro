@@ -13,7 +13,8 @@
 #define _ZC_TITLE_H_
 
 int  load_savedgames();
-int  save_savedgames(bool freemem);
+int  save_savedgames(void);
+void free_savedgames(void);
 void load_game_icon(gamedata *g);
 void titlescreen();
 void game_over();

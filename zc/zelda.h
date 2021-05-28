@@ -44,9 +44,6 @@
 /******** Enums & Structs ********/
 /*********************************/
 
-// status 
-enum {qRUN, qQUIT, qRESET, qEXIT, qGAMEOVER, qCONT, qWON, qRESUME};
-
 // magic types
 enum  {mgc_none, mgc_dinsfire, mgc_nayruslove, mgc_faroreswind};
 
@@ -111,7 +108,7 @@ extern int strike_hint_counter;
 extern int strike_hint_timer;
 extern int strike_hint;
 
-extern BITMAP *canvas;      /* screen canvas buffer to send to libretro */
+extern BITMAP *zc_canvas;      /* screen canvas buffer to send to libretro */
 extern BITMAP *framebuf, *scrollbuf, *tempbuf, *msgdisplaybuf, *pricesdisplaybuf;
 extern DATAFILE *data, *sfxdata, *mididata;
 extern FONT *zfont, *font;
@@ -142,10 +139,7 @@ extern bool anymsg, anyprice;
 extern int homescr, currscr, frame, currmap, dlevel, warpscr, worldscr;
 extern int newscr_clk, opendoors, currdmap, fadeclk, currgame, listpos;
 extern int lastentrance, lastentrance_dmap, prices[3][2], loadside, Bwpn, Awpn;
-extern int digi_volume, midi_volume, currmidi, wand_x, wand_y, hasitem,
-       whistleclk, pan_style;
-extern int Akey, Bkey, Ekey, Skey, Lkey, Rkey, Mkey;
-extern int DUkey, DDkey, DLkey, DRkey, Status;
+extern int sel_music, wand_x, wand_y, hasitem, whistleclk;
 extern int arrow_x, arrow_y, brang_x, brang_y, chainlink_x, chainlink_y;
 extern int hs_startx, hs_starty, hs_xdist, hs_ydist, clockclk, clock_zoras;
 extern int swordhearts[4], currcset, gfc, gfc2, pitx, pity, refill_what;
@@ -154,7 +148,7 @@ extern int magiccastclk, castx, casty, df_x, df_y, nl1_x, nl1_y, nl2_x, nl2_y,
        magicdrainclk, conveyclk;
 extern bool nosecretsounds;
 extern bool blockmoving;
-extern bool Playing, TransLayers, HeartBeep;
+extern bool Playing;
 extern bool refreshpal, blockpath, wand_dead, loaded_guys, freeze_guys;
 extern bool loaded_enemies, drawguys, watch;
 extern bool Udown, Ddown, Ldown, Rdown, Adown, Bdown, Edown, Sdown, Mdown,
@@ -177,7 +171,7 @@ extern mapscr tmpscr3[6];
 
 extern int cheat;  // 0 = none; 1,2,3,4 = cheat level
 
-extern char qstpath[1024];
+extern char qst_name[256];
 extern gamedata *saves;
 extern gamedata game;
 

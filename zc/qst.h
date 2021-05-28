@@ -24,7 +24,7 @@
    default:\
       pack_fclose(f);\
       if(!oldquest)\
-         delete_file(tmpfilename);\
+         delete_file(tpath);\
       return ret;\
       break;\
    }
@@ -65,7 +65,7 @@ int count_infos(miscQdata *misc);
 int count_warprings(miscQdata *misc);
 int count_palcycles(miscQdata *misc);
 int count_windwarps(miscQdata *misc);
-int loadquest(char *filename, zquestheader *Header, miscQdata *Misc,
+int loadquest(const char *qstpath, zquestheader *Header, miscQdata *Misc,
               music *midis);
 
 int readheader(PACKFILE *f, zquestheader *header, bool keepdata);

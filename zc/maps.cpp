@@ -751,7 +751,7 @@ void do_scrolling_layer(BITMAP *bmp, int type, mapscr *layer, int x, int y,
 
          else
             tscr = tmpscr3 + type;
-         if (TransLayers || layer->layeropacity[type] == 255)
+         if (trans_layers || layer->layeropacity[type] == 255)
          {
             if (layer->layermap[type] > 0)
             {
@@ -1871,7 +1871,7 @@ void ViewMap()
 
    if (!mappic)
    {
-      Z_error("Error in View Map, Not enough memory.");
+      zc_error("Error in View Map, Not enough memory.");
       return;
    }
 
@@ -2043,7 +2043,7 @@ void ViewMap()
          done = true;
 
    }
-   while (!done && !Status);
+   while (!done && !zc_state);
    destroy_bitmap(mappic);
    loadscr2(0, currscr, -1);
    for (int i = 0; i < 6; ++i)

@@ -580,13 +580,13 @@ void putBmap(BITMAP *dest)
 
 void load_Sitems()
 {
-   int ofs = 0;                                              // = NEWSUBSCR ? 108 : 0;
-   int y = 0;                                                //   = NEWSUBSCR ? 48 : 24;
+   int ofs = 0;   // = NEWSUBSCR ? 108 : 0;
+   int y = 0;  //   = NEWSUBSCR ? 48 : 24;
    int x[6] = {0, 0, 0, 0, 0, 0};
 
    switch (zinit.subscreen)
    {
-      case 0:                                                 //original
+      case 0:  //original
          ofs = 0;
          y = 24;
          x[0] = 128;
@@ -598,13 +598,13 @@ void load_Sitems()
          if (BSZ)
             x[1] = 146;
          break;
-      case 1:                                                 //revision 1 ("New Subscreen")
+      case 1:  //revision 1 ("New Subscreen")
          ofs = 108;
          y = 48;
          for (int i = 0; i < 6; i++)
             x[i] = (i << 4) + 128;
          break;
-      case 2:                                                 //revision 2 (1.92 beta 168)
+      case 2:  //revision 2 (1.92 beta 168)
          ofs = 108;
          y = 48;
          for (int i = 0; i < 6; i++)
@@ -677,15 +677,15 @@ void load_Sitems()
    //first row
    switch (zinit.subscreen)
    {
-      case 0:                                                 //original
+      case 0:  //original
          ofs = 0;
          y = 48;
          break;
-      case 1:                                                 //revision 1 ("New Subscreen")
+      case 1:  //revision 1 ("New Subscreen")
          ofs = 16;
          y = 32;
          break;
-      case 2:                                                 //revision 2 (1.92 beta 168)
+      case 2:  //revision 2 (1.92 beta 168)
          ofs = -2;
          y = 32;
          break;
@@ -725,13 +725,13 @@ void load_Sitems()
 
    switch (zinit.subscreen)
    {
-      case 0:                                                 //original
+      case 0:  //original
          y = 64;
          break;
-      case 1:                                                 //revision 1 ("New Subscreen")
+      case 1:  //revision 1 ("New Subscreen")
          y = 48;
          break;
-      case 2:                                                 //revision 2 (1.92 beta 168)
+      case 2:  //revision 2 (1.92 beta 168)
          y = 48;
          break;
    }
@@ -752,11 +752,11 @@ void load_Sitems()
    //  if(NEWSUBSCR)
    switch (zinit.subscreen)
    {
-      case 0:                                                 //original
+      case 0:  //original
          //nothing.  already drew all the items
          break;
-      case 1:                                                 //revision 1 ("New Subscreen")
-      case 2:                                                 //revision 2 (1.92 beta 168)
+      case 1:  //revision 1 ("New Subscreen")
+      case 2:  //revision 2 (1.92 beta 168)
          y = 64;
          if (zinit.subscreen == 2)
          {
@@ -785,8 +785,8 @@ void load_Sitems()
 
    switch (zinit.subscreen)
    {
-      case 0:                                                 //original
-      case 1:                                                 //new subscreen
+      case 0:  //original
+      case 1:  //new subscreen
          if (type == dmDNGN || type == dmCAVE)
          {
             if (game.lvlitems[dlevel]&liMAP)
@@ -795,7 +795,7 @@ void load_Sitems()
                Sitems.add(new item((fix)44, (fix)152, iCompass, 0, 0));
          }
          break;
-      case 2:                                                 //revision 2
+      case 2:  //revision 2
          if (type == dmDNGN || type == dmCAVE)
          {
             if (game.lvlitems[dlevel]&liMAP)
@@ -818,17 +818,17 @@ void put_topsubscr()
 
    switch (zinit.subscreen)
    {
-      case 0:                                                 //original
+      case 0:  //original
          blueframe(subscr, 56, 40, 4, 4);
          textout_ex(subscr, zfont, "INVENTORY", 32, 24, QMisc.colors.caption, -1);
          textout_ex(subscr, zfont, "USE B BUTTON", 16, 72, QMisc.colors.text, -1);
          textout_ex(subscr, zfont, "FOR THIS", 32, 80, QMisc.colors.text, -1);
          break;
-      case 1:                                                 //revision 1 ("New Subscreen")
+      case 1:  //revision 1 ("New Subscreen")
          textout_ex(subscr, zfont, "INVENTORY", 32, 24, QMisc.colors.caption, -1);
          blueframe(subscr, 12, 40, 14, 6);
          break;
-      case 2:                                                 //revision 2 (1.92 beta 168)
+      case 2:  //revision 2 (1.92 beta 168)
          textout_ex(subscr, zfont, "INVENTORY", 26, 24, QMisc.colors.caption, -1);
          blueframe(subscr, 6, 40, 14, 6);
          break;
@@ -851,13 +851,13 @@ void put_topsubscr()
 
    switch (zinit.subscreen)
    {
-      case 0:                                                 //original
+      case 0:  //original
          blueframe(subscr, 120, 40, 13, 6);
          break;
-      case 1:                                                 //revision 1 ("New Subscreen")
+      case 1:  //revision 1 ("New Subscreen")
          blueframe(subscr, 136, 24, 13, 8);
          break;
-      case 2:                                                 //revision 2 (1.92 beta 168)
+      case 2:  //revision 2 (1.92 beta 168)
          if (type == dmDNGN || type == dmCAVE)
             blueframe(subscr, 16, 104, 9, 4);
          blueframe(subscr, 118, 24, 16, 8);
@@ -910,7 +910,7 @@ void dosubscr()
          blit(scrollbuf, framebuf, 0, y, 0, 0, 256, 230 - y);
          update_topsubscr(y);
          advanceframe();
-         if (Status)
+         if (zc_state)
             return;
       }
    }
@@ -929,7 +929,7 @@ void dosubscr()
          blit(scrollbuf, framebuf, 0, y, 0, 0, 256, 224);
          update_topsubscr(y);
          advanceframe();
-         if (Status)
+         if (zc_state)
             return;
       }
    }
@@ -987,7 +987,7 @@ void dosubscr()
       sel.draw(framebuf);
 
       advanceframe();
-      if (Status)
+      if (zc_state)
          return;
       if (rSbtn())
          done = true;
@@ -1005,7 +1005,7 @@ void dosubscr()
          blit(scrollbuf, framebuf, 0, y, 0, 0, 256, 230 - y);
          update_topsubscr(y);
          advanceframe();
-         if (Status)
+         if (zc_state)
             return;
       }
       blit(scrollbuf, scrollbuf, 256, 0, 0, 0, 256, 176);
@@ -1020,7 +1020,7 @@ void dosubscr()
          blit(scrollbuf, framebuf, 0, y, 0, 0, 256, 224);
          update_topsubscr(y);
          advanceframe();
-         if (Status)
+         if (zc_state)
             return;
       }
       blit(scrollbuf, scrollbuf, 0, 230, 0, 0, 256, 176);

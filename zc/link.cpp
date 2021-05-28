@@ -2074,8 +2074,7 @@ bool LinkClass::animate(int index)
       action = hopping;
 
    // get user input or do other animation
-   freeze_guys =
-      false;                                      // reset this flag, set it again if holding
+   freeze_guys = false;   // reset this flag, set it again if holding
    switch (action)
    {
       case gothit:
@@ -2146,7 +2145,7 @@ bool LinkClass::animate(int index)
       // fall through
 
       default:
-         movelink();                                           // call the main movement routine
+         movelink();    // call the main movement routine
    }
    // check for ladder removal
    if ((abs(laddery - int(y)) >= 16) || (abs(ladderx - int(x)) >= 16))
@@ -2236,7 +2235,7 @@ bool LinkClass::animate(int index)
 
    if (game.life <= (HP_PER_HEART))
    {
-      if (HeartBeep)
+      if (heart_beep)
          cont_sfx(SFX_ER);
 
       else
@@ -2257,13 +2256,7 @@ bool LinkClass::animate(int index)
       heart_beep_timer = -1;
       stop_sfx(SFX_ER);
    }
-   /*
-     if(rSbtn())
-     {
-       conveyclk=3;
-       dosubscr();
-     }
-   */
+
    if (rSbtn())
    {
       conveyclk = 3;
@@ -2348,7 +2341,7 @@ bool LinkClass::startwpn(int wpn)                           // an item index
          for (int i = 0; i < 150; i++)
          {
             advanceframe();
-            if (Status)
+            if (zc_state)
                return false;
          }
          Lwpns.add(new weapon(x, y, wWhistle, 0, 0, dir));
@@ -4779,7 +4772,7 @@ void LinkClass::stepforward(int steps)
       move(dir);
       draw_screen(tmpscr, 0, 0);
       advanceframe();
-      if (Status)
+      if (zc_state)
          return;
    }
    draw_screen(tmpscr, 0, 0);
@@ -4811,7 +4804,7 @@ void LinkClass::walkdown()   //entering cave
          ++y;
       draw_screen(tmpscr, 0, 0);
       advanceframe();
-      if (Status)
+      if (zc_state)
          break;
    }
    action = none;
@@ -4842,7 +4835,7 @@ void LinkClass::walkdown2()   //exiting cave 2
          ++y;
       draw_screen(tmpscr, 0, 0);
       advanceframe();
-      if (Status)
+      if (zc_state)
          break;
    }
    action = none;
@@ -4874,7 +4867,7 @@ void LinkClass::walkup()   //exiting cave
          --y;
       draw_screen(tmpscr, 0, 0);
       advanceframe();
-      if (Status)
+      if (zc_state)
          break;
    }
    map_bkgsfx();
@@ -4908,7 +4901,7 @@ void LinkClass::walkup2()   //entering cave2
          --y;
       draw_screen(tmpscr, 0, 0);
       advanceframe();
-      if (Status)
+      if (zc_state)
          break;
    }
    map_bkgsfx();
@@ -5250,7 +5243,7 @@ void LinkClass::scrollscr(int dir, int destscr, int destdmap)
       if (cx == scx)
          rehydratelake();
       advanceframe();
-      if (Status)
+      if (zc_state)
       {
          screenscrolling = false;
          return;
@@ -5422,7 +5415,7 @@ void LinkClass::scrollscr(int dir, int destscr, int destdmap)
       putsubscr(framebuf, 0, 0);
 
       advanceframe();
-      if (Status)
+      if (zc_state)
       {
          screenscrolling = false;
          return;
@@ -6928,7 +6921,7 @@ void LinkClass::gameover()
       advanceframe();
       ++f;
    }
-   while (f < 353 && !Status);
+   while (f < 353 && !zc_state);
 
    action = none;
    dontdraw = false;
@@ -6961,7 +6954,7 @@ void LinkClass::ganon_intro()
    action = holding2;
    holditem = iTriforce;
 
-   for (int f = 0; f < 271 && !Status; f++)
+   for (int f = 0; f < 271 && !zc_state; f++)
    {
       if (f == 47)
       {
@@ -7016,7 +7009,7 @@ void LinkClass::saved_Zelda()
 {
    Playing = false;
    action = won;
-   Status = qWON;
+   zc_state = qWON;
    hclk = 0;
    x = 136;
    y = (isdungeon() && currscr < 128) ? 75 : 73;

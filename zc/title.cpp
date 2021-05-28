@@ -26,7 +26,8 @@
 // first the game saving & loading system
 
 static const char *SAVE_HEADER = "Zelda Classic Save File";
-static char SAVE_FILE[1048] = {'\0'};
+static const char *TEMP_SAVEFILE = "tmpsav";
+
 
 int readsaves(gamedata *savedata, PACKFILE *f)
 {
@@ -132,76 +133,78 @@ int readsaves(gamedata *savedata, PACKFILE *f)
    return 0;
 }
 
-// call once at startup
 int load_savedgames()
 {
    int ret;
    PACKFILE *f = NULL;
-   const char *tmpfilename = "tmpsav";
+   char spath[MAX_STRLEN];
+   char tpath[MAX_STRLEN];
 
    int  section_id;
    int  section_size;
    word section_version;
    word section_cversion;
-
-   // Create the save file path by replacing the ext of qstpath
-   replace_extension(SAVE_FILE, qstpath, "sav");
+   
+   /* Calculate the save path to use */
+   sprintf(spath, "%s%c%s", save_path, OTHER_PATH_SEPARATOR, qst_name);
+   replace_extension(spath, spath, "sav");
+   
+   /* Calculate the temp file path */
+   replace_filename(tpath, spath, TEMP_SAVEFILE);
 
    if (saves == NULL)
    {
       saves = (gamedata *)malloc(sizeof(gamedata) * MAXSAVES);
       if (saves == NULL)
-         return 1;
+         return -1;
    }
 
-   // see if it's there
-   if (!file_exists(SAVE_FILE))
+   /* see if it already exists */
+   if (!file_exists(spath))
       goto newdata;
 
-   // decode to temp file
-   ret = decode_file_007(SAVE_FILE, tmpfilename, SAVE_HEADER, ENC_METHOD_MAX - 1,
-                         strstr(SAVE_FILE, ".dat#") != NULL);
+   /* decode to temp file */
+   ret = decode_file_007(spath, tpath, SAVE_HEADER, ENC_METHOD_MAX - 1,
+                         strstr(spath, ".dat#") != NULL);
    if (ret)
    {
-      delete_file(tmpfilename);
-      Z_message("Format error.  Resetting game data...");
+      delete_file(tpath);
+      zc_message("Format error. Resetting game data...");
       goto init;
    }
 
-   // load the games
-   f = pack_fopen(tmpfilename, F_READ_PACKED);
+   /* load the games */
+   f = pack_fopen(tpath, F_READ_PACKED);
    if (!f)
       goto newdata;
 
-   //section id
+   /* section id */
    if (!p_mgetl(&section_id, f, true))
       goto reset;
-
-   //section version info
+   /* section version info */
    if (!p_igetw(&section_version, f, true))
       goto reset;
    if (!p_igetw(&section_cversion, f, true))
       goto reset;
-
-   //section size
+   /* section size */
    if (!p_igetl(&section_size, f, true))
       goto reset;
-
+   /* actual save data */
    if (readsaves(saves, f) != 0)
       goto reset;
 
    pack_fclose(f);
-   delete_file(tmpfilename);
+   delete_file(tpath);
    return 0;
 
 newdata:
-   Z_message("Save file not found.  Creating new save file...");
+   zc_message("Save file not found. Creating new save file...");
    goto init;
 
 reset:
    pack_fclose(f);
-   delete_file(tmpfilename);
-   Z_error("Format error.  Resetting game data...");
+   delete_file(tpath);
+   zc_error("Format error. Resetting game data...");
 
 init:
    int *di = (int *)saves;
@@ -297,17 +300,25 @@ int writesaves(gamedata *savedata, PACKFILE *f)
    return 0;
 }
 
-int save_savedgames(bool freemem)
+int save_savedgames(void)
 {
+   char spath[MAX_STRLEN];
+   char tpath[MAX_STRLEN];
+   
    if (saves == NULL)
       return 1;
 
-   const char *tmpfilename = "tmpsav";
+   /* Calculate the save path to use */
+   sprintf(spath, "%s%c%s", save_path, OTHER_PATH_SEPARATOR, qst_name);
+   replace_extension(spath, spath, "sav");
+   
+   /* Calculate the temp file path */
+   replace_filename(tpath, spath, TEMP_SAVEFILE);
 
-   PACKFILE *f = pack_fopen(tmpfilename, F_WRITE_PACKED);
+   PACKFILE *f = pack_fopen(tpath, F_WRITE_PACKED);
    if (!f)
    {
-      delete_file(tmpfilename);
+      delete_file(tpath);
       return 2;
    }
 
@@ -316,38 +327,43 @@ int save_savedgames(bool freemem)
    int section_cversion = CV_SAVEGAME;
    int section_size = 0;
 
-   //section id
+   /* section id */
    if (!p_mputl(section_id, f))
       return 2;
-
-   //section version info
+   /* section version info */
    if (!p_iputw(section_version, f))
       return 3;
    if (!p_iputw(section_cversion, f))
       return 4;
-
-   //section size
+   /* section size */
    if (!p_iputl(section_size, f))
       return 5;
-
+   /* write the actual save data */
    if (writesaves(saves, f) != 0)
    {
       pack_fclose(f);
-      delete_file(tmpfilename);
+      delete_file(tpath);
       return 4;
    }
 
    pack_fclose(f);
-   int ret = encode_file_007(tmpfilename, SAVE_FILE, 0x413F0000 + (frame & 0xffff),
+   int ret = encode_file_007(tpath, spath, 0x413F0000 + (frame & 0xffff),
                              SAVE_HEADER, ENC_METHOD_MAX - 1);
    if (ret)
       ret += 100;
 
-   delete_file(tmpfilename);
-   if (freemem)
-      free(saves);
+   delete_file(tpath);
 
    return ret;
+}
+
+void free_savedgames(void)
+{
+   if (saves)
+   {
+      free(saves);
+      saves = NULL;
+   }
 }
 
 void load_game_icon(gamedata *g)
@@ -625,7 +641,7 @@ static bool register_name()
       draw_cursor(0, 0);
       advanceframe();
 
-      if (Status)
+      if (zc_state)
          cancel = true;
 
    }
@@ -634,7 +650,7 @@ static bool register_name()
    if (done)
    {
       saves[s].quest = 0xFF;
-      strncpy(saves[s].qstpath, get_filename(qstpath), 80);
+      strncpy(saves[s].qstpath, qst_name, sizeof(saves[s].qstpath));
       load_game(saves + s);
       saves[s].maxlife = zinit.hc * HP_PER_HEART;
       saves[s].items[itype_ring] = 0;
@@ -743,7 +759,7 @@ static int game_details(int file)
    textout_ex(framebuf, zfont, "START: PLAY QUEST", 56, 152, 1, -1);
    textout_ex(framebuf, zfont, "    B: CANCEL", 56, 168, 1, -1);
 
-   while (!Status)
+   while (!zc_state)
    {
       advanceframe();
       if (rBbtn())
@@ -884,7 +900,7 @@ static void select_game()
          }
       }
    }
-   while (!Status && !done);
+   while (!zc_state && !done);
 }
 
 /**************************************/
@@ -893,9 +909,9 @@ static void select_game()
 
 void titlescreen()
 {
-   int q = Status;
+   int q = zc_state;
 
-   Status = 0;
+   zc_state = 0;
    Playing = false;
 
    if (q == qRESUME)
@@ -914,10 +930,10 @@ void titlescreen()
    if (q == qRESET)
       reset_status();
 
-   if (!Status)
+   if (!zc_state)
       select_game();
 
-   if (!Status)
+   if (!zc_state)
       init_game();
 
    setup_combo_animations();
@@ -934,7 +950,7 @@ int selection_menu()
    int f = -1;
    int htile = 2;
    bool done = false;
-   Status = 0;
+   zc_state = 0;
 
    do
    {
@@ -985,11 +1001,11 @@ int selection_menu()
 
       // Need to avoid player hit the exit key
       // by mistake in this menu.
-      if (Status == qEXIT)
-         Status = 0;
+      if (zc_state == qEXIT)
+         zc_state = 0;
 
    }
-   while (!Status && !done);
+   while (!zc_state && !done);
 
    return pos;
 }
@@ -1009,24 +1025,24 @@ void game_over()
    clear_bitmap(framebuf);
    advanceframe();
 
-   if (!Status)
+   if (!zc_state)
    {
       switch (pos)
       {
          case 0:
-            Status = qCONT;
+            zc_state = qCONT;
             break;
          case 3:
-            Status = qEXIT;
+            zc_state = qEXIT;
             break;
          case 1:
             game.cheat |= cheat;
             saves[currgame] = game;
             load_game_icon(saves + currgame);
-            save_savedgames(false);
+            save_savedgames();
          // fall thru...
          case 2:
-            Status = qQUIT;
+            zc_state = qQUIT;
             break;
       }
    }
@@ -1044,24 +1060,24 @@ void go_quit()
    clear_bitmap(framebuf);
    advanceframe();
 
-   if (!Status)
+   if (!zc_state)
    {
       switch (pos)
       {
          case 0:
-            Status = qRESUME;
+            zc_state = qRESUME;
             break;
          case 3:
-            Status = qEXIT;
+            zc_state = qEXIT;
             break;
          case 1:
             game.cheat |= cheat;
             saves[currgame] = game;
             load_game_icon(saves + currgame);
-            save_savedgames(false);
+            save_savedgames();
          // fall thru...
          case 2:
-            Status = qQUIT;
+            zc_state = qQUIT;
             break;
       }
    }

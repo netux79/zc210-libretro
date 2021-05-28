@@ -292,77 +292,48 @@ bool init_section(zquestheader* Header, long section_id) {
 
 int alloc_qst_buffers()
 {
-   int ret = 0;
-
+   bool success = true;
+   
+   TheMaps = NULL; MsgStrings = NULL; DoorComboSets = NULL;
+   DMaps = NULL; combobuf = NULL; colordata = NULL; tilebuf = NULL;
+   itemsbuf = NULL; wpnsbuf = NULL; guysbuf = NULL;
+   
    if (!(TheMaps = (mapscr *)malloc(sizeof(mapscr) * MAPSCRS)))
-   {
-      ret = -1;
-      goto error;
-   }
+      RETURN_ERROR;
 
    if (!(MsgStrings = (MsgStr *)malloc(sizeof(MsgStr) * MAXMSGS)))
-   {
-      ret = -1;
-      goto error;
-   }
+      RETURN_ERROR;
 
    if (!(DoorComboSets = (DoorComboSet *)malloc(sizeof(DoorComboSet) *
                          MAXDOORCOMBOSETS)))
-   {
-      ret = -1;
-      goto error;
-   }
+      RETURN_ERROR;
 
    if (!(DMaps = (dmap *)malloc(sizeof(dmap) * MAXDMAPS)))
-   {
-      ret = -1;
-      goto error;
-   }
+      RETURN_ERROR;
 
    if (!(combobuf = (newcombo *)malloc(sizeof(newcombo) * MAXCOMBOS)))
-   {
-      ret = -1;
-      goto error;
-   }
+      RETURN_ERROR;
 
    if (!(colordata = (byte *)malloc(psTOTAL)))
-   {
-      ret = -1;
-      goto error;
-   }
+      RETURN_ERROR;
 
    if (!(tilebuf = (byte *)malloc(NEWTILE_SIZE)))
-   {
-      ret = -1;
-      goto error;
-   }
+      RETURN_ERROR;
 
    if (!(itemsbuf = (itemdata *)malloc(sizeof(itemdata) * MAXITEMS)))
-   {
-      ret = -1;
-      goto error;
-   }
+      RETURN_ERROR;
 
    if (!(wpnsbuf = (wpndata *)malloc(sizeof(wpndata) * MAXWPNS)))
-   {
-      ret = -1;
-      goto error;
-   }
+      RETURN_ERROR;
 
    if (!(guysbuf = (guydata *)malloc(sizeof(guydata) * MAXGUYS)))
-   {
-      ret = -1;
-      goto error;
-   }
-      
+      RETURN_ERROR;
+
 error:
-   if (ret)
-   {
-      Z_error("Error allocating quest buffers.");
-      free_qst_buffers();
-   }
-   
-   return ret;
+   if (!success)
+      zc_error("Error allocating quest buffers.");
+
+   return success;
 }
 
 void free_qst_buffers()
@@ -441,7 +412,6 @@ void reset_scr(int scr)
    }
 
    TheMaps[scr].valid = mVERSION;
-
 }
 
 int operator ==(DoorComboSet a, DoorComboSet b)
@@ -3357,10 +3327,11 @@ int readinitdata(PACKFILE *f, zquestheader *header, bool keepdata)
    return 0;
 }
 
-int loadquest(char *filename, zquestheader *Header, miscQdata *Misc,
+int loadquest(const char *qstpath, zquestheader *Header, miscQdata *Misc,
               music *midis)
 {
-   const char *tmpfilename = "tmp007";
+   const char *TMP007 = "tmp007.tmp";
+   char tpath[MAX_STRLEN];
    bool catchup = false;
    byte tempbyte;
    zquestheader tempheader;
@@ -3369,12 +3340,15 @@ int loadquest(char *filename, zquestheader *Header, miscQdata *Misc,
    bool oldquest = false;
    PACKFILE *f = NULL;
    int ret;
+   
+   /* Calculate the temp file path */
+   replace_filename(tpath, qstpath, TMP007);
 
-   Z_message("Loading Quest %s...", filename);
+   zc_message("Loading Quest %s...", get_filename(qstpath));
 
    /* Decrypting... */
-   ret = decode_file_007(filename, tmpfilename, ENC_STR, ENC_METHOD_MAX - 1,
-                         strstr(filename, ".dat#") != NULL);
+   ret = decode_file_007(qstpath, tpath, ENC_STR, ENC_METHOD_MAX - 1,
+                         strstr(qstpath, ".dat#") != NULL);
    if (ret)
    {
       switch (ret)
@@ -3383,30 +3357,30 @@ int loadquest(char *filename, zquestheader *Header, miscQdata *Misc,
             return qe_notfound;
          case 2:
             return qe_internal;
-            // be sure not to delete tmpfilename now...
+            // be sure not to delete tpath now...
       }
       if (ret == 5)                                           //old encryption?
-         ret = decode_file_007(filename, tmpfilename, ENC_STR, ENC_METHOD_192B185,
-                               strstr(filename, ".dat#") != NULL);
+         ret = decode_file_007(qstpath, tpath, ENC_STR, ENC_METHOD_192B185,
+                               strstr(qstpath, ".dat#") != NULL);
       if (ret == 5)                                           //old encryption?
-         ret = decode_file_007(filename, tmpfilename, ENC_STR, ENC_METHOD_192B105,
-                               strstr(filename, ".dat#") != NULL);
+         ret = decode_file_007(qstpath, tpath, ENC_STR, ENC_METHOD_192B105,
+                               strstr(qstpath, ".dat#") != NULL);
       if (ret == 5)                                           //old encryption?
-         ret = decode_file_007(filename, tmpfilename, ENC_STR, ENC_METHOD_192B104,
-                               strstr(filename, ".dat#") != NULL);
+         ret = decode_file_007(qstpath, tpath, ENC_STR, ENC_METHOD_192B104,
+                               strstr(qstpath, ".dat#") != NULL);
       if (ret)
          oldquest = true;
    }
 
    /* Opening quest... */
-   f = pack_fopen(oldquest ? filename : tmpfilename, F_READ_PACKED);
+   f = pack_fopen(oldquest ? qstpath : tpath, F_READ_PACKED);
    if (!f)
    {
-      f = pack_fopen(oldquest ? filename : tmpfilename, F_READ);
+      f = pack_fopen(oldquest ? qstpath : tpath, F_READ);
       if (!f)
       {
          if (!oldquest)
-            delete_file(tmpfilename);
+            delete_file(tpath);
 
          return qe_invalid;
       }
@@ -3554,7 +3528,7 @@ int loadquest(char *filename, zquestheader *Header, miscQdata *Misc,
                break;
             default:
                if (!catchup)
-                  Z_error("Bad token!  Searching...");
+                  zc_error("Bad token!  Searching...");
 
                catchup = true;
                break;
@@ -3649,8 +3623,8 @@ int loadquest(char *filename, zquestheader *Header, miscQdata *Misc,
       pack_fclose(f);
    if (!oldquest)
    {
-      if (file_exists(tmpfilename))
-         delete_file(tmpfilename);
+      if (file_exists(tpath))
+         delete_file(tpath);
    }
 
    memcpy(Header, &tempheader, sizeof(tempheader));
@@ -3662,8 +3636,8 @@ invalid:
       pack_fclose(f);
    if (!oldquest)
    {
-      if (file_exists(tmpfilename))
-         delete_file(tmpfilename);
+      if (file_exists(tpath))
+         delete_file(tpath);
    }
 
    return qe_invalid;

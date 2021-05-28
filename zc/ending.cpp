@@ -49,7 +49,7 @@ void putendmsg(const char *s, int x, int y, int speed, void(proc)())
    int i = 0;
    int c = strlen(s) * speed;
 
-   for (int f = 0; f < c && !Status; f++)
+   for (int f = 0; f < c && !zc_state; f++)
    {
       if ((f % speed) == 0)
       {
@@ -135,7 +135,7 @@ void ending()
    music_stop();
    kill_sfx();
    sfx(SFX_ZELDA);
-   Status = 0;
+   zc_state = 0;
    
    BITMAP *tmp_bmp = create_bitmap(32, 32);
 
@@ -173,7 +173,7 @@ void ending()
       }
       draw_screen(tmpscr, 0, 0);
       advanceframe();
-      if (Status)
+      if (zc_state)
          return;
    }
 
@@ -225,7 +225,6 @@ void ending()
          overtile16(framebuf, BSZ ? 32 : 29, 136, 129, 6,
                     0); //draw Link two-handed overhead
       }
-
       if (f == 733)
       {
          blit(framebuf, scrollbuf, 0, 0, 0, 0, 256, 56);
@@ -260,7 +259,7 @@ void ending()
       if (f > 668 && f != 860)
          put_triforce();
       advanceframe();
-      if (Status)
+      if (zc_state)
          return;
    }
 
@@ -284,7 +283,7 @@ void ending()
       if (f == 1461)
          blit(tmp_bmp, framebuf, 0, 0, 120, 113, 32, 32);
       advanceframe();
-      if (Status)
+      if (zc_state)
          return;
    }
 
@@ -389,7 +388,7 @@ void ending()
          blit(scrollbuf, scrollbuf, 0, 1, 0, 0, 256, 232);
       blit(scrollbuf, framebuf, 0, 0, 0, 0, 256, 224);
       advanceframe();
-      if (Status)
+      if (zc_state)
          return;
       rSbtn();
    }
@@ -403,7 +402,7 @@ void ending()
          overtile16(framebuf, 176, 120, 129, 9, 0);
 
       advanceframe();
-      if (Status)
+      if (zc_state)
          return;
    }
    while (!rSbtn());
@@ -414,5 +413,5 @@ void ending()
    game.continue_dmap = zinit.start_dmap;
    game.continue_scrn = 0xFF;
    saves[currgame] = game;
-   save_savedgames(false);
+   save_savedgames();
 }

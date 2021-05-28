@@ -33,15 +33,6 @@ extern sprite_list  guys, items, Ewpns, Lwpns, Sitems, chainlinks, decorations,
 /******** System functions ********/
 /**********************************/
 
-void load_game_configs()
-{
-   /*digi_volume = get_config_int(cfg_sect, "sfx", 255);
-   midi_volume = get_config_int(cfg_sect, "music", 255);
-   pan_style = get_config_int(cfg_sect, "pan", 1);
-   TransLayers = (bool)get_config_int(cfg_sect, "translayers", 1);
-   HeartBeep = get_config_int(cfg_sect, "heartbeep", 1);*/
-}
-
 int black_opening_count = 0;
 int black_opening_x, black_opening_y;
 
@@ -60,7 +51,7 @@ void close_black_opening(int x, int y, bool wait)
          putsubscr(framebuf, 0, 0);
          syskeys();
          advanceframe();
-         if (Status)
+         if (zc_state)
             break;
       }
    }
@@ -81,7 +72,7 @@ void open_black_opening(int x, int y, bool wait)
          putsubscr(framebuf, 0, 0);
          syskeys();
          advanceframe();
-         if (Status)
+         if (zc_state)
             break;
       }
    }
@@ -235,7 +226,7 @@ bool has_item(int item_type,
          it = (1 << (it - 1));
          if (item_type >= itype_max)
          {
-            Z_error("Error - has_item() exception.");
+            zc_error("Error - has_item() exception.");
             return false;
          }
          if (game.items[item_type]&it)
@@ -1882,10 +1873,10 @@ void updatescr()
       clear_bitmap(tempbuf);
       blit(framebuf, tempbuf, 0, 56, 0, 56 / 2, 256, 224 - 56);
       
-      canvas = tempbuf;
+      zc_canvas = tempbuf;
    }
    else
-      canvas = framebuf;
+      zc_canvas = framebuf;
 }
 
 //----------------------------------------------------------------
@@ -1895,7 +1886,7 @@ void f_Quit(int type)
    music_pause();
    pause_all_sfx();
 
-   Status = type;
+   zc_state = type;
 
    eat_buttons();
 }
@@ -1918,7 +1909,7 @@ void syskeys()
 
 void advanceframe()
 {
-   if (Status)
+   if (zc_state)
       return;
 
    if (Playing && game.time < MAXTIME)
@@ -1942,7 +1933,7 @@ void zapout()
       draw_fuzzy(i);
       syskeys();
       advanceframe();
-      if (Status)
+      if (zc_state)
          break;
    }
 }
@@ -1960,7 +1951,7 @@ void zapin()
       draw_fuzzy(i);
       syskeys();
       advanceframe();
-      if (Status)
+      if (zc_state)
          break;
    }
 }
@@ -2013,7 +2004,7 @@ void wavyout()
       syskeys();
       advanceframe();
 
-      if (Status)
+      if (zc_state)
          break;
    }
    destroy_bitmap(wavebuf);
@@ -2068,7 +2059,7 @@ void wavyin()
       syskeys();
       advanceframe();
 
-      if (Status)
+      if (zc_state)
          break;
    }
    destroy_bitmap(wavebuf);
@@ -2084,7 +2075,7 @@ void blackscr(int fcnt, bool showsubscr)
          putsubscr(framebuf, 0, 0);
       syskeys();
       advanceframe();
-      if (Status)
+      if (zc_state)
          break;
       ;
       --fcnt;
@@ -2124,7 +2115,7 @@ void openscreen()
       }
       syskeys();
       advanceframe();
-      if (Status)
+      if (zc_state)
          break;
    }
    Link.setDontDraw(false);
@@ -2178,28 +2169,6 @@ inline int mixvol(int v1, int v2)
    return (min(v1, 255) * min(v2, 255)) >> 8;
 }
 
-void jukebox(int index, int loop)
-{
-   music_stop();
-   if (index < 0)
-      index = MAXMUSIC - 1;
-   if (index >= MAXMUSIC)
-      index = 0;
-
-   music_stop();
-   midi_set_volume(mixvol(tunes[index].volume, midi_volume >> 1));
-   midi_play(tunes[index].midi, loop);
-   if (tunes[index].start > 0)
-      midi_seek(tunes[index].start);
-
-   /* This functionality is no supported :( 
-    * midi_loop_end = tunes[index].loop_end;
-   midi_loop_start = tunes[index].loop_start;*/
-
-   currmidi = index;
-   master_volume(digi_volume, midi_volume);
-}
-
 void jukebox(int index)
 {
    if (index < 0)
@@ -2208,10 +2177,21 @@ void jukebox(int index)
       index = 0;
 
    // do nothing if it's already playing
-   if (index == currmidi && midi_isplaying() >= 0)
+   if (index == sel_music && midi_isplaying())
       return;
 
-   jukebox(index, tunes[index].loop);
+   sel_music = index;
+
+   music_stop();
+   update_music_volume();
+   midi_play(tunes[sel_music].midi, tunes[sel_music].loop);
+
+   /* This functionality is not supported for now :( 
+    * if (tunes[index].start > 0)
+    *    midi_seek(tunes[index].start);
+    * midi_loop_end = tunes[index].loop_end;
+    * midi_loop_start = tunes[index].loop_start;
+    * */
 }
 
 void play_DmapMusic()
@@ -2237,17 +2217,11 @@ void play_DmapMusic()
    }
 }
 
-void master_volume(int dv, int mv)
+void update_music_volume(void)
 {
-   if (dv >= 0)
-      digi_volume = max(min(dv, 255), 0);
-   if (mv >= 0)
-      midi_volume = max(min(mv, 255), 0);
-   int i = min(max(currmidi, 0), MAXMUSIC - 1);
-   midi_set_volume(mixvol(tunes[i].volume, midi_volume));
-   /* here we set volume for sfx, now I just set the master volume
-    * but we might need to change it later on */
-   mixer_set_volume(digi_volume);
+   int i = min(max(sel_music, 0), MAXMUSIC - 1);
+   int vol = mixvol(tunes[i].volume, music_vol);
+   midi_set_volume(vol);
 }
 
 /*****************/
@@ -2259,13 +2233,33 @@ void master_volume(int dv, int mv)
 // -1 = voice not allocated
 static int sfx_voice[SFX_COUNT];
 
-void Z_init_sound()
+bool zc_initsound()
 {
+   /* Init mixer */
+   if (!mixer_init(sampling_rate / TIMING_FPS, sampling_rate, mix_quality,
+         MIXER_MAX_SFX))
+      return false;
+
+   /* Setup the midi processor */
+   if (!midi_init(sampling_rate, 1 / TIMING_FPS))
+      return false;
+
+   /* Apply master volume */
+   mixer_set_volume(master_vol);
+
    for (int i = 0; i < SFX_COUNT; i++)
       sfx_voice[i] = -1;
+
    for (int i = 0; i < MUSIC_COUNT; i++)
       tunes[i].midi = (void *)mididata[i].dat;
-   master_volume(digi_volume, midi_volume);
+      
+   return true;
+}
+
+void zc_deinitsound()
+{
+   midi_deinit();
+   mixer_exit();
 }
 
 // clean up finished samples
@@ -2279,7 +2273,7 @@ void sfx_cleanup()
       }
 }
 
-// allocates a voice for the sample "wav_index" (index into zelda.dat)
+// allocates a voice for the sample "sfx_index" (index into zcdata.dat)
 // if a voice is already allocated (and/or playing), then it just returns true
 // Returns true:  voice is allocated
 //         false: unsuccessful
@@ -2669,30 +2663,6 @@ int get_bit(byte *bitstr, int bit)
    return ((*bitstr) >> (bit & 7)) & 1;
 }
 
-void Z_error(const char *format, ...)
-{
-   char buf[256];
-
-   va_list ap;
-   va_start(ap, format);
-   vsprintf(buf, format, ap);
-   va_end(ap);
-   /* printf now, change to libretro log later on */
-   printf("%s\n", buf);
-}
-
-void Z_message(const char *format, ...)
-{
-   char buf[2048];
-
-   va_list ap;
-   va_start(ap, format);
-   vsprintf(buf, format, ap);
-   va_end(ap);
-   /* printf now, change to libretro log later on */
-   printf("%s\n", buf);
-}
-
 int anim_3_4(int clk, int speed)
 {
    clk /= speed;
@@ -2833,7 +2803,7 @@ int decode_file_007(const char *srcfile, const char *destfile,
    if (size < 1)
       return 1;
    
-   size -= 8;                                                // get actual data size, minus key and checksums
+   size -= 8;  // get actual data size, minus key and checksums
    
    if (size < 1)
       return 3;

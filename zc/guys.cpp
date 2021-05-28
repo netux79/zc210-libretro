@@ -7437,7 +7437,7 @@ void getBigTri()
 
    draw_screen(tmpscr, 0, 0);
 
-   for (int f = 0; f < 24 * 8 && !Status; f++)
+   for (int f = 0; f < 24 * 8 && !zc_state; f++)
    {
       if (f == 4)
       {
