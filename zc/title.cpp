@@ -430,7 +430,7 @@ static int savecnt;
 
 static void list_save(int save_num, int ypos)
 {
-   bool r = refreshpal;
+   bool r = zc_sync_pal;
 
    if (save_num < savecnt)
    {
@@ -459,7 +459,7 @@ static void list_save(int save_num, int ypos)
 
    textout_ex(framebuf, zfont, "-", 136, ypos + 16, 1, -1);
 
-   refreshpal = r;
+   zc_sync_pal = r;
 }
 
 static void list_saves()
@@ -507,7 +507,7 @@ static bool register_name()
    int spos = 0;
    char name[9] = "        ";
 
-   refreshpal = true;
+   zc_sync_pal = true;
    bool done = false;
    bool cancel = false;
 
@@ -651,7 +651,8 @@ static bool register_name()
    {
       saves[s].quest = 0xFF;
       strncpy(saves[s].qstpath, qst_name, sizeof(saves[s].qstpath));
-      load_game(saves + s);
+      strncpy(saves[s].version, QHeader.version, sizeof(saves[s].version));
+      strncpy(saves[s].title, QHeader.title, sizeof(saves[s].title));
       saves[s].maxlife = zinit.hc * HP_PER_HEART;
       saves[s].items[itype_ring] = 0;
       if (zinit.ring)
@@ -785,7 +786,7 @@ static void select_game()
       pos = 3;
 
    bool done = false;
-   refreshpal = true;
+   zc_sync_pal = true;
 
    do
    {
@@ -800,10 +801,9 @@ static void select_game()
             case 3:
                if (!register_name())
                   pos = 3;
-
                else
                   pos = (savecnt - 1) % 3;
-               refreshpal = true;
+               zc_sync_pal = true;
                break;
 
             case 4:
@@ -813,7 +813,7 @@ static void select_game()
                   pos = 0;
                   copy_mode();
                }
-               refreshpal = true;
+               zc_sync_pal = true;
                break;
 
             case 5:
@@ -823,7 +823,7 @@ static void select_game()
                   pos = 0;
                   delete_mode();
                }
-               refreshpal = true;
+               zc_sync_pal = true;
                break;
 
             default:
@@ -840,7 +840,7 @@ static void select_game()
                      {
                         mode = 0;
                         pos = (savecnt - 1) % 3;
-                        refreshpal = true;
+                        zc_sync_pal = true;
                      }
                      break;
 
@@ -849,7 +849,7 @@ static void select_game()
                      {
                         mode = 0;
                         pos = 3;
-                        refreshpal = true;
+                        zc_sync_pal = true;
                      }
                      break;
                }
@@ -873,13 +873,13 @@ static void select_game()
       {
          listpos -= 3;
          sfx(SFX_CHIME);
-         refreshpal = true;
+         zc_sync_pal = true;
       }
       if (rRight() && listpos + 3 < savecnt)
       {
          listpos += 3;
          sfx(SFX_CHIME);
-         refreshpal = true;
+         zc_sync_pal = true;
       }
       if (rBbtn() && mode)
       {
@@ -909,25 +909,25 @@ static void select_game()
 
 void titlescreen()
 {
-   int q = zc_state;
+   int state = zc_state;
 
-   zc_state = 0;
-   Playing = false;
+   zc_state = ZC_RUN;
+   is_playing = false;
 
-   if (q == qRESUME)
+   if (state == ZC_RESUME)
    {
       resume_game();
       return;
    }
 
-   if (q == qCONT)
+   if (state == ZC_CONT)
    {
       cont_game();
       setup_combo_animations();
       return;
    }
 
-   if (q == qRESET)
+   if (state == ZC_RESET)
       reset_status();
 
    if (!zc_state)
@@ -950,7 +950,7 @@ int selection_menu()
    int f = -1;
    int htile = 2;
    bool done = false;
-   zc_state = 0;
+   zc_state = ZC_RUN;
 
    do
    {
@@ -998,19 +998,13 @@ int selection_menu()
       rectfill(framebuf, 72, 72, 79, 151, 0);
       puttile8(framebuf, htile, 72, pos * 24 + 72, 1, 0);
       advanceframe();
-
-      // Need to avoid player hit the exit key
-      // by mistake in this menu.
-      if (zc_state == qEXIT)
-         zc_state = 0;
-
    }
    while (!zc_state && !done);
 
    return pos;
 }
 
-void game_over()
+void zc_gameover()
 {
    kill_sfx();
    music_stop();
@@ -1030,10 +1024,10 @@ void game_over()
       switch (pos)
       {
          case 0:
-            zc_state = qCONT;
+            zc_state = ZC_CONT;
             break;
          case 3:
-            zc_state = qEXIT;
+            zc_state = ZC_EXIT;
             break;
          case 1:
             game.cheat |= cheat;
@@ -1042,13 +1036,13 @@ void game_over()
             save_savedgames();
          // fall thru...
          case 2:
-            zc_state = qQUIT;
+            zc_state = ZC_QUIT;
             break;
       }
    }
 }
 
-void go_quit()
+void zc_quit()
 {
    clear_bitmap(framebuf);
 
@@ -1065,10 +1059,10 @@ void go_quit()
       switch (pos)
       {
          case 0:
-            zc_state = qRESUME;
+            zc_state = ZC_RESUME;
             break;
          case 3:
-            zc_state = qEXIT;
+            zc_state = ZC_EXIT;
             break;
          case 1:
             game.cheat |= cheat;
@@ -1077,7 +1071,7 @@ void go_quit()
             save_savedgames();
          // fall thru...
          case 2:
-            zc_state = qQUIT;
+            zc_state = ZC_QUIT;
             break;
       }
    }

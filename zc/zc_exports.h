@@ -11,10 +11,11 @@
 #define zc_message(...)    zc_log(false, __VA_ARGS__)
 
 /* game states */
-enum {qRUN, qQUIT, qRESET, qEXIT, qGAMEOVER, qCONT, qWON, qRESUME};
+enum {ZC_RUN, ZC_QUIT, ZC_RESET, ZC_EXIT, ZC_GAMEOVER, ZC_CONT, ZC_WON, ZC_RESUME};
 
 extern BITMAP *zc_canvas;
 extern RGB *zc_palette;
+extern bool zc_sync_pal;
 
 extern char *save_path;
 extern char *system_path;
@@ -42,9 +43,11 @@ extern int zc_state;
 bool zc_init(const char *qpath);
 void zc_deinit(void);
 void zc_gameloop(void *arg);
+void zc_action(int state);
+void update_music_volume(void);
+void update_sfx_volume(void);
 
 /* Libretro methods */
-void set_alpalette(RGB *p);
 void zc_log(bool err, const char *format, ...);
 
 #endif

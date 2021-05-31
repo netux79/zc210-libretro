@@ -24,6 +24,5 @@ SOURCES_CXX := $(CORE_DIR)/zc/zelda.cpp \
 				 $(CORE_DIR)/zc/items.cpp \
 				 $(CORE_DIR)/zc/guys.cpp \
 				 $(CORE_DIR)/zc/ending.cpp \
-				 $(CORE_DIR)/zc/defdata.cpp \
 				 $(CORE_DIR)/zc/decorations.cpp \
 				 $(CORE_DIR)//libretro.cpp

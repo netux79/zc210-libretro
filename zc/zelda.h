@@ -93,7 +93,6 @@ int init_game();
 int cont_game();
 void restart_level();
 void resume_game();
-int load_game(gamedata *g);
 void reset_status();
 
 /**********************************/
@@ -148,8 +147,8 @@ extern int magiccastclk, castx, casty, df_x, df_y, nl1_x, nl1_y, nl2_x, nl2_y,
        magicdrainclk, conveyclk;
 extern bool nosecretsounds;
 extern bool blockmoving;
-extern bool Playing;
-extern bool refreshpal, blockpath, wand_dead, loaded_guys, freeze_guys;
+extern bool is_playing;
+extern bool blockpath, wand_dead, loaded_guys, freeze_guys;
 extern bool loaded_enemies, drawguys, watch;
 extern bool Udown, Ddown, Ldown, Rdown, Adown, Bdown, Edown, Sdown, Mdown,
        LBdown, RBdown, Mdown;

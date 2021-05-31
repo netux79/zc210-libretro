@@ -42,11 +42,9 @@ static sthread_t *zc_thread;
 slock_t *mutex;
 scond_t *cond;
 
-static bool enable_audio = true;
 static bpp_t lr_palette[PAL_SIZE];
 static bpp_t *framebuf;
 static short *soundbuf;
-
 
 void zc_log(bool err, const char *format, ...)
 {
@@ -109,7 +107,7 @@ void retro_get_system_info(struct retro_system_info *info)
    info->library_name     = "Zelda Classic v2.10";
    info->library_version  = "Alpha 1";
    info->need_fullpath    = true;
-   info->valid_extensions = "dat";
+   info->valid_extensions = "qst";
 }
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
@@ -136,7 +134,7 @@ void retro_set_environment(retro_environment_t cb)
       { "zc_music_vol", "Music Volume; 16|0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15" },
       { "zc_pan_style", "Sound Pan Style; 1/2|3/4|Full|Mono" },
       { "zc_heart_beep", "Enable Low Health Beep; true|false" },
-      { "zc_trans_layers", "Show Transparent layers; true|false" },
+      { "zc_trans_layers", "Show Transparent Layers; true|false" },
       { NULL, NULL },
    };
 
@@ -190,6 +188,7 @@ void retro_set_video_refresh(retro_video_refresh_t cb)
 
 void retro_reset(void)
 {
+   zc_action(ZC_RESET);
 }
 
 static void update_input(void)
@@ -204,14 +203,13 @@ static void update_input(void)
    Akey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
    Bkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
    Mkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
-   //butY = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
    Lkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L);
    Rkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R);
    Ekey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT);
    Skey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START);
 }
 
-void set_alpalette(RGB *p)
+void update_palette(RGB *p)
 {
    int i;
 
@@ -225,35 +223,16 @@ void set_alpalette(RGB *p)
        lr_palette[i] = ((p[i].r & 0x1F) << 11) | ((p[i].g & 0x3F) << 5) | (p[i].b & 0x1F);
 #endif
 }
-/*
-static void tnread_loop(void *arg)
-{
-   while (running) 
-   {
-      slock_lock(mutex);
 
-      // Paint the checkered screen into the canvas.
-      for (unsigned y = 0; y < SCR_HEIGHT; y++)
-      {
-         unsigned index_y = ((y - y_coord) >> 4) & 1;
-         for (unsigned x = 0; x < SCR_WIDTH; x++)
-         {
-            unsigned index_x = ((x - x_coord) >> 4) & 1;
-            *(zc_canvas->line[y] + x) = (index_y ^ index_x) ? 14 : 1;
-         }
-      }
-
-      scond_wait(cond, mutex);
-      slock_unlock(mutex);
-   }
-}
-*/
-static void render_checkered(void)
+static void render_video(void)
 {
    /* Try rendering straight into VRAM if we can. */
    bpp_t *buf = NULL;
-   unsigned stride = 0;
+   unsigned int stride = 0;
+   unsigned int i = 0;
    struct retro_framebuffer fb = {0};
+   unsigned char *canvp = NULL;
+
    fb.width = SCR_WIDTH;
    fb.height = SCR_HEIGHT;
    fb.access_flags = RETRO_MEMORY_ACCESS_WRITE;
@@ -267,21 +246,28 @@ static void render_checkered(void)
       buf = framebuf;
       stride = SCR_WIDTH;
    }
-   
-   // Blit the canvas into the libretro framebuffer
-   unsigned char *canvp = (unsigned char *) zc_canvas->dat;
-   for (unsigned x = 0; x < SCR_WIDTH * SCR_HEIGHT; x++)
+
+   /* update the Libretro palette if required */
+   if (zc_sync_pal)
    {
-      buf[x] =  lr_palette[canvp[x]];
+      zc_sync_pal = false;
+      update_palette(zc_palette);
    }
+
+   /* Blit the ZC canvas into the libretro framebuffer */
+   canvp = (unsigned char *) zc_canvas->dat;
+   for (i = 0; i < SCR_WIDTH * SCR_HEIGHT; i++)
+      buf[i] =  lr_palette[canvp[i]];
 
    video_cb(buf, SCR_WIDTH, SCR_HEIGHT, stride << STRIDE_SHIFT);
 }
 
-static void check_variables(bool firsttime = false)
+static void check_variables(bool startup = false)
 {
    struct retro_variable var = {0};
-   int old_mv = music_vol;
+   int old_musicv = music_vol;
+   int old_masterv = master_vol;
+   int old_sfxv = sfx_vol;
 
    var.key = "zc_master_vol";
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
@@ -332,7 +318,7 @@ static void check_variables(bool firsttime = false)
       trans_layers = !strcmp(var.value, "true") ? true : false;
    }
 
-   if (firsttime)
+   if (startup)
    {
       /* For these we require restart */
       var.key = "zc_samplerate";
@@ -352,20 +338,23 @@ static void check_variables(bool firsttime = false)
    }
    else
    {
-      /* Apply sound volume if changed.
-       * we just want to exercise this on run-time after setup */
-       if (music_vol != old_mv)
-         midi_set_volume(music_vol);
+    /* we just want to exercise these on run-time after setup */
+   /* Apply master volume */
+   if (master_vol != old_masterv)
+      mixer_set_volume(master_vol);
+
+   /* Apply music volume if updated. */
+    if (music_vol != old_musicv)
+      update_music_volume();
+
+   /* Apply sound volume if updated. */
+    if (sfx_vol != old_sfxv)
+      update_sfx_volume();
    }
 }
 
-static void audio_callback(void)
+static void render_audio(void)
 {
-   if (!enable_audio)
-      return;
-
-   /* process midi music */
-   midi_fill_buffer();
    mixer_mix(soundbuf);
    audio_batch_cb(soundbuf, sampling_rate / TIMING_FPS);
 }
@@ -377,13 +366,12 @@ void retro_run(void)
    slock_lock(mutex);
    
    update_input();
-   render_checkered();
+   render_audio();
+   render_video();
    
    /* wake up core thread */
    slock_unlock(mutex);
    scond_signal(cond);
-   
-   audio_callback();
 
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
       check_variables();
@@ -399,7 +387,6 @@ bool retro_load_game(const struct retro_game_info *info)
       { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      "B" },
       { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      "A" },
       { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      "Map" },
-/*      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,     "Y" },*/
       { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      "L" },
       { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      "R" },
       { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  "Start" },
@@ -439,9 +426,9 @@ bool retro_load_game(const struct retro_game_info *info)
    /* init zelda classic engine */
    if (!zc_init(info->path))
       return false;
-   
+
    /* Create a thread to generate 1-frame of video & audio */
-   zc_state = qRUN;
+   zc_state = ZC_RUN;
    zc_thread = sthread_create(zc_gameloop, NULL);
    sthread_detach(zc_thread);
 
@@ -451,7 +438,7 @@ bool retro_load_game(const struct retro_game_info *info)
 void retro_unload_game(void)
 {
    /* stop zc game loop thread from running */
-   zc_state = qEXIT;
+   zc_state = ZC_EXIT;
    scond_signal(cond);
 
    zc_deinit();

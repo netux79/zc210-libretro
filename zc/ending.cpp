@@ -87,10 +87,10 @@ void endingpal()
    colordata = pal;
    loadpalset(csBOSS, 0);
    colordata = hold;
-   refreshpal = true;
+   zc_sync_pal = true;
 }
 
-void ending()
+void zc_ending()
 {
    /*
    *************************
@@ -135,7 +135,7 @@ void ending()
    music_stop();
    kill_sfx();
    sfx(SFX_ZELDA);
-   zc_state = 0;
+   zc_state = ZC_RUN;
    
    BITMAP *tmp_bmp = create_bitmap(32, 32);
 
@@ -241,7 +241,7 @@ void ending()
       {
          static byte flash[4] = {0x12, 0x16, 0x2A, 0x0F};
          RAMpal[16] = NESpal(flash[(f - 733) & 3]);
-         refreshpal = true;
+         zc_sync_pal = true;
       }
       if (f == 861)
       {

@@ -109,7 +109,7 @@ void loadfullpal()
       RAMpal[i] = _RGB(colordata + i * 3);
    for (int i = 240; i < 256; i++)
       RAMpal[i] = ((RGB *)data[PAL_GUI].dat)[i];
-   refreshpal = true;
+   zc_sync_pal = true;
 }
 
 /* create_zc_trans_table:
@@ -187,7 +187,7 @@ void loadlvlpal(int level)
    rgb_map = &rgb_table;
    create_zc_trans_table(&trans_table, RAMpal, 128, 128, 128);
 
-   refreshpal = true;
+   zc_sync_pal = true;
 }
 
 void loadpalset(int cset, int dataset)
@@ -198,7 +198,7 @@ void loadpalset(int cset, int dataset)
       RAMpal[CSET(cset) + i] = _RGB(si);
       si += 3;
    }
-   refreshpal = true;
+   zc_sync_pal = true;
 }
 
 void ringcolor()
@@ -218,7 +218,7 @@ void ringcolor()
          loadpalset(6, pSprite(8));
          break;
    }
-   refreshpal = true;
+   zc_sync_pal = true;
 }
 
 void loadfadepal(int dataset)
@@ -231,7 +231,7 @@ void loadfadepal(int dataset)
       si += 3;
    }
 
-   refreshpal = true;
+   zc_sync_pal = true;
 }
 
 void fade(int level, bool blackall, bool fromblack, bool total)
@@ -261,7 +261,7 @@ void fade(int level, bool blackall, bool fromblack, bool total)
                              CSET(2) + i, CSET(2) + i);
          }
          fade_interpolate(RAMpal, black_palette, RAMpal, dpos, CSET(3), last);
-         refreshpal = true;
+         zc_sync_pal = true;
       }
       else
       {
@@ -281,7 +281,7 @@ void fade(int level, bool blackall, bool fromblack, bool total)
                {
                   for (int i = 0; i < pdFADE * 16; i++)
                      RAMpal[CSET(2) + i] = black_palette[0];
-                  refreshpal = true;
+                  zc_sync_pal = true;
                }
                else
                   loadfadepal(level * pdLEVEL + poFADE3);
@@ -356,7 +356,7 @@ void dryuplake()
    if (whistleclk < 88)
    {
       RAMpal[CSET(3) + 3] = NESpal(drycolors[whistleclk >> 3]);
-      refreshpal = true;
+      zc_sync_pal = true;
    }
    else
    {
@@ -374,7 +374,7 @@ void rehydratelake()
    {
       whistleclk -= 8;
       RAMpal[CSET(3) + 3] = NESpal(drycolors[whistleclk >> 3]);
-      refreshpal = true;
+      zc_sync_pal = true;
       advanceframe();
       if (((whistleclk >> 3) & 3) == 1)
          for (int i = 0; i < 4 && !zc_state; i++)
@@ -420,7 +420,7 @@ void cycle_palette()
                RAMpal[CSET(c.first >> 4) + col] = _RGB(si);
                si += 3;
             }
-            refreshpal = true;
+            zc_sync_pal = true;
          }
       }
    }

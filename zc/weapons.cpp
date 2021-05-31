@@ -732,13 +732,13 @@ bool weapon::animate(int index)
                   for (int i = CSET(0); i < CSET(15); i++)
                      RAMpal[i] = NESpal(reverse_NESpal(RAMpal[i]) & 0x30);
                }
-               refreshpal = true;
+               zc_sync_pal = true;
             }
             if (clk == 54 || clk == 59)
             {
                // undo grayscale
                memcpy(RAMpal, temppal, PAL_SIZE * sizeof(RGB));
-               refreshpal = true;
+               zc_sync_pal = true;
             }
          }
          if (clk == 80)
@@ -844,13 +844,13 @@ bool weapon::animate(int index)
                   for (int i = CSET(0); i < CSET(15); i++)
                      RAMpal[i] = NESpal(reverse_NESpal(RAMpal[i]) & 0x30);
                }
-               refreshpal = true;
+               zc_sync_pal = true;
             }
             if (clk == 54 || clk == 59)
             {
                // undo grayscale
                memcpy(RAMpal, temppal, PAL_SIZE * sizeof(RGB));
-               refreshpal = true;
+               zc_sync_pal = true;
             }
          }
          if (clk == 80)
@@ -1679,7 +1679,7 @@ void weapon::draw(BITMAP *dest)
                    int tempcol=(RAMpal[c].r*5 + RAMpal[c].g*8 + RAMpal[c].b*3)>>4;
                    RAMpal[c].r=RAMpal[c].g=RAMpal[c].b=tempcol;
                  }
-                 refreshpal=true;
+                 zc_sync_pal=true;
                }
                else if (clk==46 || clk==54)
                {
@@ -1687,7 +1687,7 @@ void weapon::draw(BITMAP *dest)
                  {
                    RAMpal[c]=temppal[c];
                  }
-                 refreshpal=true;
+                 zc_sync_pal=true;
                }
          */
          if (clk > 72)

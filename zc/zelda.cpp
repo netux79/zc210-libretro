@@ -83,7 +83,7 @@ int lastentrance = 0, lastentrance_dmap = 0, prices[3][2], loadside, Bwpn, Awpn;
 int master_vol, sfx_vol, music_vol, pan_style, mix_quality;
 int sel_music, wand_x, wand_y, hasitem, whistleclk;
 int Akey, Bkey, Ekey, Skey, Lkey, Rkey, Mkey;
-int DUkey, DDkey, DLkey, DRkey, zc_state = qRUN;
+int DUkey, DDkey, DLkey, DRkey, zc_state = ZC_RUN;
 int arrow_x, arrow_y, brang_x, brang_y, chainlink_x, chainlink_y;
 int hs_startx, hs_starty, hs_xdist, hs_ydist, clockclk, clock_zoras;
 int swordhearts[4], currcset;
@@ -92,21 +92,18 @@ int gfc, gfc2, pitx, pity, refill_what, heart_beep_timer = 0,
 int nets = 1580, magictype = mgc_none, magiccastclk, castx, casty, df_x, df_y,
     nl1_x, nl1_y, nl2_x, nl2_y;
 int magicdrainclk = 0, conveyclk = 3;
-
 int checkx, checky;
-
 bool nosecretsounds = false;
-
 bool trans_layers, heart_beep;
-bool Playing;
-bool refreshpal, blockpath, wand_dead, loaded_guys, freeze_guys,
+bool is_playing;
+bool zc_sync_pal, blockpath, wand_dead, loaded_guys, freeze_guys,
      loaded_enemies, drawguys, watch;
 bool darkroom = false, BSZ, COOLSCROLL;
 bool Udown, Ddown, Ldown, Rdown, Adown, Bdown, Edown, Sdown, LBdown, RBdown,
      Mdown,
      fixed_door = false, hookshot_used = false, hookshot_frozen = false,
-     pull_link = false, add_chainlink = false, del_chainlink = false, hs_fix = false,
-     checklink = true, didpit = false,
+     pull_link = false, add_chainlink = false, del_chainlink = false,
+     checklink = true, didpit = false, hs_fix = false,
      castnext = false, add_df1asparkle, add_df1bsparkle, add_nl1asparkle,
      add_nl1bsparkle, add_nl2asparkle, add_nl2bsparkle,
      is_on_conveyor, activated_timed_warp = false;
@@ -377,27 +374,6 @@ void reset_status()
    reset_combo_animations();
 }
 
-int load_game(gamedata *g)
-{
-   int ret = 0;
-
-   if (!g->title[0] || !g->hasplayed)
-   {
-      strcpy(g->version, QHeader.version);
-      strcpy(g->title, QHeader.title);
-   }
-   else if (strcmp(g->title, QHeader.title))
-      ret = qe_match;
-
-   if (!ret && QHeader.minver[0] && (strcmp(g->version, QHeader.minver) < 0))
-      ret = qe_minver;
-
-   if (ret)
-      zc_error("Error loading %s: %s", qst_name, qst_error[ret]);
-      
-   return ret;
-}
-
 int init_game()
 {
    didpit = false;
@@ -427,11 +403,8 @@ int init_game()
       lens_hint_weapon[x][1] = 0;
    }
 
-   // copy saved data to RAM data
+   /* copy saved data to RAM data */
    game = saves[currgame];
-
-   load_game(&game);
-
    cheat = 0;
 
    BSZ = get_bit(quest_rules, qr_BSZELDA);
@@ -588,7 +561,7 @@ int init_game()
    show_subscreen_numbers = true;
    show_subscreen_life = true;
 
-   Playing = true;
+   is_playing = true;
    lighting(2, Link.getDir());
    map_bkgsfx();
    openscreen();
@@ -655,7 +628,7 @@ int cont_game()
    if (get_bit(quest_rules, qr_CONTFULL))
       game.life = game.maxlife;
 
-   Playing = true;
+   is_playing = true;
    lighting(2, Link.getDir());
    map_bkgsfx();
    openscreen();
@@ -678,7 +651,7 @@ void resume_game()
 {
    music_resume();
    resume_all_sfx();
-   Playing = true;
+   is_playing = true;
    // restore subscreen status
    tmpscr->flags3 = oldflags3;
 }
@@ -1069,7 +1042,7 @@ void game_loop()
       if (Link.animate(0))
       {
          if (!zc_state)
-            zc_state = qGAMEOVER;
+            zc_state = ZC_GAMEOVER;
          return;
       }
       checklink = false;
@@ -1223,6 +1196,7 @@ bool zc_init(const char *qpath)
    mididata = (DATAFILE *)data[MUSIC].dat;
    font = (FONT *)data[FONT_GUI].dat;
    zfont = (FONT *)data[FONT_ZELDA].dat;
+   zc_palette = RAMpal;
 
    if (!alloc_bitmap_buffers())
       RETURN_ERROR;
@@ -1245,8 +1219,12 @@ error:
 
 void zc_gameloop(void *arg)
 {
+   /* make the main thread wait
+    * until one frame is done */
+   slock_lock(mutex);
+   
    // play the game
-   while (zc_state != qEXIT)
+   while (zc_state != ZC_EXIT)
    {
       titlescreen();
 
@@ -1259,16 +1237,16 @@ void zc_gameloop(void *arg)
       // save subscreen status
       oldflags3 = tmpscr->flags3;
       tmpscr->flags3 = 0;
-      Playing = false;
+      is_playing = false;
 
       switch (zc_state)
       {
-         case qQUIT:       go_quit();     break;
-         case qGAMEOVER:   game_over();   break;
-         case qWON:        ending();      break;
+         case ZC_QUIT:       zc_quit();     break;
+         case ZC_GAMEOVER:   zc_gameover(); break;
+         case ZC_WON:        zc_ending();   break;
       }
 
-      if (zc_state != qRESUME)
+      if (zc_state != ZC_RESUME)
       {
          kill_sfx();
          music_stop();

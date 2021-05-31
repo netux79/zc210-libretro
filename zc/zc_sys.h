@@ -18,10 +18,8 @@ bool zc_initsound();
 void zc_deinitsound();
 void draw_lens_under();
 void draw_lens_over();
-void f_Quit(int type);
 void advanceframe();
-void updatescr();
-void syskeys();
+void update_video_frame();
 
 void eat_buttons();
 
@@ -97,7 +95,6 @@ void play_DmapMusic();
 void music_pause();
 void music_resume();
 void music_stop();
-void update_music_volume(void);
 void sfx_cleanup();
 bool sfx_init(int index);
 void sfx(int index, int pan, bool loop);

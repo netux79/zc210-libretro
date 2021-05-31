@@ -49,7 +49,6 @@ void close_black_opening(int x, int y, bool wait)
       {
          draw_screen(tmpscr, 0, 0);
          putsubscr(framebuf, 0, 0);
-         syskeys();
          advanceframe();
          if (zc_state)
             break;
@@ -70,7 +69,6 @@ void open_black_opening(int x, int y, bool wait)
       {
          draw_screen(tmpscr, 0, 0);
          putsubscr(framebuf, 0, 0);
-         syskeys();
          advanceframe();
          if (zc_state)
             break;
@@ -1838,9 +1836,9 @@ void draw_fuzzy(int fuzz)
    }
 }
 
-void updatescr()
+void update_video_frame()
 {
-   if (!Playing)
+   if (!is_playing)
       black_opening_count = 0;
 
    if (black_opening_count < 0)   //shape is opening up
@@ -1856,12 +1854,12 @@ void updatescr()
       --black_opening_count;
    }
 
-   if (refreshpal)
+   if (zc_sync_pal)
    {
-      refreshpal = false;
+      /* weird hack to keep these entries
+       * the same every time */
       RAMpal[253] = _RGB(0, 0, 0);
       RAMpal[254] = _RGB(63, 63, 63);
-      set_palette(RAMpal);
    }
 
    if (Link.DrunkClock())
@@ -1879,29 +1877,12 @@ void updatescr()
       zc_canvas = framebuf;
 }
 
-//----------------------------------------------------------------
-
-void f_Quit(int type)
+void zc_action(int state)
 {
    music_pause();
    pause_all_sfx();
-
-   zc_state = type;
-
+   zc_state = state;
    eat_buttons();
-}
-
-//----------------------------------------------------------------
-
-void syskeys()
-{
-   bool eBtn = rEbtn();
-   if (eBtn && Playing)
-      f_Quit(qQUIT);
-   /*if (ReadKey(KEY_F7))
-      f_Quit(qRESET);*/
-   if (eBtn && !Playing)
-      f_Quit(qEXIT);
 }
 
 // 99*360 + 59*60
@@ -1912,13 +1893,25 @@ void advanceframe()
    if (zc_state)
       return;
 
-   if (Playing && game.time < MAXTIME)
+   if (is_playing && game.time < MAXTIME)
       ++game.time;
 
    ++frame;
 
-   syskeys();
-   updatescr();
+   /* process midi music */
+   midi_fill_buffer();
+   /* prepare the video frame */
+   update_video_frame();
+
+   /* wait the main thread's
+    * signal to continue */
+   scond_wait(cond, mutex);
+   slock_unlock(mutex);
+
+   /* grab the mutex again inmediately 
+    * until next frame is done */
+   slock_lock(mutex);
+
    sfx_cleanup();
 }
 
@@ -1931,7 +1924,6 @@ void zapout()
    for (int i = 1; i <= 24; i++)
    {
       draw_fuzzy(i);
-      syskeys();
       advanceframe();
       if (zc_state)
          break;
@@ -1949,7 +1941,6 @@ void zapin()
    for (int i = 24; i >= 1; i--)
    {
       draw_fuzzy(i);
-      syskeys();
       advanceframe();
       if (zc_state)
          break;
@@ -1967,6 +1958,10 @@ void wavyout()
    blit(framebuf, wavebuf, 0, 0, 16, 0, 256, 224);
 
    PALETTE wavepal;
+   
+   /* use this as main palette
+    * temporary for this process */
+   zc_palette = wavepal;   
 
    int ofs;
    int amplitude = 8;
@@ -1986,10 +1981,6 @@ void wavyout()
       }
 
       palpos += palstep;
-      if (palpos >= 0)
-         set_palette(wavepal);
-      else
-         set_palette(RAMpal);
 
       for (int j = 0; j < 168; j++)
       {
@@ -2001,13 +1992,20 @@ void wavyout()
             framebuf->line[j + 56][k] = wavebuf->line[j + 56][k + ofs + 16];
          }
       }
-      syskeys();
+      
+      /* ensure changes get applied */
+      zc_sync_pal = true;
       advanceframe();
 
       if (zc_state)
          break;
    }
+
    destroy_bitmap(wavebuf);
+   
+   /* restore system palette */
+   zc_palette = RAMpal;
+   zc_sync_pal = true;
 }
 
 void wavyin()
@@ -2020,10 +2018,14 @@ void wavyin()
    blit(framebuf, wavebuf, 0, 0, 16, 0, 256, 224);
 
    PALETTE wavepal;
+   
+   /* use this as main palette
+    * temporary for this process */
+   zc_palette = wavepal;   
+   
    loadfullpal();
    loadlvlpal(DMaps[currdmap].color);
    ringcolor();
-   refreshpal = false;
    int ofs;
    int amplitude = 8;
    int wavelength = 4;
@@ -2039,12 +2041,8 @@ void wavyin()
          wavepal[l].b = vbound(int(RAMpal[l].b + ((palpos / palstop) *
                                    (63 - RAMpal[l].b))), 0, 63);
       }
-      palpos -= palstep;
 
-      if (palpos >= 0)
-         set_palette(wavepal);
-      else
-         set_palette(RAMpal);
+      palpos -= palstep;
 
       for (int j = 0; j < 168; j++)
       {
@@ -2056,13 +2054,20 @@ void wavyin()
             framebuf->line[j + 56][k] = wavebuf->line[j + 56][k + ofs + 16];
          }
       }
-      syskeys();
+      
+      /* ensure the palette change gets applied */
+      zc_sync_pal = true;
       advanceframe();
 
       if (zc_state)
          break;
    }
+
    destroy_bitmap(wavebuf);
+
+   /* restore system palette */
+   zc_palette = RAMpal;
+   zc_sync_pal = true;
 }
 
 void blackscr(int fcnt, bool showsubscr)
@@ -2073,7 +2078,6 @@ void blackscr(int fcnt, bool showsubscr)
       clear_bitmap(framebuf);
       if (showsubscr)
          putsubscr(framebuf, 0, 0);
-      syskeys();
       advanceframe();
       if (zc_state)
          break;
@@ -2113,7 +2117,6 @@ void openscreen()
          rectfill(framebuf, 0, 56, x, 223, 0);
          rectfill(framebuf, 256 - x, 56, 255, 223, 0);
       }
-      syskeys();
       advanceframe();
       if (zc_state)
          break;
@@ -2262,7 +2265,7 @@ void zc_deinitsound()
    mixer_exit();
 }
 
-// clean up finished samples
+/* clean up finished samples */
 void sfx_cleanup()
 {
    for (int i = 0; i < SFX_COUNT; i++)
@@ -2271,6 +2274,13 @@ void sfx_cleanup()
          deallocate_voice(sfx_voice[i]);
          sfx_voice[i] = -1;
       }
+}
+
+void update_sfx_volume(void)
+{
+   for (int i = 0; i < SFX_COUNT; i++)
+      if (sfx_voice[i] != -1 && voice_get_position(sfx_voice[i]) >= 0)
+         voice_set_volume(sfx_voice[i], sfx_vol);
 }
 
 // allocates a voice for the sample "sfx_index" (index into zcdata.dat)
@@ -2300,6 +2310,7 @@ void sfx(int index, int pan, bool loop)
 
    voice_set_playmode(sfx_voice[index], loop ? PLAYMODE_LOOP : PLAYMODE_PLAY);
    voice_set_pan(sfx_voice[index], pan);
+   voice_set_volume(sfx_voice[index], sfx_vol);
 
    int pos = voice_get_position(sfx_voice[index]);
    voice_set_position(sfx_voice[index], 0);
@@ -2318,6 +2329,7 @@ void cont_sfx(int index)
    {
       voice_set_position(sfx_voice[index], 0);
       voice_set_playmode(sfx_voice[index], PLAYMODE_LOOP);
+      voice_set_volume(sfx_voice[index], sfx_vol);
       voice_start(sfx_voice[index]);
    }
 }
@@ -2602,6 +2614,7 @@ void eat_buttons()
    rAbtn();
    rBbtn();
    rSbtn();
+   rEbtn();
    rLbtn();
    rRbtn();
    rMbtn();
@@ -2637,7 +2650,9 @@ float vbound(float x, float low, float high)
    return x;
 }
 
-char datapwd[8] = { char('l' + 11), char('o' + 22), char('n' + 33), char('g' + 44), char('t' + 55), char('a' + 66), char('n' + 77), char(0 + 88) };
+char datapwd[8] = { char('l' + 11), char('o' + 22), char('n' + 33), 
+                    char('g' + 44), char('t' + 55), char('a' + 66), 
+                    char('n' + 77), char(0 + 88) };
 
 void resolve_password(char *pwd)
 {

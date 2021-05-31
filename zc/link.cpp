@@ -2237,7 +2237,6 @@ bool LinkClass::animate(int index)
    {
       if (heart_beep)
          cont_sfx(SFX_ER);
-
       else
       {
          if (heart_beep_timer == -1)
@@ -2257,13 +2256,15 @@ bool LinkClass::animate(int index)
       stop_sfx(SFX_ER);
    }
 
-   if (rSbtn())
+   if (rSbtn()) /* Show subscreen */
    {
       conveyclk = 3;
       int tmp_subscr_clk = frame;
       dosubscr();
       newscr_clk += frame - tmp_subscr_clk;
    }
+   else if (rEbtn()) /* SELECT button, show quit menu */
+      zc_action(ZC_QUIT);
 
    checkstab();
 
@@ -2273,7 +2274,7 @@ bool LinkClass::animate(int index)
    return false;
 }
 
-bool LinkClass::startwpn(int wpn)                           // an item index
+bool LinkClass::startwpn(int wpn)   // an item index
 {
    if ((dir == up && y < 24) || (dir == down && y > 128) ||
          (dir == left && x < 32) || (dir == right && x > 208))
@@ -6565,7 +6566,7 @@ void LinkClass::getTriforce(int id)
             if ((f & 3) == 0)
             {
                fade_interpolate(RAMpal, flash_pal, RAMpal, 42, 0, CSET(6) - 1);
-               refreshpal = true;
+               zc_sync_pal = true;
             }
             if ((f & 3) == 2)
             {
@@ -6586,7 +6587,7 @@ void LinkClass::getTriforce(int id)
                for (int cs = 2; cs < 5; cs++)
                   for (int i = 1; i < 16; i++)
                      RAMpal[CSET(cs) + i] = flash_pal[CSET(cs) + i];
-               refreshpal = true;
+               zc_sync_pal = true;
             }
             if ((f & 7) == 4)
             {
@@ -6684,7 +6685,7 @@ void red_shift()
       }
    }
 
-   refreshpal = true;
+   zc_sync_pal = true;
 }
 
 void slide_in_color(int color)
@@ -6695,7 +6696,7 @@ void slide_in_color(int color)
       RAMpal[CSET(2) + i + 1] = RAMpal[CSET(2) + i];
       RAMpal[CSET(2) + i]   = NESpal(color);
    }
-   refreshpal = true;
+   zc_sync_pal = true;
 }
 
 void LinkClass::gameover()
@@ -6703,7 +6704,7 @@ void LinkClass::gameover()
    int f = 0;
 
    action = none;
-   Playing = false;
+   is_playing = false;
    game.deaths = min(game.deaths + 1, 999);
    dir = down;
    music_stop();
@@ -6796,7 +6797,7 @@ void LinkClass::gameover()
                if (f >= 139 && f <= 169)   //fade from red to black
                {
                   fade_interpolate(RAMpal, black_palette, RAMpal, (f - 138) << 1, 224, 255);
-                  refreshpal = true;
+                  zc_sync_pal = true;
                }
             }
             else     //f>=170
@@ -6809,7 +6810,7 @@ void LinkClass::gameover()
                      int g = (RAMpal[i].r + RAMpal[i].g + RAMpal[i].b) / 3;
                      RAMpal[i] = _RGB(g, g, g);
                   }
-                  refreshpal = true;
+                  zc_sync_pal = true;
                }
 
                //draw only link. otherwise black layers might cover him.
@@ -6855,7 +6856,7 @@ void LinkClass::gameover()
                   RAMpal[CSET(2) + i + 1] = NESpal(0x16);
                   RAMpal[CSET(2) + i + 2] = NESpal(0x26);
                }
-               refreshpal = true;
+               zc_sync_pal = true;
             }
 
             if (f == 139)
@@ -6877,7 +6878,7 @@ void LinkClass::gameover()
                   RAMpal[CSET(6) + i + 1] = NESpal(0x30);
                   RAMpal[CSET(6) + i + 2] = NESpal(0x00);
                }
-               refreshpal = true;
+               zc_sync_pal = true;
             }
 
             if (f < 169)
@@ -6983,14 +6984,15 @@ void LinkClass::ganon_intro()
 
       draw_screen(tmpscr, 0, 0);
       advanceframe();
-      if (rSbtn())
+      if (rSbtn()) /* Show subscreen */
       {
          conveyclk = 3;
          int tmp_subscr_clk = frame;
          dosubscr();
          newscr_clk += frame - tmp_subscr_clk;
       }
-
+      else if (rEbtn()) /* SELECT button, show quit menu */
+         zc_action(ZC_QUIT);
    }
 
    action = none;
@@ -7007,9 +7009,9 @@ void LinkClass::ganon_intro()
 
 void LinkClass::saved_Zelda()
 {
-   Playing = false;
+   is_playing = false;
    action = won;
-   zc_state = qWON;
+   zc_state = ZC_WON;
    hclk = 0;
    x = 136;
    y = (isdungeon() && currscr < 128) ? 75 : 73;

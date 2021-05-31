@@ -7451,7 +7451,7 @@ void getBigTri()
             for (int i = 1; i < 16; i++)
                RAMpal[CSET(cs) + i] = _RGB(63, 63, 63);
          }
-         refreshpal = true;
+         zc_sync_pal = true;
       }
       if ((f & 7) == 4)
          loadlvlpal(DMaps[currdmap].color);

@@ -722,22 +722,22 @@ void do_scrolling_layer(BITMAP *bmp, int type, mapscr *layer, int x, int y,
    mapscr *tscr;
    switch (type)
    {
-      case -2:                                                //push blocks
+      case -2:    //push blocks
          for (i = 0; i < 176; i++)
          {
             mf = layer->sflag[i];
             if (mf == mfPUSHUD || mf == mfPUSH4 || mf == mfPUSHED ||
                   ((mf >= mfPUSHLR) && (mf <= mfPUSHRINS)))
-               overcombo(bmp, ((i & 15) << 4) - x, (i & 0xF0) + 56 - y, layer->data[i],
-                         layer->cset[i]);
+               overcombo(bmp, ((i & 15) << 4) - x, (i & 0xF0) + 56 - y, 
+                         layer->data[i], layer->cset[i]);
          }
          break;
-      case -1:                                                //over combo
+      case -1:    //over combo
          for (i = 0; i < 176; i++)
          {
             if (combobuf[layer->data[i]].type == cOVERHEAD)
-               overcombo(bmp, ((i & 15) << 4) - x, (i & 0xF0) + 56 - y, layer->data[i],
-                         layer->cset[i]);
+               overcombo(bmp, ((i & 15) << 4) - x, (i & 0xF0) + 56 - y, 
+                         layer->data[i], layer->cset[i]);
          }
          break;
       case 0:
@@ -760,14 +760,16 @@ void do_scrolling_layer(BITMAP *bmp, int type, mapscr *layer, int x, int y,
                   if (layer->layeropacity[type] == 255)
                   {
                      for (i = 0; i < 176; i++)
-                        overcombo(bmp, ((i & 15) << 4) - x, (i & 0xF0) + 56 - y, tscr->data[i],
-                                  tscr->cset[i]);
+                        overcombo(bmp, ((i & 15) << 4) - x, (i & 0xF0) + 56 - y,
+                                  tscr->data[i], tscr->cset[i]);
                   }
                   else
                   {
                      for (int i = 0; i < 176; i++)
-                        overcombotranslucent(bmp, ((i & 15) << 4) - x, (i & 0xF0) + 56 - y,
-                                             tscr->data[i], tscr->cset[i], layer->layeropacity[type]);
+                        overcombotranslucent(bmp, ((i & 15) << 4) - x, 
+                                             (i & 0xF0) + 56 - y, tscr->data[i],
+                                              tscr->cset[i], 
+                                              layer->layeropacity[type]);
                   }
                }
                else
@@ -775,14 +777,16 @@ void do_scrolling_layer(BITMAP *bmp, int type, mapscr *layer, int x, int y,
                   if (layer->layeropacity[type] == 255)
                   {
                      for (i = 0; i < 176; i++)
-                        overcombo(bmp, ((i & 15) << 4) - x, (i & 0xF0) + 56 - y, tscr->data[i],
-                                  tscr->cset[i]);
+                        overcombo(bmp, ((i & 15) << 4) - x, (i & 0xF0) + 56 - y,
+                                  tscr->data[i], tscr->cset[i]);
                   }
                   else
                   {
                      for (i = 0; i < 176; i++)
-                        overcombotranslucent(bmp, ((i & 15) << 4) - x, (i & 0xF0) + 56 - y,
-                                             tscr->data[i], tscr->cset[i], layer->layeropacity[type]);
+                        overcombotranslucent(bmp, ((i & 15) << 4) - x, 
+                                             (i & 0xF0) + 56 - y, tscr->data[i],
+                                             tscr->cset[i],
+                                             layer->layeropacity[type]);
                   }
                }
             }
@@ -2057,7 +2061,7 @@ void ViewMap()
 
 void onViewMap()
 {
-   if (Playing && currscr < 128 && dlevel == 0)
+   if (is_playing && currscr < 128 && dlevel == 0)
    {
       if (get_bit(quest_rules, qr_VIEWMAP))
       {
