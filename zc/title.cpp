@@ -944,7 +944,6 @@ int selection_menu()
    textout_ex(framebuf, zfont, "CONTINUE", 88, 72, QMisc.colors.text, -1);
    textout_ex(framebuf, zfont, "SAVE", 88, 96, QMisc.colors.text, -1);
    textout_ex(framebuf, zfont, "RETRY", 88, 120, QMisc.colors.text, -1);
-   textout_ex(framebuf, zfont, "QUIT", 88, 144, QMisc.colors.text, -1);
 
    int pos = 0;
    int f = -1;
@@ -959,12 +958,12 @@ int selection_menu()
          if (rUp())
          {
             sfx(SFX_CHINK);
-            pos = (pos == 0) ? 3 : pos - 1;
+            pos = (pos == 0) ? 2 : pos - 1;
          }
          if (rDown())
          {
             sfx(SFX_CHINK);
-            pos = (pos + 1) % 4;
+            pos = (pos + 1) % 3;
          }
          if (rSbtn())
             ++f;
@@ -988,14 +987,11 @@ int selection_menu()
                case 2:
                   textout_ex(framebuf, zfont, "RETRY", 88, 120, c, -1);
                   break;
-               case 3:
-                  textout_ex(framebuf, zfont, "QUIT", 88, 144, c, -1);
-                  break;
             }
          }
       }
 
-      rectfill(framebuf, 72, 72, 79, 151, 0);
+      rectfill(framebuf, 72, 72, 79, 127, 0);
       puttile8(framebuf, htile, 72, pos * 24 + 72, 1, 0);
       advanceframe();
    }
@@ -1026,9 +1022,6 @@ void zc_gameover()
          case 0:
             zc_state = ZC_CONT;
             break;
-         case 3:
-            zc_state = ZC_EXIT;
-            break;
          case 1:
             game.cheat |= cheat;
             saves[currgame] = game;
@@ -1048,9 +1041,10 @@ void zc_quit()
 
    int pos = selection_menu();
 
-   // if not resuming...
+   /* if not resuming... */
    if (pos)
       reset_status();
+
    clear_bitmap(framebuf);
    advanceframe();
 
@@ -1060,9 +1054,6 @@ void zc_quit()
       {
          case 0:
             zc_state = ZC_RESUME;
-            break;
-         case 3:
-            zc_state = ZC_EXIT;
             break;
          case 1:
             game.cheat |= cheat;
