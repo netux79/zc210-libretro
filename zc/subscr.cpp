@@ -217,9 +217,9 @@ void putxnum(BITMAP *dest, int x, int y, int num)
 {
    if (!show_subscreen_numbers)
       return;
+
    if (num >= 100)
       textprintf_ex(dest, zfont, x, y, QMisc.colors.text, -1, "%d", num);
-
    else
       textprintf_ex(dest, zfont, x, y, QMisc.colors.text, -1, "X%d", num);
 }
