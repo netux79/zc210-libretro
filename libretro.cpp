@@ -13,15 +13,15 @@
 
 //#define WANT_BPP32
 #ifdef WANT_BPP32
-   typedef uint32_t bpp_t;
-   static unsigned STRIDE_SHIFT = 2;
-   static enum retro_pixel_format RETRO_PIX_FORMAT = RETRO_PIXEL_FORMAT_XRGB8888;
-   #define RETRO_PIX_NAME "XRGB8888"
+typedef uint32_t bpp_t;
+static unsigned STRIDE_SHIFT = 2;
+static enum retro_pixel_format RETRO_PIX_FORMAT = RETRO_PIXEL_FORMAT_XRGB8888;
+#define RETRO_PIX_NAME "XRGB8888"
 #else
-   typedef uint16_t bpp_t;
-   static unsigned STRIDE_SHIFT = 1;
-   static enum retro_pixel_format RETRO_PIX_FORMAT = RETRO_PIXEL_FORMAT_RGB565;
-   #define RETRO_PIX_NAME "RGB565"
+typedef uint16_t bpp_t;
+static unsigned STRIDE_SHIFT = 1;
+static enum retro_pixel_format RETRO_PIX_FORMAT = RETRO_PIXEL_FORMAT_RGB565;
+#define RETRO_PIX_NAME "RGB565"
 #endif
 
 static retro_video_refresh_t video_cb;
@@ -37,7 +37,7 @@ char game_path[MAX_STRLEN];
 char *save_path;
 char *system_path;
 
-/* threads stuff*/
+/* threads stuff */
 static sthread_t *zc_thread;
 slock_t *mutex;
 scond_t *cond;
@@ -57,12 +57,12 @@ void zc_log(bool err, const char *format, ...)
    log_cb(err ? RETRO_LOG_ERROR : RETRO_LOG_INFO, "%s\n", buf);
 }
 
-static void extract_directory(char* buf, const char* path, size_t size)
+static void extract_directory(char *buf, const char *path, size_t size)
 {
    strncpy(buf, path, size - 1);
    buf[size - 1] = '\0';
 
-   char* base = strrchr(buf, '/');
+   char *base = strrchr(buf, '/');
 
    if (base)
       *base = '\0';
@@ -112,9 +112,8 @@ void retro_get_system_info(struct retro_system_info *info)
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
-   info->timing.fps = TIMING_FPS,
-   info->timing.sample_rate = sampling_rate,
-
+   info->timing.fps = TIMING_FPS;
+   info->timing.sample_rate = sampling_rate;
    info->geometry.base_width = SCR_WIDTH;
    info->geometry.base_height = SCR_HEIGHT;
    info->geometry.max_width = SCR_WIDTH;
@@ -126,7 +125,8 @@ void retro_set_environment(retro_environment_t cb)
 {
    environ_cb = cb;
 
-   static const struct retro_variable vars[] = {
+   static const struct retro_variable vars[] =
+   {
       { "zc_samplerate", "Sample Rate (requires restart); 22050|32000|44100" },
       { "zc_mix_quality", "Sound Quality (requires restart); Normal|High|Low" },
       { "zc_master_vol", "Master Volume; 16|0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15" },
@@ -138,8 +138,8 @@ void retro_set_environment(retro_environment_t cb)
       { NULL, NULL },
    };
 
-   cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)vars);
-   
+   cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void *)vars);
+
    static struct retro_log_callback logging;
 
    if (cb(RETRO_ENVIRONMENT_GET_LOG_INTERFACE, &logging))
@@ -147,18 +147,20 @@ void retro_set_environment(retro_environment_t cb)
    else
       log_cb = fallback_log;
 
-   static const struct retro_controller_description controllers[] = {
+   static const struct retro_controller_description controllers[] =
+   {
       { "Dummy Controller #1", RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 0) },
       { "Dummy Controller #2", RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 1) },
-      { "Augmented Joypad", RETRO_DEVICE_JOYPAD }, // Test overriding generic description in UI.
+      { "Augmented Joypad", RETRO_DEVICE_JOYPAD },
    };
 
-   static const struct retro_controller_info ports[] = {
+   static const struct retro_controller_info ports[] =
+   {
       { controllers, 3 },
       { NULL, 0 },
    };
 
-   cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void*)ports);
+   cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void *)ports);
 }
 
 void retro_set_audio_sample(retro_audio_sample_t cb)
@@ -194,12 +196,12 @@ void retro_reset(void)
 static void update_input(void)
 {
    input_poll_cb();
-   
+
    DUkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP);
    DDkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN);
    DLkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT);
    DRkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT);
-   
+
    Akey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
    Bkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
    Mkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
@@ -215,12 +217,13 @@ void update_palette(RGB *p)
 
 #ifdef WANT_BPP32
    bpp_t *pa = (bpp_t *)p;
+   /* Just need to shift it in order to make it 0-255 range 
+    * (allegro palette is 0-63 range). */
    for (i = 0; i < PAL_SIZE; i++)
-       // Just need to shift it in order to make it 0-255 range (allegro palette is 0-63 range).
-       lr_palette[i] = pa[i] << 2;
+      lr_palette[i] = pa[i] << 2;
 #else
    for (i = 0; i < PAL_SIZE; i++)
-       lr_palette[i] = ((p[i].r & 0x1F) << 11) | ((p[i].g & 0x3F) << 5) | (p[i].b & 0x1F);
+      lr_palette[i] = ((p[i].r & 0x3E) << 10) | (p[i].g << 5) | (p[i].b >> 1);
 #endif
 }
 
@@ -236,7 +239,8 @@ static void render_video(void)
    fb.width = SCR_WIDTH;
    fb.height = SCR_HEIGHT;
    fb.access_flags = RETRO_MEMORY_ACCESS_WRITE;
-   if (environ_cb(RETRO_ENVIRONMENT_GET_CURRENT_SOFTWARE_FRAMEBUFFER, &fb) && fb.format == RETRO_PIX_FORMAT)
+   if (environ_cb(RETRO_ENVIRONMENT_GET_CURRENT_SOFTWARE_FRAMEBUFFER, &fb)
+         && fb.format == RETRO_PIX_FORMAT)
    {
       buf = (bpp_t *)fb.data;
       stride = fb.pitch >> STRIDE_SHIFT;
@@ -308,15 +312,11 @@ static void check_variables(bool startup = false)
 
    var.key = "zc_heart_beep";
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
       heart_beep = !strcmp(var.value, "true") ? true : false;
-   }
 
    var.key = "zc_trans_layers";
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
       trans_layers = !strcmp(var.value, "true") ? true : false;
-   }
 
    if (startup)
    {
@@ -338,18 +338,18 @@ static void check_variables(bool startup = false)
    }
    else
    {
-    /* we just want to exercise these on run-time after setup */
-   /* Apply master volume */
-   if (master_vol != old_masterv)
-      mixer_set_volume(master_vol);
+      /* Want to exercise these on run-time after setup only */
+      /* Apply master volume */
+      if (master_vol != old_masterv)
+         mixer_set_volume(master_vol);
 
-   /* Apply music volume if updated. */
-    if (music_vol != old_musicv)
-      update_music_volume();
+      /* Apply music volume if updated. */
+      if (music_vol != old_musicv)
+         update_music_volume();
 
-   /* Apply sound volume if updated. */
-    if (sfx_vol != old_sfxv)
-      update_sfx_volume();
+      /* Apply sound volume if updated. */
+      if (sfx_vol != old_sfxv)
+         update_sfx_volume();
    }
 }
 
@@ -364,11 +364,11 @@ void retro_run(void)
    bool updated = false;
 
    slock_lock(mutex);
-   
+
    update_input();
    render_audio();
    render_video();
-   
+
    /* wake up core thread */
    slock_unlock(mutex);
    scond_signal(cond);
@@ -379,17 +379,18 @@ void retro_run(void)
 
 bool retro_load_game(const struct retro_game_info *info)
 {
-   struct retro_input_descriptor desc[] = {
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   "Left" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     "Up" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   "Down" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  "Right" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      "B" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      "A" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      "Map" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      "L" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      "R" },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  "Start" },
+   struct retro_input_descriptor desc[] =
+   {
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   "Left"   },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     "Up"     },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   "Down"   },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  "Right"  },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      "B"      },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      "A"      },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      "Map"    },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      "L"      },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      "R"      },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  "Start"  },
       { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, "Select" },
       { 0 },
    };
@@ -404,14 +405,16 @@ bool retro_load_game(const struct retro_game_info *info)
    }
 
    extract_directory(game_path, info->path, sizeof(game_path));
-   
-   if (!environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY, &save_path) || !save_path)
+
+   if (!environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY, &save_path)
+         || !save_path)
    {
       log_cb(RETRO_LOG_INFO, "Defaulting save directory to %s.\n", game_path);
       save_path = game_path;
    }
 
-   if (!environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &system_path) || !system_path)
+   if (!environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &system_path)
+         || !system_path)
    {
       log_cb(RETRO_LOG_INFO, "Defaulting system directory to %s.\n", game_path);
       system_path = game_path;
@@ -419,7 +422,7 @@ bool retro_load_game(const struct retro_game_info *info)
 
    check_variables(true);
 
-   /* Main libretro buffers setup, done after check_variables to respect settings */
+   /* Main libretro buffers, done after check_variables to respect settings */
    framebuf = (bpp_t *)calloc(SCR_WIDTH * SCR_HEIGHT, sizeof(bpp_t));
    soundbuf = (short *)malloc(sampling_rate / TIMING_FPS * 2 * sizeof(short));
 
@@ -452,7 +455,8 @@ unsigned retro_get_region(void)
    return RETRO_REGION_NTSC;
 }
 
-bool retro_load_game_special(unsigned type, const struct retro_game_info *info, size_t num)
+bool retro_load_game_special(unsigned type, const struct retro_game_info *info,
+                             size_t num)
 {
    return false;
 }
