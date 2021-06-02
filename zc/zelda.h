@@ -67,33 +67,33 @@ enum
 
 // zelda.cpp
 void addLwpn(int x, int y, int id, int type, int power, int dir);
-void ALLOFF();
-fix LinkX();
-fix LinkY();
-int LinkNayrusLoveShieldClk();
-int LinkLStep();
-fix LinkModifiedX();
-fix LinkModifiedY();
+void ALLOFF(void);
+fix LinkX(void);
+fix LinkY(void);
+int LinkNayrusLoveShieldClk(void);
+int LinkLStep(void);
+fix LinkModifiedX(void);
+fix LinkModifiedY(void);
 fix GuyX(int j);
 fix GuyY(int j);
 int GuyID(int j);
 int GuyMisc(int j);
 void StunGuy(int j);
 bool GuySuperman(int j);
-int GuyCount();
-int LinkDir();
+int GuyCount(void);
+int LinkDir(void);
 void add_grenade(int wx, int wy, int size);
 fix distance(int x1, int y1, int x2, int y2);
-bool getClock();
+bool getClock(void);
 void setClock(bool state);
-void CatchBrang();
-int LinkAction();
-void dointro();
-int init_game();
-int cont_game();
-void restart_level();
-void resume_game();
-void reset_status();
+void CatchBrang(void);
+int LinkAction(void);
+void dointro(void);
+int init_game(void);
+int cont_game(void);
+void restart_level(void);
+void resume_game(void);
+void reset_status(void);
 
 /**********************************/
 /******** Global Variables ********/

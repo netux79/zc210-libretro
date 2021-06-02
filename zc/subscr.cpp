@@ -229,7 +229,7 @@ void putxnum(BITMAP *dest, int x, int y, int num)
 item *Bitem = NULL, *Aitem = NULL;
 int   Bid = 0, Aid = 0;
 
-void reset_subscr_items()
+void reset_subscr_items(void)
 {
    if (Aitem)
    {
@@ -244,7 +244,7 @@ void reset_subscr_items()
    Aid = Bid = 0;
 }
 
-void update_subscr_items()
+void update_subscr_items(void)
 {
    if (Bid != Bwpn)
    {
@@ -578,7 +578,7 @@ void putBmap(BITMAP *dest)
              (maptile ? 8 : 0), ((homescr & 0xF0) >> 1) + 99, QMisc.colors.link_dot);
 }
 
-void load_Sitems()
+void load_Sitems(void)
 {
    int ofs = 0;   // = NEWSUBSCR ? 108 : 0;
    int y = 0;  //   = NEWSUBSCR ? 48 : 24;
@@ -809,7 +809,7 @@ void load_Sitems()
    }
 }
 
-void put_topsubscr()
+void put_topsubscr(void)
 {
    BITMAP *subscr = scrollbuf;
    int type = (DMaps[currdmap].type & dmfTYPE);
@@ -882,7 +882,7 @@ void update_topsubscr(int y)
    Sitems.draw(framebuf, false);
 }
 
-void dosubscr()
+void dosubscr(void)
 {
    if (tmpscr->flags3 & fNOSUBSCR)
       return;

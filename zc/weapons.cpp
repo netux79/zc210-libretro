@@ -60,7 +60,6 @@ void weapon::seekEnemy(int j)
       j = -1;
       for (int i = 0; i < GuyCount(); i++)
       {
-         //        tempdistance=sqrt(pow(abs(x-GuyX(i)),2)+pow(abs(y-GuyY(i)),2));
          tempdistance = distance(x, y, GuyX(i), GuyY(i));
          if ((tempdistance < mindistance) && (GuyID(i) >= 10) && !GuySuperman(i))
          {
@@ -120,9 +119,9 @@ weapon::weapon(fix X, fix Y, int Id, int Type, int pow, int Dir) : sprite()
    switch (id)
    {
       case wWhistle:
-         xofs = 1000;                                          // don't show
+         xofs = 1000;   // don't show
          x = y = hxofs = hyofs = 0;
-         hxsz = hysz = 255;                                    // hit the whole screen
+         hxsz = hysz = 255;   // hit the whole screen
          break;
       case wWind:
          LOADGFX(wWIND);
@@ -145,8 +144,8 @@ weapon::weapon(fix X, fix Y, int Id, int Type, int pow, int Dir) : sprite()
             case left:
                flip = 1;
             case right:
-               tile = wpnsbuf[wid].tile + ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames :
-                                           1);
+               tile = wpnsbuf[wid].tile + 
+                      ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames : 1);
                hxofs = 2;
                hxsz = 12;
                yofs = (BSZ ? 59 : 57);
@@ -171,8 +170,8 @@ weapon::weapon(fix X, fix Y, int Id, int Type, int pow, int Dir) : sprite()
             case left:
                flip = 1;
             case right:
-               tile = wpnsbuf[wid].tile + ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames :
-                                           1);
+               tile = wpnsbuf[wid].tile + 
+                      ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames : 1);
                yofs = 57;
                hyofs = 2;
                hysz = 14;
@@ -234,8 +233,8 @@ weapon::weapon(fix X, fix Y, int Id, int Type, int pow, int Dir) : sprite()
             case left:
                flip = 1;
             case right:
-               tile = wpnsbuf[wid].tile + ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames :
-                                           1);
+               tile = wpnsbuf[wid].tile + 
+                      ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames : 1);
                yofs = (BSZ ? 59 : 57);
                hxofs = 2;
                hxsz = 12;
@@ -250,7 +249,7 @@ weapon::weapon(fix X, fix Y, int Id, int Type, int pow, int Dir) : sprite()
          hxsz = 7;
          hyofs = 2;
          hysz = 11;
-         dummy_bool[0] = false;                                //grenade armed?
+         dummy_bool[0] = false;  //grenade armed?
          break;
 
       case wHookshot:
@@ -275,16 +274,16 @@ weapon::weapon(fix X, fix Y, int Id, int Type, int pow, int Dir) : sprite()
                break;
             case left:
                flip = 1;
-               tile = wpnsbuf[wid].tile + ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames :
-                                           1);
+               tile = wpnsbuf[wid].tile + 
+                      ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames : 1);
                xofs += 2;
                yofs = 60;
                hxofs = 2;
                hxsz = 12;
                break;
             case right:
-               tile = wpnsbuf[wid].tile + ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames :
-                                           1);
+               tile = wpnsbuf[wid].tile + 
+                      ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames : 1);
                xofs -= 2;
                yofs = 60;
                hxofs = 2;
@@ -313,16 +312,16 @@ weapon::weapon(fix X, fix Y, int Id, int Type, int pow, int Dir) : sprite()
                break;
             case left:
                flip = 1;
-               tile = wpnsbuf[wid].tile + ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames :
-                                           1);
+               tile = wpnsbuf[wid].tile + 
+                      ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames : 1);
                xofs += 2;
                yofs = 60;
                hxofs = 2;
                hxsz = 12;
                break;
             case right:
-               tile = wpnsbuf[wid].tile + ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames :
-                                           1);
+               tile = wpnsbuf[wid].tile + 
+                      ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames : 1);
                xofs -= 2;
                yofs = 60;
                hxofs = 2;
@@ -404,8 +403,8 @@ weapon::weapon(fix X, fix Y, int Id, int Type, int pow, int Dir) : sprite()
             case left:
                flip = 1;
             case right:
-               tile = wpnsbuf[wid].tile + ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames :
-                                           1);
+               tile = wpnsbuf[wid].tile + 
+                      ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames : 1);
                yofs = 57;
                break;
          }
@@ -422,8 +421,8 @@ weapon::weapon(fix X, fix Y, int Id, int Type, int pow, int Dir) : sprite()
             case left:
                flip = 1;
             case right:
-               tile = wpnsbuf[wid].tile + ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames :
-                                           1);
+               tile = wpnsbuf[wid].tile + 
+                      ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames : 1);
                yofs = 57;
                break;
          }
@@ -441,8 +440,8 @@ weapon::weapon(fix X, fix Y, int Id, int Type, int pow, int Dir) : sprite()
             case left:
                flip = 1;
             case right:
-               tile = wpnsbuf[wid].tile + ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames :
-                                           1);
+               tile = wpnsbuf[wid].tile + 
+                      ((wpnsbuf[wid].frames > 1) ? wpnsbuf[wid].frames : 1);
                yofs = 57;
                break;
          }
@@ -655,7 +654,7 @@ bool weapon::animate(int index)
             dead = 2;
          break;
       case wFire:
-         if ((type < 2) || (type > 2))                         //candles and Din's fire
+         if ((type < 2) || (type > 2)) //candles and Din's fire
          {
             if (clk == 32)
             {
@@ -674,7 +673,7 @@ bool weapon::animate(int index)
                   findentrance(x, y, mfDINSFIRE, true);
                }
             }
-         }                                                     //wand fire
+         }  //wand fire
          else
          {
             if (clk == 1)
@@ -720,15 +719,18 @@ bool weapon::animate(int index)
                {
                   for (int i = CSET(0); i < CSET(15); i++)
                   {
-                     int g = min((RAMpal[i].r * 42 + RAMpal[i].g * 75 + RAMpal[i].b * 14) >> 7, 63);
+                     int g = min((RAMpal[i].r * 42 + 
+                                  RAMpal[i].g * 75 + 
+                                  RAMpal[i].b * 14) >> 7, 63);
                      g = (g >> 1) + 32;
                      RAMpal[i] = _RGB(g, g, g);
                   }
                }
                else
                {
-                  // this is awkward. NES Z1 converts colors based on the global
-                  // NES palette. Something like RAMpal[i] = NESpal( reverse_NESpal(RAMpal[i]) & 0x30 );
+                  /* This is awkward. NES Z1 converts colors based on the global
+                     NES palette. Something like RAMpal[i] = 
+                              NESpal( reverse_NESpal(RAMpal[i]) & 0x30 ); */
                   for (int i = CSET(0); i < CSET(15); i++)
                      RAMpal[i] = NESpal(reverse_NESpal(RAMpal[i]) & 0x30);
                }
@@ -832,15 +834,18 @@ bool weapon::animate(int index)
                {
                   for (int i = CSET(0); i < CSET(15); i++)
                   {
-                     int g = min((RAMpal[i].r * 42 + RAMpal[i].g * 75 + RAMpal[i].b * 14) >> 7, 63);
+                     int g = min((RAMpal[i].r * 42 + 
+                                  RAMpal[i].g * 75 + 
+                                  RAMpal[i].b * 14) >> 7, 63);
                      g = (g >> 1) + 32;
                      RAMpal[i] = _RGB(g, g, g);
                   }
                }
                else
                {
-                  // this is awkward. NES Z1 converts colors based on the global
-                  // NES palette. Something like RAMpal[i] = NESpal( reverse_NESpal(RAMpal[i]) & 0x30 );
+                  /* this is awkward. NES Z1 converts colors based on the global
+                   * NES palette. Something like RAMpal[i] = 
+                   * NESpal( reverse_NESpal(RAMpal[i]) & 0x30 ); */
                   for (int i = CSET(0); i < CSET(15); i++)
                      RAMpal[i] = NESpal(reverse_NESpal(RAMpal[i]) & 0x30);
                }
@@ -883,15 +888,14 @@ bool weapon::animate(int index)
          else
             step = 3;
 
-         if (clk == 0)                                         // delay a frame
+         if (clk == 0)  // delay a frame
          {
             ++clk;
             sfx(SFX_BRANG, pan(int(x)), true);
             return false;
          }
 
-         if (clk ==
-               1)                                         // then check directional input
+         if (clk == 1) // then check directional input
          {
             if (Up())
             {
@@ -922,7 +926,7 @@ bool weapon::animate(int index)
             misc = 1;
          }
 
-         if (misc == 1)                                        // returning
+         if (misc == 1) // returning
          {
             if (abs((int)(LinkY() - y)) < 7 && abs((int)(LinkX() - x)) < 7)
             {
@@ -1011,7 +1015,7 @@ bool weapon::animate(int index)
             step = 0;
          }
          ++clk2;
-         if (clk == 0)                                         // delay a frame
+         if (clk == 0)  // delay a frame
          {
             ++clk;
             sfx(SFX_HOOKSHOT, pan(int(x)), true);
@@ -1024,7 +1028,7 @@ bool weapon::animate(int index)
             misc = 1;
          }
 
-         if (misc == 1)                                        // returning
+         if (misc == 1) // returning
          {
             if (abs((int)(LinkY() - y)) < 9 && abs((int)(LinkX() - x)) < 9)
             {
@@ -1052,7 +1056,7 @@ bool weapon::animate(int index)
       case wPhantom:
          switch (type)
          {
-            case pDINSFIREROCKET:                                             //Din's Fire Rocket
+            case pDINSFIREROCKET:   //Din's Fire Rocket
                if (!(clk % (4)))
                {
                   df_x = x - 3;
@@ -1061,7 +1065,7 @@ bool weapon::animate(int index)
                   add_df1bsparkle = false;
                }
                break;
-            case pDINSFIREROCKETRETURN:                                             //Din's Fire Rocket return
+            case pDINSFIREROCKETRETURN:   //Din's Fire Rocket return
                if (!(clk % (4)))
                {
                   df_x = x - 3;
@@ -1075,17 +1079,17 @@ bool weapon::animate(int index)
                   castnext = true;
                }
                break;
-            case pDINSFIREROCKETTRAIL:                                             //Din's Fire Rocket trail
-               if (clk >= (((wpnsbuf[wDINSFIRES1A].frames) * (wpnsbuf[wDINSFIRES1A].speed)) -
-                           1))
+            case pDINSFIREROCKETTRAIL: //Din's Fire Rocket trail
+               if (clk >= (((wpnsbuf[wDINSFIRES1A].frames) * 
+                            (wpnsbuf[wDINSFIRES1A].speed)) - 1))
                   dead = 0;
                break;
-            case pDINSFIREROCKETTRAILRETURN:                                             //Din's Fire Rocket return trail
-               if (clk >= (((wpnsbuf[wDINSFIRES1B].frames) * (wpnsbuf[wDINSFIRES1B].speed)) -
-                           1))
+            case pDINSFIREROCKETTRAILRETURN: //Din's Fire Rocket return trail
+               if (clk >= (((wpnsbuf[wDINSFIRES1B].frames) * 
+                            (wpnsbuf[wDINSFIRES1B].speed)) - 1))
                   dead = 0;
                break;
-            case pNAYRUSLOVEROCKET1:                                             //Nayru's Love Rocket
+            case pNAYRUSLOVEROCKET1:   //Nayru's Love Rocket
                if (!(clk % (4)))
                {
                   nl1_x = x - 3;
@@ -1094,7 +1098,7 @@ bool weapon::animate(int index)
                   add_nl1bsparkle = false;
                }
                break;
-            case pNAYRUSLOVEROCKETRETURN1:                                             //Nayru's Love Rocket return
+            case pNAYRUSLOVEROCKETRETURN1:   //Nayru's Love Rocket return
                if (!(clk % (4)))
                {
                   nl1_x = x - 3;
@@ -1108,19 +1112,19 @@ bool weapon::animate(int index)
                   castnext = true;
                }
                break;
-            case pNAYRUSLOVEROCKETTRAIL1:                                             //Nayru's Love Rocket trail
-               if (clk >= (((wpnsbuf[wNAYRUSLOVES1A].frames) * (wpnsbuf[wNAYRUSLOVES1A].speed))
-                           - 1))
+            case pNAYRUSLOVEROCKETTRAIL1: //Nayru's Love Rocket trail
+               if (clk >= (((wpnsbuf[wNAYRUSLOVES1A].frames) * 
+                            (wpnsbuf[wNAYRUSLOVES1A].speed)) - 1))
                   dead = 0;
                break;
-            case pNAYRUSLOVEROCKETTRAILRETURN1:                                             //Nayru's Love Rocket return trail
-               if (clk >= (((wpnsbuf[wNAYRUSLOVES1B].frames) * (wpnsbuf[wNAYRUSLOVES1B].speed))
-                           - 1))
+            case pNAYRUSLOVEROCKETTRAILRETURN1: //Nayru's Love Rocket return trail
+               if (clk >= (((wpnsbuf[wNAYRUSLOVES1B].frames) * 
+                            (wpnsbuf[wNAYRUSLOVES1B].speed)) - 1))
                   dead = 0;
                break;
 
 
-            case pNAYRUSLOVEROCKET2:                                             //Nayru's Love Rocket
+            case pNAYRUSLOVEROCKET2:   //Nayru's Love Rocket
                if (!(clk % (4)))
                {
                   nl2_x = x - 3;
@@ -1129,7 +1133,7 @@ bool weapon::animate(int index)
                   add_nl2bsparkle = false;
                }
                break;
-            case pNAYRUSLOVEROCKETRETURN2:                                             //Nayru's Love Rocket return
+            case pNAYRUSLOVEROCKETRETURN2:   //Nayru's Love Rocket return
                if (!(clk % (4)))
                {
                   nl2_x = x - 3;
@@ -1143,14 +1147,14 @@ bool weapon::animate(int index)
                   castnext = true;
                }
                break;
-            case pNAYRUSLOVEROCKETTRAIL2:                                             //Nayru's Love Rocket trail
-               if (clk >= (((wpnsbuf[wNAYRUSLOVES2A].frames) * (wpnsbuf[wNAYRUSLOVES2A].speed))
-                           - 1))
+            case pNAYRUSLOVEROCKETTRAIL2: //Nayru's Love Rocket trail
+               if (clk >= (((wpnsbuf[wNAYRUSLOVES2A].frames) * 
+                            (wpnsbuf[wNAYRUSLOVES2A].speed)) - 1))
                   dead = 0;
                break;
-            case pNAYRUSLOVEROCKETTRAILRETURN2:                                             //Nayru's Love Rocket return trail
-               if (clk >= (((wpnsbuf[wNAYRUSLOVES2B].frames) * (wpnsbuf[wNAYRUSLOVES2B].speed))
-                           - 1))
+            case pNAYRUSLOVEROCKETTRAILRETURN2: //Nayru's Love Rocket return trail
+               if (clk >= (((wpnsbuf[wNAYRUSLOVES2B].frames) * 
+                            (wpnsbuf[wNAYRUSLOVES2B].speed)) - 1))
                   dead = 0;
                break;
 
@@ -1280,8 +1284,8 @@ bool weapon::animate(int index)
             dead = 0;
          if ((id == wRefFireball) && (findentrance(x, y, mfSTRIKE, true)))
             dead = 0;
-         if ((id == ewFireball) && (!(clk % 8)
-                                    && 0))          //homing (remove &&0 to activate)
+         if ((id == ewFireball) && 
+             (!(clk % 8) && 0))   //homing (remove &&0 to activate)
             seekLink();
 
          else
@@ -1324,7 +1328,7 @@ bool weapon::animate(int index)
       case ewBrang:
          if (clk == 0)
          {
-            misc2 = (dir < left) ? y : x;    // save home position
+            misc2 = (dir < left) ? y : x; // save home position
          }
 
          ++clk2;
@@ -1349,7 +1353,7 @@ bool weapon::animate(int index)
             dir ^= 1;
          }
 
-         if (misc == 1)                                        // returning
+         if (misc == 1) // returning
             switch (dir)
             {
                case up:
@@ -1421,8 +1425,7 @@ void weapon::onhit(bool clipped)
 
 void weapon::onhit(bool clipped, int special, int linkdir)
 {
-   if (special ==
-         2)                                         // hit Link's mirror shield
+   if (special == 2) // hit Link's mirror shield
       switch (id)
       {
          case ewFireball:
@@ -1456,10 +1459,10 @@ void weapon::onhit(bool clipped, int special, int linkdir)
             return;
 
          default:
-            special = 1;                                          // check normal shield stuff
+            special = 1;   // check normal shield stuff
       }
 
-   if (special == 1)                                         // hit Link's shield
+   if (special == 1) // hit Link's shield
       switch (id)
       {
          case ewMagic:
@@ -1494,7 +1497,7 @@ void weapon::onhit(bool clipped, int special, int linkdir)
       case wFire:
       case wHSHandle:
       case wPhantom:
-         break;                                   // don't worry about clipping or hits with these
+         break;   // don't worry about clipping or hits with these
       case ewFlame:
          if (!clipped)
             dead = 1;
@@ -1504,7 +1507,7 @@ void weapon::onhit(bool clipped, int special, int linkdir)
          break;
       case wArrow:
          dead = 4;
-         break;                           //findentrance(x,y,mfARROW,true); break;
+         break;   //findentrance(x,y,mfARROW,true); break;
       case ewArrow:
          dead = clipped ? 4 : 1;
          break;
@@ -1554,14 +1557,14 @@ void weapon::onhit(bool clipped, int special, int linkdir)
       case wMagic:
          wand_dead = true;
          wand_x = x;
-         wand_y = y;      // set some global flags
+         wand_y = y; // set some global flags
          dead = 1;
-         break;                                          //remove the dead part to make the wand only die when clipped
+         break;   //remove the dead part to make the wand only die when clipped
 
       case ewWind:
          if (clipped)
          {
-            if (misc == 999)                                    // in enemy wind
+            if (misc == 999)  // in enemy wind
                ewind_restart = true;
             dead = 1;
          }
@@ -1628,8 +1631,6 @@ void weapon::draw(BITMAP *dest)
          if (++aframe >= wpnsbuf[wid].frames)
             aframe = 0;
       }
-      //shnarf
-      //     tile = wpnsbuf[wid].tile + aframe + (((!angular)&&(dir&2))?wpnsbuf[wid].frames:0);
       tile = wpnsbuf[wid].tile + aframe;
    }
 
@@ -1658,7 +1659,7 @@ void weapon::draw(BITMAP *dest)
          if (!type || f == 3 || (type > 1 && f == 0))
             overtile16(dest, tile, x + 2 + ofs, y + 58 + ofs, cs, 3);
       }
-      return;                                               // don't draw sword
+      return;  // don't draw sword
 
       case wBomb:
       case wSBomb:
@@ -1668,27 +1669,27 @@ void weapon::draw(BITMAP *dest)
          tile = wpnsbuf[wBOOM].tile;
          cs = wpnsbuf[wBOOM].csets & 15;
          /*
-               if ((clk>=42 && clk<=45)||(clk>=50 && clk<=53))
-               {
-                 for (int c=0; c<256; ++c)
-                 {
-                   if (clk==42||clk==50)
-                   {
-                     temppal[c]=RAMpal[c];
-                   }
-                   int tempcol=(RAMpal[c].r*5 + RAMpal[c].g*8 + RAMpal[c].b*3)>>4;
-                   RAMpal[c].r=RAMpal[c].g=RAMpal[c].b=tempcol;
-                 }
-                 zc_sync_pal=true;
-               }
-               else if (clk==46 || clk==54)
-               {
-                 for (int c=0; c<256; ++c)
-                 {
-                   RAMpal[c]=temppal[c];
-                 }
-                 zc_sync_pal=true;
-               }
+         if ((clk>=42 && clk<=45)||(clk>=50 && clk<=53))
+         {
+           for (int c=0; c<256; ++c)
+           {
+             if (clk==42||clk==50)
+             {
+               temppal[c]=RAMpal[c];
+             }
+             int tempcol=(RAMpal[c].r*5 + RAMpal[c].g*8 + RAMpal[c].b*3)>>4;
+             RAMpal[c].r=RAMpal[c].g=RAMpal[c].b=tempcol;
+           }
+           zc_sync_pal=true;
+         }
+         else if (clk==46 || clk==54)
+         {
+           for (int c=0; c<256; ++c)
+           {
+             RAMpal[c]=temppal[c];
+           }
+           zc_sync_pal=true;
+         }
          */
          if (clk > 72)
             ++tile;
@@ -1704,7 +1705,7 @@ void weapon::draw(BITMAP *dest)
             overtile16(dest, tile, x + ((clk & 1) ? 21 : -21), y + yofs + 14, cs, 0);
             overtile16(dest, tile, x + ((clk & 1) ? -7 : 7), y + yofs + 28, cs, 0);
          }
-         return;                                               // don't draw bomb
+         return;  // don't draw bomb
       case wArrow:
       case ewArrow:
          if (dead > 0 && !bounce)
@@ -1769,7 +1770,8 @@ void weapon::draw(BITMAP *dest)
             case pNAYRUSLOVEROCKETRETURN2:
             case pNAYRUSLOVEROCKETTRAIL2:
             case pNAYRUSLOVEROCKETTRAILRETURN2:
-               if ((get_bit(quest_rules, qr_FLICKERINGNAYRUSLOVEROCKET)) && !(frame & 1))
+               if ((get_bit(quest_rules, qr_FLICKERINGNAYRUSLOVEROCKET)) && 
+                  !(frame & 1))
                   return;
                break;
          }

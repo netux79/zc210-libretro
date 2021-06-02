@@ -13,9 +13,9 @@
 #include "zdefs.h"
 
 void clear_dmap(byte i);
-void clear_dmaps();
-int count_dmaps();
-int isdungeon();
+void clear_dmaps(void);
+int count_dmaps(void);
+int isdungeon(void);
 int MAPDATA(int x, int y);
 int MAPCSET(int x, int y);
 int MAPFLAG(int x, int y);
@@ -24,24 +24,20 @@ int MAPDATA2(int layer, int x, int y);
 int MAPCSET2(int layer, int x, int y);
 int MAPFLAG2(int layer, int x, int y);
 int COMBOTYPE2(int layer, int x, int y);
-void setmapflag();
-void unsetmapflag();
-bool getmapflag();
+void setmapflag(void);
+void unsetmapflag(void);
+bool getmapflag(void);
 void setmapflag(int flag);
 void unsetmapflag(int flag);
 bool getmapflag(int flag);
 int WARPCODE(int dmap, int scr, int dw);
-void update_combo_cycling();
+void update_combo_cycling(void);
 bool iswater(int combo);
 bool iswater_type(int type);
-bool isstepable(int
-                combo);                                 //can use ladder on it
-bool hiddenstair(int tmp,
-                 bool redraw);                     // tmp = index of tmpscr[]
-bool remove_lockblocks(int tmp,
-                       bool redraw);               // tmp = index of tmpscr[]
-bool remove_bosslockblocks(int tmp,
-                           bool redraw);           // tmp = index of tmpscr[]
+bool isstepable(int combo); /*c an use ladder on it */
+bool hiddenstair(int tmp, bool redraw); /* tmp = index of tmpscr[] */
+bool remove_lockblocks(int tmp, bool redraw); /* tmp = index of tmpscr[] */
+bool remove_bosslockblocks(int tmp, bool redraw); /* tmp = index of tmpscr[] */
 bool overheadcombos(mapscr *s);
 void delete_fireball_shooter(mapscr *s, int i);
 void hidden_entrance(int tmp, bool refresh, bool high16only = false);
@@ -66,16 +62,16 @@ void put_door(int t, int pos, int side, int type, bool redraw);
 void over_door(int t, int pos, int side);
 void putdoor(int t, int side, int door, bool redraw = true);
 void showbombeddoor(int side);
-void openshutters();
+void openshutters(void);
 void loadscr(int tmp, int scr, int ldir);
 void putscr(BITMAP *dest, int x, int y, mapscr *ms);
 bool _walkflag(int x, int y, int cnt);
 bool water_walkflag(int x, int y, int cnt);
 bool hit_walkflag(int x, int y, int cnt);
-void map_bkgsfx();
+void map_bkgsfx(void);
 
 /****  View Map  ****/
 extern int mapres;
-void ViewMap();
-void onViewMap();
+void ViewMap(void);
+void onViewMap(void);
 #endif

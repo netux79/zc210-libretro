@@ -27,7 +27,7 @@ public:
 class dBushLeaves : public decoration
 {
 public:
-   int ft[4][8][3];                                        //[leaf][frame][x/y/flip]
+   int ft[4][8][3];  //[leaf][frame][x/y/flip]
    int ox, oy;
    dBushLeaves(fix X, fix Y, int Id, int Clk);
    virtual bool animate(int index);
@@ -37,7 +37,7 @@ public:
 class dFlowerClippings : public decoration
 {
 public:
-   int ft[4][8][3];                                        //[leaf][frame][x/y/flip]
+   int ft[4][8][3];  //[leaf][frame][x/y/flip]
    int ox, oy;
    dFlowerClippings(fix X, fix Y, int Id, int Clk);
    virtual bool animate(int index);
@@ -47,7 +47,7 @@ public:
 class dGrassClippings : public decoration
 {
 public:
-   int ft[3][4][4];                                        //[leaf][frame][x/y/flip/size(0=large, 1=small)]
+   int ft[3][4][4];  //[leaf][frame][x/y/flip/size(0=large, 1=small)]
    int ox, oy;
    dGrassClippings(fix X, fix Y, int Id, int Clk);
    virtual bool animate(int index);
@@ -57,7 +57,7 @@ public:
 class dHammerSmack : public decoration
 {
 public:
-   int ft[2][4][3];                                        //[leaf][frame][x/y/icon(0=spark, 1=star)]
+   int ft[2][4][3];  //[leaf][frame][x/y/icon(0=spark, 1=star)]
    int ox, oy;
    dHammerSmack(fix X, fix Y, int Id, int Clk);
    virtual bool animate(int index);

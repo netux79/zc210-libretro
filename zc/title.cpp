@@ -133,7 +133,7 @@ int readsaves(gamedata *savedata, PACKFILE *f)
    return 0;
 }
 
-int load_savedgames()
+int load_savedgames(void)
 {
    int ret;
    PACKFILE *f = NULL;
@@ -395,24 +395,24 @@ void load_game_icon(gamedata *g)
       g->pal[j] = *(si++);
 }
 
-static void select_mode()
+static void select_mode(void)
 {
    textout_ex(scrollbuf, zfont, "REGISTER YOUR NAME", 48, 152, 1, -1);
    textout_ex(scrollbuf, zfont, "COPY FILE", 48, 168, 1, -1);
    textout_ex(scrollbuf, zfont, "DELETE FILE", 48, 184, 1, -1);
 }
 
-static void copy_mode()
+static void copy_mode(void)
 {
    textout_ex(scrollbuf, zfont, "COPY FILE", 48, 168, 3, -1);
 }
 
-static void delete_mode()
+static void delete_mode(void)
 {
    textout_ex(scrollbuf, zfont, "DELETE FILE", 48, 184, 3, -1);
 }
 
-static void selectscreen()
+static void selectscreen(void)
 {
    loadfullpal();
    clear_bitmap(scrollbuf);
@@ -459,7 +459,7 @@ static void list_save(int save_num, int ypos)
    zc_sync_pal = r;
 }
 
-static void list_saves()
+static void list_saves(void)
 {
    for (int i = 0; i < 3; i++)
       list_save(listpos + i, i * 24 + 56);
@@ -487,7 +487,7 @@ static void draw_cursor(int pos, int mode)
       overtile8(framebuf, 0, 40, (pos - 3) * 16 + 153, 1, 0);
 }
 
-static bool register_name()
+static bool register_name(void)
 {
    if (savecnt >= MAXSAVES)
       return false;
@@ -770,7 +770,7 @@ static int game_details(int file)
    return 0;
 }
 
-static void select_game()
+static void select_game(void)
 {
    int pos = max(min(currgame - listpos, 3), 0);
    int mode = 0;
@@ -906,7 +906,7 @@ static void select_game()
 /****  Main title screen routine  *****/
 /**************************************/
 
-void titlescreen()
+void titlescreen(void)
 {
    int state = zc_state;
 
@@ -938,7 +938,7 @@ void titlescreen()
    setup_combo_animations();
 }
 
-int selection_menu()
+int selection_menu(void)
 {
    textout_ex(framebuf, zfont, "CONTINUE", 88, 72, QMisc.colors.text, -1);
    textout_ex(framebuf, zfont, "SAVE", 88, 96, QMisc.colors.text, -1);
@@ -999,7 +999,7 @@ int selection_menu()
    return pos;
 }
 
-void zc_gameover()
+void zc_gameover(void)
 {
    kill_sfx();
    music_stop();
@@ -1034,7 +1034,7 @@ void zc_gameover()
    }
 }
 
-void zc_quit()
+void zc_quit(void)
 {
    clear_bitmap(framebuf);
 

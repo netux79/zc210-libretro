@@ -177,7 +177,7 @@ music tunes[MAXMUSIC] =
    { "Zelda 1 - Triforce",    0,  -1,  -1,  0,  168,  NULL },
 };
 
-void dointro()
+void dointro(void)
 {
    if (game.visited[currdmap] != 1)
    {
@@ -202,7 +202,7 @@ void addLwpn(int x, int y, int id, int type, int power, int dir)
 
 }
 
-void ALLOFF()
+void ALLOFF(void)
 {
    clear_bitmap(msgdisplaybuf);
    anymsg = false;
@@ -246,27 +246,27 @@ void ALLOFF()
    blockmoving = false;
 }
 
-fix LinkX()
+fix LinkX(void)
 {
    return Link.getX();
 }
 
-fix LinkY()
+fix LinkY(void)
 {
    return Link.getY();
 }
 
-int LinkHClk()
+int LinkHClk(void)
 {
    return Link.getHClk();
 }
 
-int LinkNayrusLoveShieldClk()
+int LinkNayrusLoveShieldClk(void)
 {
    return Link.getNayrusLoveShieldClk();
 }
 
-int LinkLStep()
+int LinkLStep(void)
 {
    return Link.getLStep();
 }
@@ -298,7 +298,7 @@ bool GuySuperman(int j)
    return ((enemy *)guys.spr(j))->superman;
 }
 
-int GuyCount()
+int GuyCount(void)
 {
    return guys.Count();
 }
@@ -307,17 +307,17 @@ void StunGuy(int j)
    ((enemy *)guys.spr(j))->stunclk = 160;
 }
 
-fix LinkModifiedX()
+fix LinkModifiedX(void)
 {
    return Link.getModifiedX();
 }
 
-fix LinkModifiedY()
+fix LinkModifiedY(void)
 {
    return Link.getModifiedY();
 }
 
-int LinkDir()
+int LinkDir(void)
 {
    return Link.getDir();
 }
@@ -344,7 +344,7 @@ fix distance(int x1, int y1, int x2, int y2)
    return (fix)sqrt(pow(abs(x1 - x2), 2) + pow(abs(y1 - y2), 2));
 }
 
-bool getClock()
+bool getClock(void)
 {
    return Link.getClock();
 }
@@ -354,7 +354,7 @@ void setClock(bool state)
    Link.setClock(state);
 }
 
-void CatchBrang()
+void CatchBrang(void)
 {
    Link.Catch();
 }
@@ -363,7 +363,7 @@ void CatchBrang()
 /***** Main Game Code *****/
 /**************************/
 
-void reset_status()
+void reset_status(void)
 {
    Link.setDontDraw(false);
    show_subscreen_dmap_dots = true;
@@ -374,7 +374,7 @@ void reset_status()
    reset_combo_animations();
 }
 
-int init_game()
+int init_game(void)
 {
    didpit = false;
    Link.unfreeze();
@@ -647,7 +647,7 @@ int cont_game()
    return 0;
 }
 
-void resume_game()
+void resume_game(void)
 {
    music_resume();
    resume_all_sfx();
@@ -656,7 +656,7 @@ void resume_game()
    tmpscr->flags3 = oldflags3;
 }
 
-void restart_level()
+void restart_level(void)
 {
    blackscr(16, true);
    if (dlevel)
@@ -705,7 +705,7 @@ void restart_level()
    }
 }
 
-void putintro()
+void putintro(void)
 {
    if (!strcmp("                                                                        ",
                 DMaps[currdmap].intro))
@@ -749,7 +749,7 @@ void putintro()
 
 }
 
-void do_magic_casting()
+void do_magic_casting(void)
 {
    static int tempx, tempy;
    static byte linktilebuf[256];
@@ -897,7 +897,7 @@ void do_magic_casting()
    }
 }
 
-void update_hookshot()
+void update_hookshot(void)
 {
    int hs_x, hs_y, hs_dx, hs_dy;
    bool check_hs = false;
@@ -1019,7 +1019,7 @@ void update_hookshot()
    }
 }
 
-void game_loop()
+void game_loop(void)
 {
    if (fadeclk >= 0)
    {
@@ -1107,7 +1107,7 @@ void game_loop()
    }
 }
 
-void free_bitmap_buffers()
+void free_bitmap_buffers(void)
 {
    if (framebuf)
       destroy_bitmap(framebuf);

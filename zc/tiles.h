@@ -17,12 +17,12 @@ extern byte *tilebuf;
 extern newcombo *combobuf;
 extern byte unpackbuf[256];
 
-void register_blank_tiles();
+void register_blank_tiles(void);
 word count_tiles(byte *buf);
-word count_combos();
-void setup_combo_animations();
-void reset_combo_animations();
-void animate_combos();
+word count_combos(void);
+void setup_combo_animations(void);
+void reset_combo_animations(void);
+void animate_combos(void);
 void clear_tiles(byte *buf);
 void unpack_tile(int tile, int flip, bool force);
 

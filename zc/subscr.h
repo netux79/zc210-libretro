@@ -37,7 +37,7 @@ extern item *Bitem, *Aitem;
 extern int   Bid, Aid;
 const byte tripiece[8 * 3] =
 {
-   112, 112, 0, 128, 112, 1, 96, 128, 0, 144, 128, 1,
+   112, 112, 0, 128, 112, 1,  96, 128, 0, 144, 128, 1,
    112, 128, 2, 112, 128, 1, 128, 128, 3, 128, 128, 0
 };
 const byte bmap[16 * 2] =
@@ -48,22 +48,22 @@ const byte bmap[16 * 2] =
 const int fringe[8] = { 6, 2, 4, 7, 6, 8, 7, 5 };
 const byte bmaptiles[8 * 5] =
 {
-   0, 1, 2, 3, 2, 3, 3, 4,
+   0,   1,  2,  3,  2,  3,  3,  4,
    20, 21, 22, 23, 22, 23, 23, 24,
    20, 21, 22, 23, 22, 23, 23, 24,
    20, 21, 22, 23, 22, 23, 23, 24,
    40, 41, 42, 43, 42, 43, 43, 44
 };
 
-void reset_subscr_items();
-void update_subscr_items();
+void reset_subscr_items(void);
+void update_subscr_items(void);
 void putsubscr(BITMAP *dest, int x, int y, bool showtime = false);
 void puttriframe(BITMAP *dest);
 void markBmap(int dir);
 void draw_block(BITMAP *dest, int x, int y, int tile, int cset, int w, int h);
 void putBmap(BITMAP *dest);
-void load_Sitems();
-void put_topsubscr();
+void load_Sitems(void);
+void put_topsubscr(void);
 void update_topsubscr(int y);
-void dosubscr();
+void dosubscr(void);
 #endif

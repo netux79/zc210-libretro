@@ -290,7 +290,7 @@ bool init_section(zquestheader* Header, long section_id) {
    return init_section(Header, ID_TILES);
 }*/
 
-int alloc_qst_buffers()
+int alloc_qst_buffers(void)
 {
    bool success = true;
    
@@ -336,7 +336,7 @@ error:
    return success;
 }
 
-void free_qst_buffers()
+void free_qst_buffers(void)
 {
    if (TheMaps)
       free(TheMaps);
@@ -365,13 +365,13 @@ void clear_combo(int i)
    memset(combobuf + i, 0, sizeof(newcombo));
 }
 
-void clear_combos()
+void clear_combos(void)
 {
    for (int tmpcounter = 0; tmpcounter < MAXCOMBOS; tmpcounter++)
       clear_combo(tmpcounter);
 }
 
-void pack_combos()
+void pack_combos(void)
 {
    int di = 0;
    for (int si = 0; si < 1024; si += 2)
@@ -1221,7 +1221,7 @@ int readdoorcombosets(PACKFILE *f, zquestheader *header, bool keepdata)
    return 0;
 }
 
-int count_dmaps()
+int count_dmaps(void)
 {
    int i = MAXDMAPS - 1;
    bool found = false;
@@ -2006,7 +2006,7 @@ int readweapons(PACKFILE *f, zquestheader *header, bool keepdata)
    return 0;
 }
 
-int init_guys()
+int init_guys(void)
 {
    for (int i = 0; i < eMAXGUYS; i++)
       guysbuf[i] = default_guys[i];

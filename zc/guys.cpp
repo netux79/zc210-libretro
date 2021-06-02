@@ -30,10 +30,10 @@ int sle_x, sle_y, sle_cnt, sle_clk;
 int vhead = 0;
 int guyindex = 0;
 
-bool hasBoss();
+bool hasBoss(void);
 void never_return(int index);
 
-bool can_do_clock()
+bool can_do_clock(void)
 {
    if (watch || hasBoss() || (get_bit(quest_rules, qr_NOCLOCKS)))
       return false;
@@ -82,7 +82,7 @@ bool m_walkflag(int x, int y, int special)
           COMBOTYPE(x, y + 8) == cPIT || COMBOTYPE(x + 8, y + 8) == cPIT;
 }
 
-int link_on_wall()
+int link_on_wall(void)
 {
    int lx = Link.getX();
    int ly = Link.getY();
@@ -116,10 +116,6 @@ bool isflier(int id)
       case eKEESE1:
       case eKEESE2:
       case eKEESE3:
-
-
-
-
       case eKEESETRIB:
       case eBAT:
       case ePATRA1:
@@ -149,10 +145,6 @@ bool isfloater(int id)
 /**********************************/
 /*******  Enemy Base Class  *******/
 /**********************************/
-
-/* ROM data flags
-
- */
 
 enemy::enemy(fix X, fix Y, int Id, int Clk) : sprite()
 {
@@ -7417,7 +7409,7 @@ void eGanon::draw_flash(BITMAP *dest)
    overtile16(dest, 196, x + 8 + c, y + 8 + c + 56, cs, 3);
 }
 
-void getBigTri()
+void getBigTri(void)
 {
    /*
    *************************
@@ -9464,7 +9456,7 @@ void additem(int x, int y, int id, int pickup, int clk)
    items.add(new item((fix)x, (fix)y, id, pickup, clk));
 }
 
-void kill_em_all()
+void kill_em_all(void)
 {
    for (int i = 0; i < guys.Count(); i++)
       ((enemy *)guys.spr(i))->kickbucket();
@@ -9502,7 +9494,7 @@ int GuyHit(int index, int tx, int ty, int txsz, int tysz)
    return hit ? index : -1;
 }
 
-bool hasMainGuy()
+bool hasMainGuy(void)
 
 {
    for (int i = 0; i < guys.Count(); i++)
@@ -9521,7 +9513,7 @@ void GrabLink(int index)
    ((eWallM *)guys.spr(index))->grablink();
 }
 
-bool CarryLink()
+bool CarryLink(void)
 {
    for (int i = 0; i < guys.Count(); i++)
       if (guys.spr(i)->id == eWALLM)
@@ -9857,7 +9849,7 @@ bool isjumper(int id)
    return false;
 }
 
-void addfires()
+void addfires(void)
 {
    if (!get_bit(quest_rules, qr_NOGUYFIRES))
    {
@@ -9867,7 +9859,7 @@ void addfires()
    }
 }
 
-void loadguys()
+void loadguys(void)
 {
    if (loaded_guys)
       return;
@@ -10013,7 +10005,7 @@ dontdoit:
    return;
 }
 
-bool hasBoss()
+bool hasBoss(void)
 {
    for (int i = 0; i < guys.Count(); i++)
    {
@@ -10124,7 +10116,7 @@ bool ok2add(int id)
    return true;
 }
 
-void load_default_enemies()
+void load_default_enemies(void)
 {
    wallm_load_clk = frame - 80;
 
@@ -10190,7 +10182,7 @@ void load_default_enemies()
          }
 }
 
-void nsp()
+void nsp(void)
 // moves sle_x and sle_y to the next position
 {
    if (sle_x == 0)
@@ -10227,7 +10219,7 @@ void nsp()
    }
 }
 
-int next_side_pos()
+int next_side_pos(void)
 // moves sle_x and sle_y to the next available position
 // returns the direction the enemy should face
 {
@@ -10300,7 +10292,7 @@ bool can_side_load(int id)
 }
 
 
-void side_load_enemies()
+void side_load_enemies(void)
 {
    if (sle_clk == 0)
    {
@@ -10368,7 +10360,7 @@ void side_load_enemies()
       loaded_enemies = true;
 }
 
-void loadenemies()
+void loadenemies(void)
 {
    if (loaded_enemies)
       return;
@@ -10583,7 +10575,7 @@ placed_enemy:
    }
 }
 
-void moneysign()
+void moneysign(void)
 {
    additem(48, 108, iRupy, ipDUMMY);
    anyprice = true;
@@ -10618,7 +10610,7 @@ void putprices(bool sign)
    }
 }
 
-void setupscreen()
+void setupscreen(void)
 {
    int t = currscr < 128 ? 0 : 1;
    word str = tmpscr[t].str;
@@ -10768,7 +10760,7 @@ void setupscreen()
       Link.unfreeze();
 }
 
-void putmsg()
+void putmsg(void)
 {
    if (linkedmsgclk > 0)
    {
@@ -10848,7 +10840,7 @@ void putmsg()
    }
 }
 
-void domoney()
+void domoney(void)
 {
    static bool sfxon = false;
 
@@ -10892,7 +10884,7 @@ void domoney()
       sfx(SFX_MSG);
 }
 
-void domagic()                                              //basically a copy of domoney()
+void domagic(void)                                              //basically a copy of domoney()
 {
    if (magicdrainclk == 32767)
       magicdrainclk = -1;
@@ -10947,7 +10939,7 @@ void domagic()                                              //basically a copy o
 
 /***  Collision detection & handling  ***/
 
-void check_collisions()
+void check_collisions(void)
 {
    for (int i = 0; i < Lwpns.Count(); i++)
    {

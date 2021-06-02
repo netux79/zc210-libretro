@@ -104,8 +104,7 @@ bool can_use_item(int item_type,
    return false;
 }
 
-bool has_item(int item_type,
-              int it)                        //does Link possess this item?
+bool has_item(int item_type, int it)   /* does Link possess this item? */
 {
    switch (item_type)
    {
@@ -396,7 +395,7 @@ int current_item(int item_type,
    return high_item(jmax, item_type, consecutive, 0, false);
 }
 
-int item_tile_mod()
+int item_tile_mod(void)
 {
    long tile = 0;
    int ret = 0;
@@ -883,12 +882,12 @@ int item_tile_mod()
    return tile;
 }
 
-int dmap_tile_mod()
+int dmap_tile_mod(void)
 {
    return 0;
 }
 
-void draw_lens_under()
+void draw_lens_under(void)
 {
    int strike_hint_table[11] =
    {
@@ -1742,7 +1741,7 @@ void draw_lens_under()
    }
 }
 
-void draw_lens_over()
+void draw_lens_over(void)
 {
    clear_to_color(tempbuf, BLACK);
    circlefill(tempbuf, LinkX() + 8, LinkY() + 8 + 56, 60, 0);
@@ -1836,7 +1835,7 @@ void draw_fuzzy(int fuzz)
    }
 }
 
-void update_video_frame()
+void update_video_frame(void)
 {
    if (!is_playing)
       black_opening_count = 0;
@@ -1888,7 +1887,7 @@ void zc_action(int state)
 // 99*360 + 59*60
 #define MAXTIME  21405240
 
-void advanceframe()
+void advanceframe(void)
 {
    if (zc_state)
       return;
@@ -1915,7 +1914,7 @@ void advanceframe()
    sfx_cleanup();
 }
 
-void zapout()
+void zapout(void)
 {
    // draw screen on right half of scrollbuf
    blit(framebuf, scrollbuf, 0, 0, 256, 0, 256, 224);
@@ -1930,7 +1929,7 @@ void zapout()
    }
 }
 
-void zapin()
+void zapin(void)
 {
    // draw screen on right half of scrollbuf
    draw_screen(tmpscr, 0, 0);
@@ -1948,7 +1947,7 @@ void zapin()
 }
 
 
-void wavyout()
+void wavyout(void)
 {
    draw_screen(tmpscr, 0, 0);
    putsubscr(framebuf, 0, 0);
@@ -2008,7 +2007,7 @@ void wavyout()
    zc_sync_pal = true;
 }
 
-void wavyin()
+void wavyin(void)
 {
    draw_screen(tmpscr, 0, 0);
    putsubscr(framebuf, 0, 0);
@@ -2086,7 +2085,7 @@ void blackscr(int fcnt, bool showsubscr)
    }
 }
 
-void openscreen()
+void openscreen(void)
 {
    reset_pal_cycling();
    black_opening_count = 0;
@@ -2126,7 +2125,7 @@ void openscreen()
    show_subscreen_dmap_dots = true;
 }
 
-int TriforceCount()
+int TriforceCount(void)
 {
    int c = 0;
    for (int i = 1; i <= 8; i++)
@@ -2148,17 +2147,17 @@ void color_layer(RGB *src, RGB *dest, char r, char g, char b, char pos,
    fade_interpolate(src, tmp, dest, pos, from, to);
 }
 
-void music_pause()
+void music_pause(void)
 {
    midi_pause();
 }
 
-void music_resume()
+void music_resume(void)
 {
    midi_resume();
 }
 
-void music_stop()
+void music_stop(void)
 {
    midi_stop();
 }
@@ -2197,7 +2196,7 @@ void jukebox(int index)
     * */
 }
 
-void play_DmapMusic()
+void play_DmapMusic(void)
 {
    int m = DMaps[currdmap].midi;
    switch (m)
@@ -2236,7 +2235,7 @@ void update_music_volume(void)
 // -1 = voice not allocated
 static int sfx_voice[SFX_COUNT];
 
-bool zc_initsound()
+bool zc_initsound(void)
 {
    /* Init mixer */
    if (!mixer_init(sampling_rate / TIMING_FPS, sampling_rate, mix_quality,
@@ -2259,14 +2258,14 @@ bool zc_initsound()
    return true;
 }
 
-void zc_deinitsound()
+void zc_deinitsound(void)
 {
    midi_deinit();
    mixer_exit();
 }
 
 /* clean up finished samples */
-void sfx_cleanup()
+void sfx_cleanup(void)
 {
    for (int i = 0; i < SFX_COUNT; i++)
       if (sfx_voice[i] != -1 && voice_get_position(sfx_voice[i]) < 0)
@@ -2359,7 +2358,7 @@ void resume_sfx(int index)
 }
 
 // pauses all active voices
-void pause_all_sfx()
+void pause_all_sfx(void)
 {
    for (int i = 0; i < SFX_COUNT; i++)
       if (sfx_voice[i] != -1)
@@ -2367,7 +2366,7 @@ void pause_all_sfx()
 }
 
 // resumes all paused voices
-void resume_all_sfx()
+void resume_all_sfx(void)
 {
    for (int i = 0; i < SFX_COUNT; i++)
       if (sfx_voice[i] != -1)
@@ -2387,7 +2386,7 @@ void stop_sfx(int index)
    }
 }
 
-void kill_sfx()
+void kill_sfx(void)
 {
    for (int i = 0; i < SFX_COUNT; i++)
       if (sfx_voice[i] != -1)
@@ -2431,185 +2430,185 @@ static bool rButton(bool(proc)(), bool &flag)
    return false;
 }
 
-bool Up()
+bool Up(void)
 {
    return DUkey;
 }
-bool Down()
+bool Down(void)
 {
    return DDkey;
 }
-bool Left()
+bool Left(void)
 {
    return DLkey;
 }
-bool Right()
+bool Right(void)
 {
    return DRkey;
 }
-bool cAbtn()
+bool cAbtn(void)
 {
    return Akey;
 }
-bool cBbtn()
+bool cBbtn(void)
 {
    return Bkey;
 }
-bool cEbtn()
+bool cEbtn(void)
 {
    return Ekey;
 }
-bool cSbtn()
+bool cSbtn(void)
 {
    return Skey;
 }
-bool cLbtn()
+bool cLbtn(void)
 {
    return Lkey;
 }
-bool cRbtn()
+bool cRbtn(void)
 {
    return Rkey;
 }
-bool cMbtn()
+bool cMbtn(void)
 {
    return Mkey;
 }
 
-bool rUp()
+bool rUp(void)
 {
    return rButton(Up, Udown);
 }
-bool rDown()
+bool rDown(void)
 {
    return rButton(Down, Ddown);
 }
-bool rLeft()
+bool rLeft(void)
 {
    return rButton(Left, Ldown);
 }
-bool rRight()
+bool rRight(void)
 {
    return rButton(Right, Rdown);
 }
-bool rAbtn()
+bool rAbtn(void)
 {
    return rButton(cAbtn, Adown);
 }
-bool rBbtn()
+bool rBbtn(void)
 {
    return rButton(cBbtn, Bdown);
 }
-bool rEbtn()
+bool rEbtn(void)
 {
    return rButton(cEbtn, Edown);
 }
-bool rSbtn()
+bool rSbtn(void)
 {
    return rButton(cSbtn, Sdown);
 }
-bool rLbtn()
+bool rLbtn(void)
 {
    return rButton(cLbtn, LBdown);
 }
-bool rRbtn()
+bool rRbtn(void)
 {
    return rButton(cRbtn, RBdown);
 }
-bool rMbtn()
+bool rMbtn(void)
 {
    return rButton(cMbtn, Mdown);
 }
 
-bool drunk()
+bool drunk(void)
 {
    //  return ((!(frame%((rand()%100)+1)))&&(rand()%MAXDRUNKCLOCK<Link.DrunkClock()));
    return false;
 }
 
-bool DrunkUp()
+bool DrunkUp(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !Up() : Up();
 }
-bool DrunkDown()
+bool DrunkDown(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !Down() : Down();
 }
-bool DrunkLeft()
+bool DrunkLeft(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !Left() : Left();
 }
-bool DrunkRight()
+bool DrunkRight(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !Right() : Right();
 }
-bool DrunkcAbtn()
+bool DrunkcAbtn(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !cAbtn() : cAbtn();
 }
-bool DrunkcBbtn()
+bool DrunkcBbtn(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !cBbtn() : cBbtn();
 }
-bool DrunkcSbtn()
+bool DrunkcSbtn(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !cSbtn() : cSbtn();
 }
-bool DrunkcLbtn()
+bool DrunkcLbtn(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !cLbtn() : cLbtn();
 }
-bool DrunkcRbtn()
+bool DrunkcRbtn(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !cRbtn() : cRbtn();
 }
-bool DrunkcMbtn()
+bool DrunkcMbtn(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !cMbtn() : cMbtn();
 }
 
-bool DrunkrUp()
+bool DrunkrUp(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !rUp() : rUp();
 }
-bool DrunkrDown()
+bool DrunkrDown(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !rDown() : rDown();
 }
-bool DrunkrLeft()
+bool DrunkrLeft(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !rLeft() : rLeft();
 }
-bool DrunkrRight()
+bool DrunkrRight(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !rRight() : rRight();
 }
-bool DrunkrAbtn()
+bool DrunkrAbtn(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !rAbtn() : rAbtn();
 }
-bool DrunkrBbtn()
+bool DrunkrBbtn(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !rBbtn() : rBbtn();
 }
-bool DrunkrSbtn()
+bool DrunkrSbtn(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !rSbtn() : rSbtn();
 }
-bool DrunkrLbtn()
+bool DrunkrLbtn(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !rLbtn() : rLbtn();
 }
-bool DrunkrRbtn()
+bool DrunkrRbtn(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !rRbtn() : rRbtn();
 }
-bool DrunkrMbtn()
+bool DrunkrMbtn(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !rMbtn() : rMbtn();
 }
 
-void eat_buttons()
+void eat_buttons(void)
 {
    rAbtn();
    rBbtn();

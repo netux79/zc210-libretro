@@ -46,17 +46,17 @@ extern COLOR_MAP trans_table;
 
 RGB _RGB(const byte *si);
 RGB _RGB(int r, int g, int b);
-void loadfullpal();
+void loadfullpal(void);
 void loadlvlpal(int level);
 void loadpalset(int cset, int dataset);
 void loadfadepal(int dataset);
-void ringcolor();
+void ringcolor(void);
 void fade(int level, bool blackall, bool fromblack, bool total);
 void lighting(int funct, int dir);
-void dryuplake();
-void rehydratelake();
-void reset_pal_cycling();
-void cycle_palette();
+void dryuplake(void);
+void rehydratelake(void);
+void reset_pal_cycling(void);
+void cycle_palette(void);
 int reverse_NESpal(RGB c);
 
 inline RGB NESpal(int i)

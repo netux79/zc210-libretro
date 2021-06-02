@@ -103,7 +103,7 @@ RGB _RGB(int r, int g, int b)
    return x;
 }
 
-void loadfullpal()
+void loadfullpal(void)
 {
    for (int i = 0; i < 240; i++)
       RAMpal[i] = _RGB(colordata + i * 3);
@@ -201,7 +201,7 @@ void loadpalset(int cset, int dataset)
    zc_sync_pal = true;
 }
 
-void ringcolor()
+void ringcolor(void)
 {
    switch (current_item(itype_ring, true))
    {
@@ -347,7 +347,7 @@ void lighting(int funct, int dir)
 
 byte drycolors[11] = {0x12, 0x11, 0x22, 0x21, 0x31, 0x32, 0x33, 0x35, 0x34, 0x36, 0x37};
 
-void dryuplake()
+void dryuplake(void)
 {
    if (whistleclk < 0 || whistleclk >= 88)
       return;
@@ -365,7 +365,7 @@ void dryuplake()
    }
 }
 
-void rehydratelake()
+void rehydratelake(void)
 {
    if (whistleclk == -1)
       return;
@@ -388,13 +388,13 @@ void rehydratelake()
 static int palclk[3];
 static int palpos[3];
 
-void reset_pal_cycling()
+void reset_pal_cycling(void)
 {
    for (int i = 0; i < 3; i++)
       palclk[i] = palpos[i] = 0;
 }
 
-void cycle_palette()
+void cycle_palette(void)
 {
    if (!get_bit(quest_rules, qr_FADE) || darkroom)
       return;

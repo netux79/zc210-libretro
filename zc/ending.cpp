@@ -28,7 +28,7 @@ extern int draw_screen_clip_rect_y2;
 extern bool draw_screen_clip_rect_show_link;
 extern bool draw_screen_clip_rect_show_guys;
 
-void put_triforce()
+void put_triforce(void)
 {
    if (get_bit(quest_rules, qr_HOLDITEMANIMATION))
    {
@@ -71,7 +71,7 @@ void brick(int x, int y)
    blit(scrollbuf, scrollbuf, 256, 0, x, y, 8, 8);
 }
 
-void endingpal()
+void endingpal(void)
 {
    byte pal[16 * 3] =
    {
@@ -90,7 +90,7 @@ void endingpal()
    zc_sync_pal = true;
 }
 
-void zc_ending()
+void zc_ending(void)
 {
    /*
    *************************

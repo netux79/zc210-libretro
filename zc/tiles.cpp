@@ -15,16 +15,15 @@
 extern byte *tilebuf;
 extern newcombo *combobuf;
 extern word
-animated_combo_table[MAXCOMBOS][2];             //[0]=position in act2, [1]=original tile
+animated_combo_table[MAXCOMBOS][2]; //[0]=position in act2, [1]=original tile
 extern word
-animated_combo_table4[MAXCOMBOS][2];            //[0]=combo, [1]=clock
+animated_combo_table4[MAXCOMBOS][2];   //[0]=combo, [1]=clock
 extern word animated_combos;
 extern bool
-blank_tile_table[NEWMAXTILES];                  //keeps track of blank tiles
-extern bool blank_tile_quarters_table[NEWMAXTILES *
-                                                  4];     //keeps track of blank tiles
-extern fix  LinkModifiedX();
-extern fix  LinkModifiedY();
+blank_tile_table[NEWMAXTILES];   //keeps track of blank tiles
+extern bool blank_tile_quarters_table[NEWMAXTILES * 4]; //keeps track of blank tiles
+extern fix  LinkModifiedX(void);
+extern fix  LinkModifiedY(void);
 
 byte unpackbuf[256];
 
@@ -54,14 +53,14 @@ void register_blank_tile_quarters(int tile)
       for (int j = 0; j < 32; ++j, ++di)
       {
          if (*di != 0)
-            blank_tile_quarters_table[(tile << 2) + ((j > 15) ? 2 : 0) + ((
-                                                     j & 1) ? 1 : 0)] = false;
+            blank_tile_quarters_table[(tile << 2) + ((j > 15) ? 2 : 0) + 
+                                      ((j & 1) ? 1 : 0)] = false;
       }
    }
 
 }
 
-void register_blank_tiles()
+void register_blank_tiles(void)
 {
    for (int i = 0; i < NEWMAXTILES; ++i)
    {
@@ -88,7 +87,7 @@ word count_tiles(byte *buf)
 }
 
 //returns the number of combos
-word count_combos()
+word count_combos(void)
 {
    word combos_used;
    for (combos_used = MAXCOMBOS; combos_used > 0; --combos_used)
@@ -99,7 +98,7 @@ word count_combos()
    return combos_used;
 }
 
-void setup_combo_animations()
+void setup_combo_animations(void)
 {
    memset(animated_combo_table, 0, MAXCOMBOS * 2 * 2);
    memset(animated_combo_table4, 0, MAXCOMBOS * 2 * 2);
@@ -122,46 +121,47 @@ void reset_combo_animation(int c)
 {
    for (word x = 0; x < animated_combos; ++x)
    {
-      int y = animated_combo_table4[x][0];                    //combo number
+      int y = animated_combo_table4[x][0];   //combo number
       if (y == c)
       {
-         combobuf[y].tile = animated_combo_table[y][1];      //reset tile
-         animated_combo_table4[x][1] = 0;                      //reset clock
+         combobuf[y].tile = animated_combo_table[y][1];  //reset tile
+         animated_combo_table4[x][1] = 0; //reset clock
          return;
       }
    }
 }
 
-void reset_combo_animations()
+void reset_combo_animations(void)
 {
    for (word x = 0; x < animated_combos; ++x)
       combobuf[animated_combo_table4[x][0]].tile =
          animated_combo_table[animated_combo_table4[x][0]][1];
 }
 
-extern void update_combo_cycling();
+extern void update_combo_cycling(void);
 
-void animate_combos()
+void animate_combos(void)
 {
    update_combo_cycling();
    for (word x = 0; x < animated_combos; ++x)
    {
-      int y = animated_combo_table4[x][0];                    //combo number
-      if (animated_combo_table4[x][1] >= combobuf[y].speed)   //time to animate
+      int y = animated_combo_table4[x][0];   //combo number
+      if (animated_combo_table4[x][1] >= combobuf[y].speed) //time to animate
       {
-         if (combobuf[y].tile - combobuf[y].frames >= animated_combo_table[y][1] - 1)
+         if (combobuf[y].tile - combobuf[y].frames >= 
+             animated_combo_table[y][1] - 1)
          {
-            combobuf[y].tile = animated_combo_table[y][1];      //reset tile
+            combobuf[y].tile = animated_combo_table[y][1];  //reset tile
          }
          else
          {
-            ++combobuf[y].tile;                                 //increment tile
+            ++combobuf[y].tile;  //increment tile
          }
-         animated_combo_table4[x][1] = 0;                      //reset clock
+         animated_combo_table4[x][1] = 0; //reset clock
       }
       else
       {
-         ++animated_combo_table4[x][1];                        //increment clock
+         ++animated_combo_table4[x][1];   //increment clock
       }
    }
 }
@@ -290,8 +290,7 @@ void puttiletranslucent8(BITMAP *dest, int tile, int x, int y, int cset,
    if (flip & 1)   //horizontal
       si += 7;
 
-   if ((flip & 2) ==
-         0)                                      //not flipped vertically
+   if ((flip & 2) == 0) //not flipped vertically
    {
       if (y < 0)
          si += (0 - y) << 4;
@@ -313,7 +312,7 @@ void puttiletranslucent8(BITMAP *dest, int tile, int x, int y, int cset,
          else
             si += 8;
       }
-   }                                                         //flipped vertically
+   }  //flipped vertically
    else
    {
       if (y + 7 >= dest->h)
@@ -360,8 +359,7 @@ void overtiletranslucent8(BITMAP *dest, int tile, int x, int y, int cset,
    if (flip & 1)
       si += 7;
 
-   if ((flip & 2) ==
-         0)                                      //not flipped vertically
+   if ((flip & 2) == 0) //not flipped vertically
    {
       if (y < 0)
          si += (0 - y) << 4;
@@ -384,7 +382,7 @@ void overtiletranslucent8(BITMAP *dest, int tile, int x, int y, int cset,
          else
             si += 8;
       }
-   }                                                         //flipped vertically
+   }  //flipped vertically
    else
    {
       if (y + 7 >= dest->h)
@@ -805,78 +803,78 @@ void overblocktranslucent8(BITMAP *dest, int tile, int x, int y, int csets[],
 void putcombotranslucent(BITMAP *dest, int x, int y, int cmbdat, int cset,
                          int opacity)
 {
-   newcombo c = combobuf[cmbdat];                            //strip the flags
+   newcombo c = combobuf[cmbdat];   //strip the flags
    int drawtile = c.tile;
    int tframes = max(1, combobuf[cmbdat].frames);
    double ddir = atan2(double(y - LinkModifiedY()), double(LinkModifiedX() - x));
    switch (combobuf[cmbdat].type)
    {
       case cEYEBALL_A:
-         if ((ddir <= (((-5)*PI) / 8)) && (ddir > (((-7)*PI) / 8)))
+         if ((ddir <= (((-5) * PI) / 8)) && (ddir > (((-7) * PI) / 8)))
          {
-            drawtile += tframes * 5;                            //dl
+            drawtile += tframes * 5;   //dl
          }
-         else if ((ddir <= (((-3)*PI) / 8)) && (ddir > (((-5)*PI) / 8)))
+         else if ((ddir <= (((-3) * PI) / 8)) && (ddir > (((-5) * PI) / 8)))
          {
-            drawtile += tframes * 4;                            //d
+            drawtile += tframes * 4;   //d
          }
-         else if ((ddir <= (((-1)*PI) / 8)) && (ddir > (((-3)*PI) / 8)))
+         else if ((ddir <= (((-1) * PI) / 8)) && (ddir > (((-3) * PI) / 8)))
          {
-            drawtile += tframes * 3;                            //dr
+            drawtile += tframes * 3;   //dr
          }
-         else if ((ddir <= (((1)*PI) / 8)) && (ddir > (((-1)*PI) / 8)))
+         else if ((ddir <= (((1) * PI) / 8)) && (ddir > (((-1) * PI) / 8)))
          {
-            drawtile += tframes * 2;                            //r
+            drawtile += tframes * 2;   //r
          }
-         else if ((ddir <= (((3)*PI) / 8)) && (ddir > (((1)*PI) / 8)))
+         else if ((ddir <= (((3) * PI) / 8)) && (ddir > (((1) * PI) / 8)))
          {
-            drawtile += tframes * 1;                            //ur
+            drawtile += tframes * 1;   //ur
          }
-         else if ((ddir <= (((5)*PI) / 8)) && (ddir > (((3)*PI) / 8)))
+         else if ((ddir <= (((5) * PI) / 8)) && (ddir > (((3) * PI) / 8)))
          {
-            drawtile += tframes * 0;                            //u
+            drawtile += tframes * 0;   //u
          }
-         else if ((ddir <= (((7)*PI) / 8)) && (ddir > (((5)*PI) / 8)))
+         else if ((ddir <= (((7) * PI) / 8)) && (ddir > (((5) * PI) / 8)))
          {
-            drawtile += tframes * 7;                            //ul
+            drawtile += tframes * 7;   //ul
          }
          else
          {
-            drawtile += tframes * 6;                            //l
+            drawtile += tframes * 6;   //l
          }
          break;
       case cEYEBALL_B:
-         if ((ddir <= (((-6)*PI) / 8)) && (ddir > (((-8)*PI) / 8)))
+         if ((ddir <= (((-6) * PI) / 8)) && (ddir > (((-8) * PI) / 8)))
          {
-            drawtile += tframes * 5;                            //dl
+            drawtile += tframes * 5;   //dl
          }
-         else if ((ddir <= (((-4)*PI) / 8)) && (ddir > (((-6)*PI) / 8)))
+         else if ((ddir <= (((-4) * PI) / 8)) && (ddir > (((-6) * PI) / 8)))
          {
-            drawtile += tframes * 4;                            //d
+            drawtile += tframes * 4;   //d
          }
-         else if ((ddir <= (((-2)*PI) / 8)) && (ddir > (((-4)*PI) / 8)))
+         else if ((ddir <= (((-2) * PI) / 8)) && (ddir > (((-4) * PI) / 8)))
          {
-            drawtile += tframes * 3;                            //dr
+            drawtile += tframes * 3;   //dr
          }
-         else if ((ddir <= (((0)*PI) / 8)) && (ddir > (((-2)*PI) / 8)))
+         else if ((ddir <= (((0) * PI) / 8)) && (ddir > (((-2) * PI) / 8)))
          {
-            drawtile += tframes * 2;                            //r
+            drawtile += tframes * 2;   //r
          }
-         else if ((ddir <= (((2)*PI) / 8)) && (ddir > (((0)*PI) / 8)))
+         else if ((ddir <= (((2) * PI) / 8)) && (ddir > (((0) * PI) / 8)))
          {
-            drawtile += tframes * 1;                            //ur
+            drawtile += tframes * 1;   //ur
          }
-         else if ((ddir <= (((4)*PI) / 8)) && (ddir > (((2)*PI) / 8)))
+         else if ((ddir <= (((4) * PI) / 8)) && (ddir > (((2) * PI) / 8)))
          {
-            drawtile += tframes * 0;                            //u
+            drawtile += tframes * 0;   //u
          }
-         else if ((ddir <= (((6)*PI) / 8)) && (ddir > (((4)*PI) / 8)))
+         else if ((ddir <= (((6) * PI) / 8)) && (ddir > (((4) * PI) / 8)))
          {
-            drawtile += tframes * 7;                            //ul
+            drawtile += tframes * 7;   //ul
          }
          else
          {
-            drawtile += tframes * 6;                            //l
+            drawtile += tframes * 6;   //l
          }
          break;
    }
@@ -900,80 +898,78 @@ void putcombotranslucent(BITMAP *dest, int x, int y, int cmbdat, int cset,
 void overcombotranslucent(BITMAP *dest, int x, int y, int cmbdat, int cset,
                           int opacity)
 {
-   newcombo c = combobuf[cmbdat];                            //strip the flags
+   newcombo c = combobuf[cmbdat];   //strip the flags
    int drawtile = c.tile;
    int tframes = max(1, combobuf[cmbdat].frames);
    double ddir = atan2(double(y - LinkModifiedY()), double(LinkModifiedX() - x));
    switch (combobuf[cmbdat].type)
    {
       case cEYEBALL_A:
-         if ((ddir <= (((-5)*PI) / 8)) && (ddir > (((-7)*PI) / 8)))
+         if ((ddir <= (((-5) * PI) / 8)) && (ddir > (((-7) * PI) / 8)))
          {
-            drawtile += tframes * 5;                            //dl
+            drawtile += tframes * 5;   //dl
          }
-         else if ((ddir <= (((-3)*PI) / 8)) && (ddir > (((-5)*PI) / 8)))
+         else if ((ddir <= (((-3) * PI) / 8)) && (ddir > (((-5) * PI) / 8)))
          {
-            drawtile += tframes * 4;                            //d
+            drawtile += tframes * 4;   //d
          }
-         else if ((ddir <= (((-1)*PI) / 8)) && (ddir > (((-3)*PI) / 8)))
+         else if ((ddir <= (((-1) * PI) / 8)) && (ddir > (((-3) * PI) / 8)))
          {
-            drawtile += tframes * 3;                            //dr
+            drawtile += tframes * 3;   //dr
          }
-         else if ((ddir <= (((1)*PI) / 8)) && (ddir > (((-1)*PI) / 8)))
+         else if ((ddir <= (((1) * PI) / 8)) && (ddir > (((-1) * PI) / 8)))
          {
-            drawtile += tframes * 2;                            //r
+            drawtile += tframes * 2;   //r
          }
-         else if ((ddir <= (((3)*PI) / 8)) && (ddir > (((1)*PI) / 8)))
+         else if ((ddir <= (((3) * PI) / 8)) && (ddir > (((1) * PI) / 8)))
          {
-            drawtile += tframes * 1;                            //ur
+            drawtile += tframes * 1;   //ur
          }
-         else if ((ddir <= (((5)*PI) / 8)) && (ddir > (((3)*PI) / 8)))
+         else if ((ddir <= (((5) * PI) / 8)) && (ddir > (((3) * PI) / 8)))
          {
-            drawtile += tframes * 0;                            //u
+            drawtile += tframes * 0;   //u
          }
-         else if ((ddir <= (((7)*PI) / 8)) && (ddir > (((5)*PI) / 8)))
+         else if ((ddir <= (((7) * PI) / 8)) && (ddir > (((5) * PI) / 8)))
          {
-            drawtile += tframes * 7;                            //ul
+            drawtile += tframes * 7;   //ul
          }
          else
          {
-            drawtile += tframes * 6;                            //l
+            drawtile += tframes * 6;   //l
          }
          break;
       case cEYEBALL_B:
-         if ((ddir <= (((-6)*PI) / 8)) && (ddir > (((-8)*PI) / 8)))
+         if ((ddir <= (((-6) * PI) / 8)) && (ddir > (((-8) * PI) / 8)))
          {
-            drawtile += tframes * 5;                            //dl
+            drawtile += tframes * 5;   //dl
          }
-         else if ((ddir <= (((-4)*PI) / 8)) && (ddir > (((-6)*PI) / 8)))
+         else if ((ddir <= (((-4) * PI) / 8)) && (ddir > (((-6) * PI) / 8)))
          {
-            drawtile += tframes * 4;                            //d
+            drawtile += tframes * 4;   //d
          }
-         else if ((ddir <= (((-2)*PI) / 8)) && (ddir > (((-4)*PI) / 8)))
+         else if ((ddir <= (((-2) * PI) / 8)) && (ddir > (((-4) * PI) / 8)))
          {
-            drawtile += tframes * 3;                            //dr
+            drawtile += tframes * 3;   //dr
          }
-         else if ((ddir <= (((0)*PI) / 8)) && (ddir > (((-2)*PI) / 8)))
+         else if ((ddir <= (((0) * PI) / 8)) && (ddir > (((-2) * PI) / 8)))
          {
-            drawtile += tframes * 2;                            //r
+            drawtile += tframes * 2;   //r
          }
-         else if ((ddir <= (((2)*PI) / 8)) && (ddir > (((0)*PI) / 8)))
+         else if ((ddir <= (((2) * PI) / 8)) && (ddir > (((0) * PI) / 8)))
          {
-            drawtile += tframes * 1;                            //ur
+            drawtile += tframes * 1;   //ur
          }
-         else if ((ddir <= (((4)*PI) / 8)) && (ddir > (((2)*PI) / 8)))
+         else if ((ddir <= (((4) * PI) / 8)) && (ddir > (((2) * PI) / 8)))
          {
-            drawtile += tframes * 0;                            //u
+            drawtile += tframes * 0;   //u
          }
-         else if ((ddir <= (((6)*PI) / 8)) && (ddir > (((4)*PI) / 8)))
-
-
+         else if ((ddir <= (((6) * PI) / 8)) && (ddir > (((4) * PI) / 8)))
          {
-            drawtile += tframes * 7;                            //ul
+            drawtile += tframes * 7;   //ul
          }
          else
          {
-            drawtile += tframes * 6;                            //l
+            drawtile += tframes * 6;   //l
          }
          break;
    }
@@ -1010,7 +1006,7 @@ void puttile8(BITMAP *dest, int tile, int x, int y, int cset, int flip)
 
    switch (flip & 3)
    {
-      case 1:                                                 // 1 byte at a time
+      case 1:  // 1 byte at a time
       {
          byte *si = unpackbuf + ((tile & 2) << 6) + ((tile & 1) << 3);
          for (int dy = 0; dy < 8; ++dy)
@@ -1023,7 +1019,7 @@ void puttile8(BITMAP *dest, int tile, int x, int y, int cset, int flip)
       }
       break;
 
-      case 2:                                                 // 4 bytes at a time
+      case 2:  // 4 bytes at a time
       {
          dword *si = ((dword *)unpackbuf) + ((tile & 2) << 4) + ((tile & 1) << 1);
 
@@ -1037,7 +1033,7 @@ void puttile8(BITMAP *dest, int tile, int x, int y, int cset, int flip)
       }
       break;
 
-      case 3:                                                 // 1 byte at a time
+      case 3:  // 1 byte at a time
       {
          byte *si = unpackbuf + ((tile & 2) << 6) + ((tile & 1) << 3);
          for (int dy = 7; dy >= 0; --dy)
@@ -1050,7 +1046,7 @@ void puttile8(BITMAP *dest, int tile, int x, int y, int cset, int flip)
       }
       break;
 
-      default:                                                // 4 bytes at a time
+      default: // 4 bytes at a time
       {
          dword *si = ((dword *)unpackbuf) + ((tile & 2) << 4) + ((tile & 1) << 1);
          for (int dy = 0; dy < 8; ++dy)
@@ -1083,8 +1079,7 @@ void overtile8(BITMAP *dest, int tile, int x, int y, int cset, int flip)
    if (flip & 1)
       si += 7;
 
-   if ((flip & 2) ==
-         0)                                      //not flipped vertically
+   if ((flip & 2) == 0) //not flipped vertically
    {
       if (y < 0)
          si += (0 - y) << 4;
@@ -1108,7 +1103,7 @@ void overtile8(BITMAP *dest, int tile, int x, int y, int cset, int flip)
             si += 8;
 
       }
-   }                                                         //flipped vertically
+   }  //flipped vertically
    else
    {
       if (y + 7 >= dest->h)
@@ -1136,8 +1131,7 @@ void overtile8(BITMAP *dest, int tile, int x, int y, int cset, int flip)
    }
 }
 
-void puttile16(BITMAP *dest, int tile, int x, int y, int cset,
-               int flip)   //fixed
+void puttile16(BITMAP *dest, int tile, int x, int y, int cset, int flip)
 {
    if (x < 0 || y < 0)
       return;
@@ -1159,9 +1153,10 @@ void puttile16(BITMAP *dest, int tile, int x, int y, int cset,
    {
       case 2:   //vertical
       {
-         qword llcset = (((qword)cset) << 56) + (((qword)cset) << 48) + (((
-                           qword)cset) << 40) + (((qword)cset) << 32) + (((qword)cset) << 24) +
-                        (cset << 16) + (cset << 8) + cset;
+         qword llcset = (((qword)cset) << 56) + (((qword)cset) << 48) + 
+                        (((qword)cset) << 40) + (((qword)cset) << 32) + 
+                        (((qword)cset) << 24) + (cset << 16) + (cset << 8) + 
+                        cset;
          qword *si = (qword *)unpackbuf;
          for (int dy = 15; dy >= 0; --dy)
          {
@@ -1174,9 +1169,10 @@ void puttile16(BITMAP *dest, int tile, int x, int y, int cset,
       break;
       default:   //none or invalid
       {
-         qword llcset = (((qword)cset) << 56) + (((qword)cset) << 48) + (((
-                           qword)cset) << 40) + (((qword)cset) << 32) + (((qword)cset) << 24) +
-                        (cset << 16) + (cset << 8) + cset;
+         qword llcset = (((qword)cset) << 56) + (((qword)cset) << 48) + 
+                        (((qword)cset) << 40) + (((qword)cset) << 32) + 
+                        (((qword)cset) << 24) + (cset << 16) + (cset << 8) + 
+                        cset;
          qword *si = (qword *)unpackbuf;
          for (int dy = 0; dy < 16; ++dy)
          {
@@ -1190,8 +1186,7 @@ void puttile16(BITMAP *dest, int tile, int x, int y, int cset,
    }
 }
 
-void overtile16(BITMAP *dest, int tile, int x, int y, int cset,
-                int flip)   //fixed
+void overtile16(BITMAP *dest, int tile, int x, int y, int cset, int flip)
 {
    if (x < -15 || y < -15)
       return;
@@ -1384,78 +1379,78 @@ void overblock8(BITMAP *dest, int tile, int x, int y, int csets[], int flip,
 
 void putcombo(BITMAP *dest, int x, int y, int cmbdat, int cset)
 {
-   newcombo c = combobuf[cmbdat];                            //strip the flags
+   newcombo c = combobuf[cmbdat];   //strip the flags
    int drawtile = c.tile;
    int tframes = max(1, combobuf[cmbdat].frames);
    double ddir = atan2(double(y - LinkModifiedY()), double(LinkModifiedX() - x));
    switch (combobuf[cmbdat].type)
    {
       case cEYEBALL_A:
-         if ((ddir <= (((-5)*PI) / 8)) && (ddir > (((-7)*PI) / 8)))
+         if ((ddir <= (((-5) * PI) / 8)) && (ddir > (((-7) * PI) / 8)))
          {
-            drawtile += tframes * 5;                            //dl
+            drawtile += tframes * 5;   //dl
          }
-         else if ((ddir <= (((-3)*PI) / 8)) && (ddir > (((-5)*PI) / 8)))
+         else if ((ddir <= (((-3) * PI) / 8)) && (ddir > (((-5) * PI) / 8)))
          {
-            drawtile += tframes * 4;                            //d
+            drawtile += tframes * 4;   //d
          }
-         else if ((ddir <= (((-1)*PI) / 8)) && (ddir > (((-3)*PI) / 8)))
+         else if ((ddir <= (((-1) * PI) / 8)) && (ddir > (((-3) * PI) / 8)))
          {
-            drawtile += tframes * 3;                            //dr
+            drawtile += tframes * 3;   //dr
          }
-         else if ((ddir <= (((1)*PI) / 8)) && (ddir > (((-1)*PI) / 8)))
+         else if ((ddir <= (((1) * PI) / 8)) && (ddir > (((-1) * PI) / 8)))
          {
-            drawtile += tframes * 2;                            //r
+            drawtile += tframes * 2;   //r
          }
-         else if ((ddir <= (((3)*PI) / 8)) && (ddir > (((1)*PI) / 8)))
+         else if ((ddir <= (((3) * PI) / 8)) && (ddir > (((1) * PI) / 8)))
          {
-            drawtile += tframes * 1;                            //ur
+            drawtile += tframes * 1;   //ur
          }
-         else if ((ddir <= (((5)*PI) / 8)) && (ddir > (((3)*PI) / 8)))
+         else if ((ddir <= (((5) * PI) / 8)) && (ddir > (((3) * PI) / 8)))
          {
-            drawtile += tframes * 0;                            //u
+            drawtile += tframes * 0;   //u
          }
-         else if ((ddir <= (((7)*PI) / 8)) && (ddir > (((5)*PI) / 8)))
+         else if ((ddir <= (((7) * PI) / 8)) && (ddir > (((5) * PI) / 8)))
          {
-            drawtile += tframes * 7;                            //ul
+            drawtile += tframes * 7;   //ul
          }
          else
          {
-            drawtile += tframes * 6;                            //l
+            drawtile += tframes * 6;   //l
          }
          break;
       case cEYEBALL_B:
-         if ((ddir <= (((-6)*PI) / 8)) && (ddir > (((-8)*PI) / 8)))
+         if ((ddir <= (((-6) * PI) / 8)) && (ddir > (((-8) * PI) / 8)))
          {
-            drawtile += tframes * 5;                            //dl
+            drawtile += tframes * 5;   //dl
          }
-         else if ((ddir <= (((-4)*PI) / 8)) && (ddir > (((-6)*PI) / 8)))
+         else if ((ddir <= (((-4) * PI) / 8)) && (ddir > (((-6) * PI) / 8)))
          {
-            drawtile += tframes * 4;                            //d
+            drawtile += tframes * 4;   //d
          }
-         else if ((ddir <= (((-2)*PI) / 8)) && (ddir > (((-4)*PI) / 8)))
+         else if ((ddir <= (((-2) * PI) / 8)) && (ddir > (((-4) * PI) / 8)))
          {
-            drawtile += tframes * 3;                            //dr
+            drawtile += tframes * 3;   //dr
          }
-         else if ((ddir <= (((0)*PI) / 8)) && (ddir > (((-2)*PI) / 8)))
+         else if ((ddir <= (((0) * PI) / 8)) && (ddir > (((-2) * PI) / 8)))
          {
-            drawtile += tframes * 2;                            //r
+            drawtile += tframes * 2;   //r
          }
-         else if ((ddir <= (((2)*PI) / 8)) && (ddir > (((0)*PI) / 8)))
+         else if ((ddir <= (((2) * PI) / 8)) && (ddir > (((0) * PI) / 8)))
          {
-            drawtile += tframes * 1;                            //ur
+            drawtile += tframes * 1;   //ur
          }
-         else if ((ddir <= (((4)*PI) / 8)) && (ddir > (((2)*PI) / 8)))
+         else if ((ddir <= (((4) * PI) / 8)) && (ddir > (((2) * PI) / 8)))
          {
-            drawtile += tframes * 0;                            //u
+            drawtile += tframes * 0;   //u
          }
-         else if ((ddir <= (((6)*PI) / 8)) && (ddir > (((4)*PI) / 8)))
+         else if ((ddir <= (((6) * PI) / 8)) && (ddir > (((4) * PI) / 8)))
          {
-            drawtile += tframes * 7;                            //ul
+            drawtile += tframes * 7;   //ul
          }
          else
          {
-            drawtile += tframes * 6;                            //l
+            drawtile += tframes * 6;   //l
          }
          break;
    }
@@ -1478,78 +1473,78 @@ void putcombo(BITMAP *dest, int x, int y, int cmbdat, int cset)
 
 void overcombo(BITMAP *dest, int x, int y, int cmbdat, int cset)
 {
-   newcombo c = combobuf[cmbdat];                            //strip the flags
+   newcombo c = combobuf[cmbdat];   //strip the flags
    int drawtile = c.tile;
    int tframes = max(1, combobuf[cmbdat].frames);
    double ddir = atan2(double(y - LinkModifiedY()), double(LinkModifiedX() - x));
    switch (combobuf[cmbdat].type)
    {
       case cEYEBALL_A:
-         if ((ddir <= (((-5)*PI) / 8)) && (ddir > (((-7)*PI) / 8)))
+         if ((ddir <= (((-5) * PI) / 8)) && (ddir > (((-7) * PI) / 8)))
          {
-            drawtile += tframes * 5;                            //dl
+            drawtile += tframes * 5;   //dl
          }
-         else if ((ddir <= (((-3)*PI) / 8)) && (ddir > (((-5)*PI) / 8)))
+         else if ((ddir <= (((-3) * PI) / 8)) && (ddir > (((-5) * PI) / 8)))
          {
-            drawtile += tframes * 4;                            //d
+            drawtile += tframes * 4;   //d
          }
-         else if ((ddir <= (((-1)*PI) / 8)) && (ddir > (((-3)*PI) / 8)))
+         else if ((ddir <= (((-1) * PI) / 8)) && (ddir > (((-3) * PI) / 8)))
          {
-            drawtile += tframes * 3;                            //dr
+            drawtile += tframes * 3;   //dr
          }
-         else if ((ddir <= (((1)*PI) / 8)) && (ddir > (((-1)*PI) / 8)))
+         else if ((ddir <= (((1) * PI) / 8)) && (ddir > (((-1) * PI) / 8)))
          {
-            drawtile += tframes * 2;                            //r
+            drawtile += tframes * 2;   //r
          }
-         else if ((ddir <= (((3)*PI) / 8)) && (ddir > (((1)*PI) / 8)))
+         else if ((ddir <= (((3) * PI) / 8)) && (ddir > (((1) * PI) / 8)))
          {
-            drawtile += tframes * 1;                            //ur
+            drawtile += tframes * 1;   //ur
          }
-         else if ((ddir <= (((5)*PI) / 8)) && (ddir > (((3)*PI) / 8)))
+         else if ((ddir <= (((5) * PI) / 8)) && (ddir > (((3) * PI) / 8)))
          {
-            drawtile += tframes * 0;                            //u
+            drawtile += tframes * 0;   //u
          }
-         else if ((ddir <= (((7)*PI) / 8)) && (ddir > (((5)*PI) / 8)))
+         else if ((ddir <= (((7) * PI) / 8)) && (ddir > (((5) * PI) / 8)))
          {
-            drawtile += tframes * 7;                            //ul
+            drawtile += tframes * 7;   //ul
          }
          else
          {
-            drawtile += tframes * 6;                            //l
+            drawtile += tframes * 6;   //l
          }
          break;
       case cEYEBALL_B:
-         if ((ddir <= (((-6)*PI) / 8)) && (ddir > (((-8)*PI) / 8)))
+         if ((ddir <= (((-6) * PI) / 8)) && (ddir > (((-8) * PI) / 8)))
          {
-            drawtile += tframes * 5;                            //dl
+            drawtile += tframes * 5;   //dl
          }
-         else if ((ddir <= (((-4)*PI) / 8)) && (ddir > (((-6)*PI) / 8)))
+         else if ((ddir <= (((-4) * PI) / 8)) && (ddir > (((-6) * PI) / 8)))
          {
-            drawtile += tframes * 4;                            //d
+            drawtile += tframes * 4;   //d
          }
-         else if ((ddir <= (((-2)*PI) / 8)) && (ddir > (((-4)*PI) / 8)))
+         else if ((ddir <= (((-2) * PI) / 8)) && (ddir > (((-4) * PI) / 8)))
          {
-            drawtile += tframes * 3;                            //dr
+            drawtile += tframes * 3;   //dr
          }
-         else if ((ddir <= (((0)*PI) / 8)) && (ddir > (((-2)*PI) / 8)))
+         else if ((ddir <= (((0) * PI) / 8)) && (ddir > (((-2) * PI) / 8)))
          {
-            drawtile += tframes * 2;                            //r
+            drawtile += tframes * 2;   //r
          }
-         else if ((ddir <= (((2)*PI) / 8)) && (ddir > (((0)*PI) / 8)))
+         else if ((ddir <= (((2) * PI) / 8)) && (ddir > (((0) * PI) / 8)))
          {
             drawtile += tframes * 1;                            //ur
          }
-         else if ((ddir <= (((4)*PI) / 8)) && (ddir > (((2)*PI) / 8)))
+         else if ((ddir <= (((4) * PI) / 8)) && (ddir > (((2) * PI) / 8)))
          {
-            drawtile += tframes * 0;                            //u
+            drawtile += tframes * 0;   //u
          }
-         else if ((ddir <= (((6)*PI) / 8)) && (ddir > (((4)*PI) / 8)))
+         else if ((ddir <= (((6) * PI) / 8)) && (ddir > (((4) * PI) / 8)))
          {
-            drawtile += tframes * 7;                            //ul
+            drawtile += tframes * 7;   //ul
          }
          else
          {
-            drawtile += tframes * 6;                            //l
+            drawtile += tframes * 6;   //l
          }
          break;
    }

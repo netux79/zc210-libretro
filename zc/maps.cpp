@@ -34,13 +34,13 @@ void clear_dmap(byte i)
    memset(&DMaps[i], 0, sizeof(dmap));
 }
 
-void clear_dmaps()
+void clear_dmaps(void)
 {
    for (int i = 0; i <= 255; i++)
       clear_dmap(i);
 }
 
-int isdungeon()
+int isdungeon(void)
 {
    // overworlds should always be dlevel 0
    /*
@@ -61,7 +61,7 @@ int MAPDATA(int x, int y)
    int combo = (y & 0xF0) + (x >> 4);
    if (combo > 175)
       return 0;
-   return tmpscr->data[combo];                               // entire combo code
+   return tmpscr->data[combo];   // entire combo code
 }
 
 int MAPCSET(int x, int y)
@@ -69,7 +69,7 @@ int MAPCSET(int x, int y)
    int combo = (y & 0xF0) + (x >> 4);
    if (combo > 175)
       return 0;
-   return tmpscr->cset[combo];                               // entire combo code
+   return tmpscr->cset[combo];   // entire combo code
 }
 
 int MAPFLAG(int x, int y)
@@ -77,7 +77,7 @@ int MAPFLAG(int x, int y)
    int combo = (y & 0xF0) + (x >> 4);
    if (combo > 175)
       return 0;
-   return tmpscr->sflag[combo];                              // flag
+   return tmpscr->sflag[combo];  // flag
 }
 
 int COMBOTYPE(int x, int y)
@@ -92,7 +92,7 @@ int MAPDATA2(int layer, int x, int y)
       return 0;
    if (tmpscr2[layer].valid == 0)
       return 0;
-   return tmpscr2[layer].data[combo];                        // entire combo code
+   return tmpscr2[layer].data[combo];  // entire combo code
 }
 
 int MAPCSET2(int layer, int x, int y)
@@ -102,7 +102,7 @@ int MAPCSET2(int layer, int x, int y)
       return 0;
    if (tmpscr2[layer].valid == 0)
       return 0;
-   return tmpscr2[layer].cset[combo];                        // entire combo code
+   return tmpscr2[layer].cset[combo];  // entire combo code
 }
 
 int MAPFLAG2(int layer, int x, int y)
@@ -112,7 +112,7 @@ int MAPFLAG2(int layer, int x, int y)
       return 0;
    if (tmpscr2[layer].valid == 0)
       return 0;
-   return tmpscr2[layer].sflag[combo];                       // flag
+   return tmpscr2[layer].sflag[combo]; // flag
 }
 
 int COMBOTYPE2(int layer, int x, int y)
@@ -123,17 +123,17 @@ int COMBOTYPE2(int layer, int x, int y)
 }
 
 // default is to set the item flag which depends on currscr
-void setmapflag()
+void setmapflag(void)
 {
    game.maps[(currmap << 7) + homescr] |= ((currscr >= 128) ? mBELOW : mITEM);
 }
 
-void unsetmapflag()
+void unsetmapflag(void)
 {
    game.maps[(currmap << 7) + homescr] &= ((currscr >= 128) ? ~mBELOW : ~mITEM);
 }
 
-bool getmapflag()
+bool getmapflag(void)
 {
    return (game.maps[(currmap << 7) + homescr] & ((currscr >= 128) ? mBELOW :
            mITEM)) != 0;
@@ -180,7 +180,7 @@ int WARPCODE(int dmap, int scr, int dw)
    return (QMisc.warp[ring].dmap[index] << 8) + QMisc.warp[ring].scr[index];
 }
 
-void update_combo_cycling()
+void update_combo_cycling(void)
 {
    int x, y;
    for (int i = 0; i < 176; i++)
@@ -1507,7 +1507,7 @@ void showbombeddoor(int side)
    }
 }
 
-void openshutters()
+void openshutters(void)
 {
    for (int i = 0; i < 4; i++)
       if (tmpscr->door[i] == dSHUTTER)
@@ -1824,7 +1824,7 @@ bool hit_walkflag(int x, int y, int cnt)
    return _walkflag(x, y, cnt);
 }
 
-void map_bkgsfx()
+void map_bkgsfx(void)
 {
    if (tmpscr->flags & fSEA)
       cont_sfx(SFX_SEA);
@@ -1845,7 +1845,7 @@ void map_bkgsfx()
 
 int mapres = 0;
 
-void ViewMap()
+void ViewMap(void)
 {
    mapscr tmpscr_b[2];
    mapscr tmpscr_c[6];
@@ -2059,7 +2059,7 @@ void ViewMap()
    }
 }
 
-void onViewMap()
+void onViewMap(void)
 {
    if (is_playing && currscr < 128 && dlevel == 0)
    {
