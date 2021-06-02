@@ -53,8 +53,8 @@ void register_blank_tile_quarters(int tile)
       for (int j = 0; j < 32; ++j, ++di)
       {
          if (*di != 0)
-            blank_tile_quarters_table[(tile << 2) + ((j > 15) ? 2 : 0) + 
-                                      ((j & 1) ? 1 : 0)] = false;
+            blank_tile_quarters_table[(tile << 2) + ((j > 15) ? 2 : 0) +
+                                                  ((j & 1) ? 1 : 0)] = false;
       }
    }
 
@@ -148,8 +148,8 @@ void animate_combos(void)
       int y = animated_combo_table4[x][0];   //combo number
       if (animated_combo_table4[x][1] >= combobuf[y].speed) //time to animate
       {
-         if (combobuf[y].tile - combobuf[y].frames >= 
-             animated_combo_table[y][1] - 1)
+         if (combobuf[y].tile - combobuf[y].frames >=
+               animated_combo_table[y][1] - 1)
          {
             combobuf[y].tile = animated_combo_table[y][1];  //reset tile
          }
@@ -1153,9 +1153,9 @@ void puttile16(BITMAP *dest, int tile, int x, int y, int cset, int flip)
    {
       case 2:   //vertical
       {
-         qword llcset = (((qword)cset) << 56) + (((qword)cset) << 48) + 
-                        (((qword)cset) << 40) + (((qword)cset) << 32) + 
-                        (((qword)cset) << 24) + (cset << 16) + (cset << 8) + 
+         qword llcset = (((qword)cset) << 56) + (((qword)cset) << 48) +
+                        (((qword)cset) << 40) + (((qword)cset) << 32) +
+                        (((qword)cset) << 24) + (cset << 16) + (cset << 8) +
                         cset;
          qword *si = (qword *)unpackbuf;
          for (int dy = 15; dy >= 0; --dy)
@@ -1169,9 +1169,9 @@ void puttile16(BITMAP *dest, int tile, int x, int y, int cset, int flip)
       break;
       default:   //none or invalid
       {
-         qword llcset = (((qword)cset) << 56) + (((qword)cset) << 48) + 
-                        (((qword)cset) << 40) + (((qword)cset) << 32) + 
-                        (((qword)cset) << 24) + (cset << 16) + (cset << 8) + 
+         qword llcset = (((qword)cset) << 56) + (((qword)cset) << 48) +
+                        (((qword)cset) << 40) + (((qword)cset) << 32) +
+                        (((qword)cset) << 24) + (cset << 16) + (cset << 8) +
                         cset;
          qword *si = (qword *)unpackbuf;
          for (int dy = 0; dy < 16; ++dy)
