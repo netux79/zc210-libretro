@@ -62,8 +62,7 @@ word animated_combo_table[MAXCOMBOS][2];  //[0]=position in act2, [1]=original t
 word animated_combo_table4[MAXCOMBOS][2]; //[0]=combo, [1]=clock
 word animated_combos;
 bool blank_tile_table[NEWMAXTILES]; //keeps track of blank tiles
-bool blank_tile_quarters_table[NEWMAXTILES *
-                                           4];  //keeps track of blank tiles
+bool blank_tile_quarters_table[NEWMAXTILES * 4];  //keeps track of blank tiles
 bool ewind_restart = false;
 word msgclk, msgstr, msgpos, msg_count;
 word door_combo_set_count;

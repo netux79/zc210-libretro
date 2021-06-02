@@ -898,10 +898,10 @@ void dosubscr(void)
    if (COOLSCROLL)
    {
       blit(scrollbuf, scrollbuf, 0, 0, 256, 0, 256, 176);
-      blit(framebuf, scrollbuf, 0, 56, 0, 230, 256, 176);
+      blit(framebuf, scrollbuf, 0, 56, 0, 230, 256, 168);
       put_topsubscr();
       miny = 6;
-      blit(scrollbuf, framebuf, 0, 230, 0, 56, 256, 176);
+      blit(scrollbuf, framebuf, 0, 230, 0, 56, 256, 168);
       for (int y = 174; y >= 6; y -= 3)
       {
          domoney();
@@ -917,10 +917,10 @@ void dosubscr(void)
    else
    {
       blit(scrollbuf, scrollbuf, 0, 0, 256, 0, 256, 176);
-      blit(framebuf, scrollbuf, 0, 56, 0, 230, 256, 176);
+      blit(framebuf, scrollbuf, 0, 56, 0, 230, 256, 168);
       put_topsubscr();
       miny = 0;
-      blit(scrollbuf, framebuf, 0, 230, 0, 56, 256, 176);
+      blit(scrollbuf, framebuf, 0, 230, 0, 56, 256, 168);
       for (int y = 174; y >= 0; y -= 3)
       {
          domoney();
