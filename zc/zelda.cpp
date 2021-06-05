@@ -172,7 +172,7 @@ music tunes[MAXMUSIC] =
    { "Zelda 1 - Game Over",   0,  -1,  -1,  1,  224,  NULL },
    { "Zelda 1 - Level 9",     0,  -1,  -1,  1,  255,  NULL },
    { "Zelda 1 - Overworld",   0,  17,  -1,  1,  208,  NULL },
-   { "Zelda 1 - Title",       0,  -1,  -1,  0,  168,  NULL },
+   { "Zelda 1 - Title",       0,  -1,  -1,  0,  100,  NULL },
    { "Zelda 1 - Triforce",    0,  -1,  -1,  0,  168,  NULL },
 };
 

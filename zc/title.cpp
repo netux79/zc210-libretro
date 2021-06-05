@@ -775,6 +775,9 @@ static void select_game(void)
    int pos = max(min(currgame - listpos, 3), 0);
    int mode = 0;
 
+   /* Use zelda title music in the selection screen */
+   jukebox(MUSIC_TITLE);
+
    selectscreen();
 
    savecnt = 0;
@@ -900,6 +903,9 @@ static void select_game(void)
       }
    }
    while (!zc_state && !done);
+
+   /* stop selection screen music */
+   music_stop();
 }
 
 /**************************************/
