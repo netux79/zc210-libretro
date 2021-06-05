@@ -36,11 +36,9 @@ extern RGB_MAP *rgb_map;
 extern COLOR_MAP *color_map;
 
 
-extern PALETTE _current_palette;
 extern PALETTE black_palette;
 
 
-void set_palette(const PALETTE p);
 int bestfit_color(const PALETTE pal, int r, int g, int b);
 void create_rgb_table(RGB_MAP *table, const PALETTE pal);
 void fade_interpolate(const PALETTE source, const PALETTE dest, PALETTE output,
