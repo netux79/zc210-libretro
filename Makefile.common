@@ -8,7 +8,8 @@ ifneq (,$(findstring msvc2003,$(platform)))
 INCFLAGS += -I$(LIBRETRO_COMM_DIR)/include/compat/msvc
 endif
 
-SOURCES_C   := $(LIBRETRO_COMM_DIR)/rthreads/rthreads.c
+SOURCES_C   := $(LIBRETRO_COMM_DIR)/rthreads/rthreads.c \
+				$(LIBRETRO_COMM_DIR)/memmap/memalign.c
 SOURCES_CXX := $(CORE_DIR)/zc/zelda.cpp \
 				 $(CORE_DIR)/zc/zc_sys.cpp \
 				 $(CORE_DIR)/zc/weapons.cpp \

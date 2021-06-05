@@ -4,6 +4,7 @@
 #include <stdarg.h>
 #include <string.h>
 
+#include <memalign.h>
 #include "libretro.h"
 #include "alport.h"
 #include "zc/zc_exports.h"
@@ -424,7 +425,8 @@ bool retro_load_game(const struct retro_game_info *info)
 
    /* Main libretro buffers, done after check_variables to respect settings */
    framebuf = (bpp_t *)calloc(SCR_WIDTH * SCR_HEIGHT, sizeof(bpp_t));
-   soundbuf = (short *)malloc(sampling_rate / TIMING_FPS * 2 * sizeof(short));
+   soundbuf = (short *)memalign_alloc_aligned(sampling_rate / TIMING_FPS * 2 * 
+                                              sizeof(short));
 
    /* init zelda classic engine */
    if (!zc_init(info->path))
@@ -446,7 +448,7 @@ void retro_unload_game(void)
 
    zc_deinit();
 
-   free(soundbuf);
+   memalign_free(soundbuf);
    free(framebuf);
 }
 
