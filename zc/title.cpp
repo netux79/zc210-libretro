@@ -104,7 +104,7 @@ int readsaves(gamedata *savedata, PACKFILE *f)
          if (!p_getc(&(savedata[i].visited[j]), f, true))
             return 29;
       }
-      for (int j = 0; j < MAXDMAPS; ++j)
+      for (int j = 0; j < MAXDMAPS * 64; ++j)
       {
          if (!p_getc(&(savedata[i].bmaps[j]), f, true))
             return 29;
@@ -208,7 +208,7 @@ reset:
 
 init:
    int *di = (int *)saves;
-   for (unsigned i = 0; i < sizeof(gamedata)*MAXSAVES / sizeof(int); i++)
+   for (unsigned i = 0; i < sizeof(gamedata) * MAXSAVES / sizeof(int); i++)
       *(di++) = 0;
 
    return 0;
@@ -279,7 +279,7 @@ int writesaves(gamedata *savedata, PACKFILE *f)
          return 28;
       if (!pfwrite(savedata[i].visited, MAXDMAPS, f))
          return 29;
-      if (!pfwrite(savedata[i].bmaps, MAXDMAPS, f))
+      if (!pfwrite(savedata[i].bmaps, MAXDMAPS * 64, f))
          return 30;
       for (int j = 0; j < MAXMAPS2 * MAPSCRSNORMAL; j++)
       {

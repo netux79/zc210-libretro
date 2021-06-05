@@ -49,26 +49,26 @@ enum {ENC_METHOD_192B104 = 0, ENC_METHOD_192B105, ENC_METHOD_192B185, ENC_METHOD
 #define ZC_ID(a,b,c,d)  (((a)<<24) | ((b)<<16) | ((c)<<8) | (d))
 
 //ID values of the different section types
-#define ID_HEADER         ZC_ID('H','D','R',' ')              //quest header
-#define ID_RULES          ZC_ID('R','U','L','E')              //quest rules
-#define ID_STRINGS        ZC_ID('S','T','R',' ')              //message strings
-#define ID_MISC           ZC_ID('M','I','S','C')              //misc data
-#define ID_TILES          ZC_ID('T','I','L','E')              //tiles
-#define ID_COMBOS         ZC_ID('C','M','B','O')              //combos
-#define ID_CSETS          ZC_ID('C','S','E','T')              //csets (and pal names?)
-#define ID_MAPS           ZC_ID('M','A','P',' ')              //maps
-#define ID_DMAPS          ZC_ID('D','M','A','P')              //dmaps
-#define ID_DOORS          ZC_ID('D','O','O','R')              //door combo sets
-#define ID_ITEMS          ZC_ID('I','T','E','M')              //items
-#define ID_WEAPONS        ZC_ID('W','P','N',' ')              //weapons
-#define ID_COLORS         ZC_ID('C','L','R',' ')              //not sure
-#define ID_ICONS          ZC_ID('I','C','O','N')              //not sure
-#define ID_GRAPHICSPACK   ZC_ID('G','P','A','K')              //graphics pack header
-#define ID_INITDATA       ZC_ID('I','N','I','T')              //initialization data
-#define ID_GUYS           ZC_ID('G','U','Y',' ')              //guys
-#define ID_MIDIS          ZC_ID('M','I','D','I')              //midis
-#define ID_CHEATS         ZC_ID('C','H','T',' ')              //cheats
-#define ID_SAVEGAME       ZC_ID('S','V','G','M')              //save game data (used in the save game file)
+#define ID_HEADER         ZC_ID('H','D','R',' ')   //quest header
+#define ID_RULES          ZC_ID('R','U','L','E')   //quest rules
+#define ID_STRINGS        ZC_ID('S','T','R',' ')   //message strings
+#define ID_MISC           ZC_ID('M','I','S','C')   //misc data
+#define ID_TILES          ZC_ID('T','I','L','E')   //tiles
+#define ID_COMBOS         ZC_ID('C','M','B','O')   //combos
+#define ID_CSETS          ZC_ID('C','S','E','T')   //csets (and pal names?)
+#define ID_MAPS           ZC_ID('M','A','P',' ')   //maps
+#define ID_DMAPS          ZC_ID('D','M','A','P')   //dmaps
+#define ID_DOORS          ZC_ID('D','O','O','R')   //door combo sets
+#define ID_ITEMS          ZC_ID('I','T','E','M')   //items
+#define ID_WEAPONS        ZC_ID('W','P','N',' ')   //weapons
+#define ID_COLORS         ZC_ID('C','L','R',' ')   //not sure
+#define ID_ICONS          ZC_ID('I','C','O','N')   //not sure
+#define ID_GRAPHICSPACK   ZC_ID('G','P','A','K')   //graphics pack header
+#define ID_INITDATA       ZC_ID('I','N','I','T')   //initialization data
+#define ID_GUYS           ZC_ID('G','U','Y',' ')   //guys
+#define ID_MIDIS          ZC_ID('M','I','D','I')   //midis
+#define ID_CHEATS         ZC_ID('C','H','T',' ')   //cheats
+#define ID_SAVEGAME       ZC_ID('S','V','G','M')   //save game data
 
 //Version number of the different section types
 #define V_HEADER          1
@@ -147,15 +147,15 @@ extern int readsize, writesize;
 
 // quest stuff
 #define ZQ_TILES        0
-#define ZQ_MIDIS2       1                                   //4 bytes
+#define ZQ_MIDIS2       1     //4 bytes
 #define ZQ_CHEATS2       5
 #define ZQ_MAXDATA      20
 
-#define MAXMIDIS192b177 32                                  // uses bit string for midi flags, so 32 bytes
-#define MAXMIDIS        252                                 // uses bit string for midi flags, so 32 bytes
+#define MAXMIDIS192b177 32    // uses bit string for midi flags, so 32 bytes
+#define MAXMIDIS        252   // uses bit string for midi flags, so 32 bytes
 #define MIDIFLAGS_SIZE  ((MAXMIDIS+7)>>3)
 
-#define MAXMAPS2        255                                 // 4 times the old number
+#define MAXMAPS2        255   // 4 times the old number
 #define MAPSCRSNORMAL   128
 #define MAPSCRS192b136  132
 #define MAPSCRS         136
@@ -166,8 +166,8 @@ extern int readsize, writesize;
 #define MAXQTS          256
 #define MAXMSGS       65535
 #define MAXDOORCOMBOSETS 256
-#define MAXDMAPS        256                                 //this and
-#define MAXLEVELS       256                                 //this should be the same number (was 32)
+#define MAXDMAPS        256   //this and
+#define MAXLEVELS       256   //this should be the same number (was 32)
 #define MAXITEMS        256
 #define MAXWPNS         256
 #define MAXGUYS         256
@@ -221,20 +221,20 @@ extern int readsize, writesize;
 #define wfDOWN          2
 #define wfLEFT          4
 #define wfRIGHT         8
-#define fSECRET         16                                  // play "secret" sfx upon entering this screen
-#define fVADER          32                                  // play "vader" sfx instead of "roar" sfx
+#define fSECRET         16    // play "secret" sfx upon entering this screen
+#define fVADER          32    // play "vader" sfx instead of "roar" sfx
 #define fFLOATTRAPS     64
-#define fCLEARSECRET    128                                 // clear all enemies to trigger secret entrance
+#define fCLEARSECRET    128   // clear all enemies to trigger secret entrance
 
 // flags3
 #define fHOLDITEM         1
-#define fDODONGO          2                                 // play dodongo sfx instead of roar sfx
+#define fDODONGO          2   // play dodongo sfx instead of roar sfx
 #define fINVISROOM        4
 #define fINVISLINK        8
 #define fNOSUBSCR         16
-#define fIWARPFULLSCREEN  32                                // instawarps affect all sprites
-#define fNOSECRETSOUND    64                                // never play secret sound on this screen
-#define fENEMIESRETURN    128                               // enemies always return
+#define fIWARPFULLSCREEN  32  // instawarps affect all sprites
+#define fNOSECRETSOUND    64  // never play secret sound on this screen
+#define fENEMIESRETURN    128 // enemies always return
 
 //flags4
 #define fOVERHEADTEXT     1
@@ -251,18 +251,18 @@ extern int readsize, writesize;
 #define efBOSS          128
 
 // item "pick up" flags
-#define ipBIGRANGE      1                                   // Collision rectangle is large
-#define ipHOLDUP        2                                   // Link holds up item when he gets it
-#define ipONETIME       4                                   // Getting this item sets the map flag
-#define ipDUMMY         8                                   // Dummy item.  Can't get this.
-#define ipCHECK         16                                  // Check restrictions (money in a shop, etc.)
-#define ipMONEY         32                                  // This item causes money loss (bomb upgrade, swindle room, etc.)
-#define ipFADE          64                                  // Blinks if fadeclk>0
-#define ipENEMY         128                                 // Enemy is carrying it around
-#define ipTIMER         256                                 // Disappears after a while
-#define ipBIGTRI        512                                 // Large collision rectangle (used for large triforce)
-#define ipNODRAW        1024                                // Don't draw this (for underwater items)
-#define ipTMPFLASH      2048                                // not used (delete this?)
+#define ipBIGRANGE      1     // Collision rectangle is large
+#define ipHOLDUP        2     // Link holds up item when he gets it
+#define ipONETIME       4     // Getting this item sets the map flag
+#define ipDUMMY         8     // Dummy item.  Can't get this.
+#define ipCHECK         16    // Check restrictions (money in a shop, etc.)
+#define ipMONEY         32    // This item causes money loss (bomb upgrade, swindle room, etc.)
+#define ipFADE          64    // Blinks if fadeclk>0
+#define ipENEMY         128   // Enemy is carrying it around
+#define ipTIMER         256   // Disappears after a while
+#define ipBIGTRI        512   // Large collision rectangle (used for large triforce)
+#define ipNODRAW        1024  // Don't draw this (for underwater items)
+#define ipTMPFLASH      2048  // not used (delete this?)
 
 enum
 {
@@ -364,8 +364,9 @@ enum
    qr_TRANSSHADOWS, qr_QUICKSWORD, qr_BOMBHOLDFIX, qr_FULLLTM,
    qr_NOPOTIONCOMBINE, qr_LINKFLICKER, qr_SHADOWSFLICKER, qr_WALLFLIERS,
 
-   qr_NOBOMBPALFLASH, qr_TRANSLUCENTNAYRUSLOVESHIELD, qr_FLICKERINGNAYRUSLOVESHIELD, qr_TRANSLUCENTNAYRUSLOVEROCKET,
-   qr_FLICKERINGNAYRUSLOVEROCKET, qr_NOSCROLLCONTINUE, qr_OLDTRIBBLES,
+   qr_NOBOMBPALFLASH, qr_TRANSLUCENTNAYRUSLOVESHIELD, qr_FLICKERINGNAYRUSLOVESHIELD, 
+   qr_TRANSLUCENTNAYRUSLOVEROCKET, qr_FLICKERINGNAYRUSLOVEROCKET, 
+   qr_NOSCROLLCONTINUE, qr_OLDTRIBBLES,
 
    qr_MAX
 };
@@ -407,7 +408,7 @@ enum
 };
 
 // items
-enum                                                        // value matters because of current quest file data
+enum  // value matters because of current quest file data
 {
    iRupy, i5Rupies, iHeart, iBombs, iClock,
    iSword, iWSword, iMSword, iShield, iKey,
@@ -463,9 +464,11 @@ enum
 // phantom weapon types
 enum
 {
-   pDINSFIREROCKET, pDINSFIREROCKETRETURN, pDINSFIREROCKETTRAIL, pDINSFIREROCKETTRAILRETURN, pMESSAGEMORE,
-   pNAYRUSLOVEROCKET1, pNAYRUSLOVEROCKETRETURN1, pNAYRUSLOVEROCKETTRAIL1, pNAYRUSLOVEROCKETTRAILRETURN1,
-   pNAYRUSLOVEROCKET2, pNAYRUSLOVEROCKETRETURN2, pNAYRUSLOVEROCKETTRAIL2, pNAYRUSLOVEROCKETTRAILRETURN2
+   pDINSFIREROCKET, pDINSFIREROCKETRETURN, pDINSFIREROCKETTRAIL,
+   pDINSFIREROCKETTRAILRETURN, pMESSAGEMORE, pNAYRUSLOVEROCKET1,
+   pNAYRUSLOVEROCKETRETURN1, pNAYRUSLOVEROCKETTRAIL1,
+   pNAYRUSLOVEROCKETTRAILRETURN1, pNAYRUSLOVEROCKET2, pNAYRUSLOVEROCKETRETURN2,
+   pNAYRUSLOVEROCKETTRAIL2, pNAYRUSLOVEROCKETTRAILRETURN2
 };
 
 enum
@@ -475,25 +478,25 @@ enum
 
    eROCTO1 = 10, eBOCTO1, eROCTO2, eBOCTO2, eRTEK,
    eBTEK, eRLEV, eBLEV, eRMOBLIN, eBMOBLIN,
-   eRLYNEL, eBLYNEL, ePEAHAT, eZORA, eROCK,                  /*20*/
+   eRLYNEL, eBLYNEL, ePEAHAT, eZORA, eROCK,                    /*20*/
    eGHINI1, eGHINI2, eARMOS,
 
    eKEESE1, eKEESE2,
-   eKEESE3, eSTALFOS, eGEL, eZOL, eROPE,                     /*30*/
+   eKEESE3, eSTALFOS, eGEL, eZOL, eROPE,                       /*30*/
    eRGORIYA, eBGORIYA, eTRAP, eWALLM, eRDKNUT,
-   eBDKNUT, eBUBBLE, eVIRE, eLIKE, eGIBDO,                   /*40*/
+   eBDKNUT, eBUBBLE, eVIRE, eLIKE, eGIBDO,                     /*40*/
    ePOLSV, eRWIZ, eBWIZ,
 
    eRAQUAM, eMOLDORM,
-   eDODONGO, eMANHAN, eGLEEOK1, eGLEEOK2, eGLEEOK3, eGLEEOK4, /*50*/
+   eDODONGO, eMANHAN, eGLEEOK1, eGLEEOK2, eGLEEOK3, eGLEEOK4,  /*50*/
    eDIG1, eDIG3, eDIGPUP1, eDIGPUP2, eDIGPUP3, eDIGPUP4,
    eRGOHMA, eBGOHMA, eRCENT,
-   eBCENT, ePATRA1, ePATRA2, eGANON,                         /*60*/
+   eBCENT, ePATRA1, ePATRA2, eGANON,                           /*60*/
    eSTALFOS2,
    eROPE2, eRBUBBLE, eBBUBBLE, eFBALL, eITEMFAIRY,
-   eFIRE, eCOCTO, eDKNIGHT, eGELTRIB, eZOLTRIB,              /*70*/
+   eFIRE, eCOCTO, eDKNIGHT, eGELTRIB, eZOLTRIB,                /*70*/
    eKEESETRIB, eVIRETRIB, eSDKNUT, eLAQUAM, eMANHAN2,
-   eTRAP_H, eTRAP_V, eTRAP_LR, eTRAP_UD, eFWIZ,              /*80*/
+   eTRAP_H, eTRAP_V, eTRAP_LR, eTRAP_UD, eFWIZ,                /*80*/
    eWWIZ, eCEILINGM, eFLOORM, ePATRABS, ePATRAL2,
    /*90*/
    ePATRAL3, eBAT, eBATROBE, eBATROBEKING, eGLEEOK1F, eGLEEOK2F,
@@ -528,14 +531,14 @@ enum {pRANDOM, pSIDES};
 typedef struct itemdata
 {
    word tile;
-   byte misc;                                                // 0000vhtf (vh:flipping, t:two hands, f:flash)
-   byte csets;                                               // ffffcccc (f:flash cset, c:cset)
-   byte frames;                                              // animation frame count
-   byte speed;                                               // animation speed
-   byte delay;                                               // extra delay factor (-1) for first frame
+   byte misc;        // 0000vhtf (vh:flipping, t:two hands, f:flash)
+   byte csets;       // ffffcccc (f:flash cset, c:cset)
+   byte frames;      // animation frame count
+   byte speed;       // animation speed
+   byte delay;       // extra delay factor (-1) for first frame
    //byte padding;
-   long32 ltm;                                                 // Link Tile Modifier
-   byte exp[10];                                             // not used
+   long32 ltm;       // Link Tile Modifier
+   byte exp[10];     // not used
    //byte padding[2];
    // 21 bytes (uses 24)
 } itemdata;
@@ -543,12 +546,12 @@ typedef struct itemdata
 typedef struct wpndata
 {
    word tile;
-   byte misc;                                                // 0000vhff (vh:flipping, f:flash (1:NES, 2:BSZ))
-   byte csets;                                               // ffffcccc (f:flash cset, c:cset)
-   byte frames;                                              // animation frame count
-   byte speed;                                               // animation speed
-   byte type;                                                // used by certain weapons
-   byte exp;                                                 // not used
+   byte misc;        // 0000vhff (vh:flipping, f:flash (1:NES, 2:BSZ))
+   byte csets;       // ffffcccc (f:flash cset, c:cset)
+   byte frames;      // animation frame count
+   byte speed;       // animation speed
+   byte type;        // used by certain weapons
+   byte exp;         // not used
    // 8 bytes
 } wpndata;
 
@@ -756,7 +759,7 @@ typedef struct newcombo
    byte walk;
    byte type;
    byte csets;
-   word foo;                                                 //do not change!  used for positioning!  no idea why.
+   word foo;   //do not change!  used for positioning!  no idea why.
    byte frames;
    byte speed;
    word nextcombo;
@@ -841,30 +844,30 @@ typedef struct DoorComboSet
    char name[21];
    //byte padding;
    //22
-   word doorcombo_u[9][4];                                   //[door type][door combo]
-   byte doorcset_u[9][4];                                    //[door type][door combo]
-   word doorcombo_d[9][4];                                   //[door type][door combo]
-   byte doorcset_d[9][4];                                    //[door type][door combo]
+   word doorcombo_u[9][4];       //[door type][door combo]
+   byte doorcset_u[9][4];        //[door type][door combo]
+   word doorcombo_d[9][4];       //[door type][door combo]
+   byte doorcset_d[9][4];        //[door type][door combo]
    //238 (216)
-   word doorcombo_l[9][6];                                   //[door type][door combo]
-   byte doorcset_l[9][6];                                    //[door type][door combo]
-   word doorcombo_r[9][6];                                   //[door type][door combo]
-   byte doorcset_r[9][6];                                    //[door type][door combo]
+   word doorcombo_l[9][6];       //[door type][door combo]
+   byte doorcset_l[9][6];        //[door type][door combo]
+   word doorcombo_r[9][6];       //[door type][door combo]
+   byte doorcset_r[9][6];        //[door type][door combo]
    //562 (324)
-   word bombdoorcombo_u[2];                                  //rubble
-   byte bombdoorcset_u[2];                                   //rubble
-   word bombdoorcombo_d[2];                                  //rubble
-   byte bombdoorcset_d[2];                                   //rubble
+   word bombdoorcombo_u[2];      //rubble
+   byte bombdoorcset_u[2];       //rubble
+   word bombdoorcombo_d[2];      //rubble
+   byte bombdoorcset_d[2];       //rubble
    //574 (12)
-   word bombdoorcombo_l[3];                                  //rubble
-   byte bombdoorcset_l[3];                                   //rubble
+   word bombdoorcombo_l[3];      //rubble
+   byte bombdoorcset_l[3];       //rubble
    //byte padding;
-   word bombdoorcombo_r[3];                                  //rubble
-   byte bombdoorcset_r[3];                                   //rubble
+   word bombdoorcombo_r[3];      //rubble
+   byte bombdoorcset_r[3];       //rubble
    //byte padding;
    //594 (18)
-   word walkthroughcombo[4];                                 //[n, s, e, w]
-   byte walkthroughcset[4];                                  //[n, s, e, w]
+   word walkthroughcombo[4];     //[n, s, e, w]
+   byte walkthroughcset[4];      //[n, s, e, w]
 
    byte flags[2];
    byte expansion[30];
@@ -889,18 +892,18 @@ typedef struct dmap
    char intro[73];
    //byte padding;
    //132
-   word minimap_1_tile;                                      //before getting map
-   byte minimap_1_cset;                                      //cset for minimap 1
+   word minimap_1_tile;    //before getting map
+   byte minimap_1_cset;    //cset for minimap 1
    //byte padding;
-   word minimap_2_tile;                                      //after getting map
-   byte minimap_2_cset;                                      //cset for minimap 2
+   word minimap_2_tile;    //after getting map
+   byte minimap_2_cset;    //cset for minimap 2
    //byte padding;
    //140
-   word largemap_1_tile;                                     //large map
-   byte largemap_1_cset;                                     //cset for large
+   word largemap_1_tile;   //large map
+   byte largemap_1_cset;   //cset for large
    //byte padding;
-   word largemap_2_tile;                                     //large map
-   byte largemap_2_cset;                                     //cset for large
+   word largemap_2_tile;   //large map
+   byte largemap_2_cset;   //cset for large
    char tmusic[56];
    //byte padding;
    //204
@@ -1009,18 +1012,18 @@ typedef struct miscQdata
    //528 (144=18*8)
    palcycle cycles[256][3];
    //2832 (2304=3*256*3)
-   windwarp wind[9];                                         // destination of whirlwind for each level
+   windwarp wind[9];          // destination of whirlwind for each level
    //2850 (18=2*2)
-   byte     triforce[8];                                     // positions of triforce pieces on subscreen
+   byte triforce[8];          // positions of triforce pieces on subscreen
    //2858 (8)
    zcolors  colors;
    //3154 (296)
-   word     icons[4];
+   word icons[4];
    //3162 (8=2*4)
    pondtype pond[16];
    //4314 (1152=72*16)
    word endstring;
-   //  byte dummy;  // left over from a word
+   //  byte dummy;            // left over from a word
    word expansion[98];
    //4512
 } miscQdata;
@@ -1111,18 +1114,15 @@ typedef struct gamedata
    short magic;
    short dmagic;
    byte  magicdrainrate;
-   byte  canslash;                                           //Link slashes instead of stabs.
+   byte  canslash;               //Link slashes instead of stabs.
    //636
    byte  visited[MAXDMAPS];
    //892 (256)
-   byte  bmaps[MAXDMAPS *
-                        64];                               // the dungeon progress maps
+   byte  bmaps[MAXDMAPS * 64];   // the dungeon progress maps
    //17276 (16384)
-   word  maps[MAXMAPS2 *
-                       128];                               // info on map changes, items taken, etc.
+   word  maps[MAXMAPS2 * 128];   // info on map changes, items taken, etc.
    //82556 (65280)
-   byte  guys[MAXMAPS2 *
-                       128];                               // guy counts (though dungeon guys are reset on entry)
+   byte  guys[MAXMAPS2 * 128];   // guy counts (though dungeon guys are reset on entry)
    //115196 (32640)
    char  qstpath[1024];
    byte  icon[128];
@@ -1163,19 +1163,19 @@ typedef struct zinitdata
    //94
    byte hc, start_heart, cont_heart, hcp, max_bombs, keys;
    word rupies;
-   byte triforce;                                            // bit flags
+   byte triforce;             // bit flags
    byte map[32];
    byte compass[32];
    byte boss_key[32];
    byte misc[16];
    byte sword_hearts[4];
-   byte last_map;                                            //last map worked on
+   byte last_map;             //last map worked on
    //220
-   byte last_screen;                                         //last screen worked on
+   byte last_screen;          //last screen worked on
    byte max_magic;
    byte magic;
    byte beam_hearts[4];
-   byte beam_percent;                                        //bit flags
+   byte beam_percent;         //bit flags
    //228
    byte beam_power[4];
    byte hookshot_links;
@@ -1442,4 +1442,4 @@ inline bool isinRect(int x, int y, int rx1, int ry1, int rx2, int ry2)
 {
    return x >= rx1 && x <= rx2 && y >= ry1 && y <= ry2;
 }
-#endif                                                      //_ZDEFS_H_
+#endif      //_ZDEFS_H_

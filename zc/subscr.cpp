@@ -508,7 +508,6 @@ void putBmap(BITMAP *dest)
 
    if (maptile)
       draw_block(dest, 96, 88, maptile, mapcset, 9, 5);
-
    else if (QMisc.colors.dungeon_map_tile)
    {
       for (int y = 0; y < 5; y++)
@@ -971,15 +970,15 @@ void dosubscr(void)
       sel.animate(0);
       switch (zinit.subscreen)
       {
-         case 0:                                               //original
+         case 0:  //original
             sel.x = (Bpos % 4) * 24 + 128;
             sel.y = (Bpos / 4) * 16 + 48 - miny;
             break;
-         case 1:                                               //revision 1 ("New Subscreen")
+         case 1:  //revision 1 ("New Subscreen")
             sel.x = (Bpos % 4) * 24 + 144;
             sel.y = (Bpos / 4) * 16 + 32 - miny;
             break;
-         case 2:                                               //revision 2 (1.92 beta 168)
+         case 2:  //revision 2 (1.92 beta 168)
             sel.x = (Bpos % 5) * 24 + 126;
             sel.y = (Bpos / 5) * 16 + 32 - miny;
             break;
