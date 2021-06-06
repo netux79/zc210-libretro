@@ -648,7 +648,7 @@ int nextscr(int dir)
 
    // need to check for screens on other maps, 's' not valid, etc.
 
-   if (tmpscr->sidewarptype == 3)                               // scrolling warp
+   if (tmpscr->sidewarptype == 3)   // scrolling warp
    {
       switch (dir)
       {
@@ -1869,7 +1869,7 @@ void ViewMap(void)
    int ly = ((currscr >> 4) * 176) + LinkY() + 8;
    int sc = 6;
 
-   bool done = false, redraw = true;
+   bool redraw = true;
 
    mappic = create_bitmap((256 * 16) >> mapres, (176 * 8) >> mapres);
 
@@ -1888,7 +1888,6 @@ void ViewMap(void)
 
          if (!(game.maps[(currmap << 7) + s]&mVISITED))
             rectfill(scrollbuf, 256, 0, 511, 223, WHITE);
-
          else
          {
             loadscr2(1, s, -1);
@@ -1897,7 +1896,6 @@ void ViewMap(void)
                if (tmpscr[1].layermap[i] > 0)
                   tmpscr2[i] = TheMaps[(tmpscr[1].layermap[i] - 1) * MAPSCRS +
                                        tmpscr[1].layerscreen[i]];
-
                else
                   memset(tmpscr2 + i, 0, sizeof(mapscr));
             }
@@ -1926,9 +1924,9 @@ void ViewMap(void)
    {
       int step = int(16.0 / scales[sc]);
       step = (step >> 1) + (step & 1);
-      bool r = cRbtn();
+      bool r = cAbtn();
 
-      if (cLbtn())
+      if (cBbtn())
       {
          step <<= 2;
          delay = 0;
@@ -1986,8 +1984,8 @@ void ViewMap(void)
 
       else
       {
-         bool a = cAbtn();
-         bool b = cBbtn();
+         bool a = cRbtn();
+         bool b = cLbtn();
          if (a && !b)
          {
             sc = min(sc + 1, 16);
@@ -2002,7 +2000,7 @@ void ViewMap(void)
          }
       }
 
-      if (rMbtn())
+      if (rEbtn())
          --show;
 
       px = vbound(px, -4096, 4096);
@@ -2012,12 +2010,12 @@ void ViewMap(void)
 
       if (!redraw)
          blit(scrollbuf, framebuf, 256, 0, 0, 0, 256, 224);
-
       else
       {
          clear_to_color(framebuf, BLACK);
          stretch_blit(mappic, framebuf, 0, 0, mappic->w, mappic->h,
-                      int(256 + (px - mappic->w)*scale) / 2, int(224 + (py - mappic->h)*scale) / 2,
+                      int(256 + (px - mappic->w)*scale) / 2, 
+                      int(224 + (py - mappic->h)*scale) / 2,
                       int(mappic->w * scale), int(mappic->h * scale));
 
          blit(framebuf, scrollbuf, 0, 0, 256, 0, 256, 224);
@@ -2043,11 +2041,9 @@ void ViewMap(void)
       }
 
       advanceframe();
-      if (rSbtn())
-         done = true;
-
    }
-   while (!done && !zc_state);
+   while (!(rSbtn() || rMbtn() || zc_state));
+   
    destroy_bitmap(mappic);
    loadscr2(0, currscr, -1);
    for (int i = 0; i < 6; ++i)
@@ -2066,7 +2062,8 @@ void onViewMap(void)
       if (get_bit(quest_rules, qr_VIEWMAP))
       {
          clear_to_color(framebuf, BLACK);
-         textout_centre_ex(framebuf, font, "Drawing map...", 128, 108, WHITE, BLACK);
+         textout_centre_ex(framebuf, font, "Drawing map...", 128, 108, WHITE, 
+                           BLACK);
          advanceframe();
          ViewMap();
       }
