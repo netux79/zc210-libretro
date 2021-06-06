@@ -435,7 +435,6 @@ bool retro_load_game(const struct retro_game_info *info)
    /* Create a thread to generate 1-frame of video & audio */
    zc_state = ZC_RUN;
    zc_thread = sthread_create(zc_gameloop, NULL);
-   sthread_detach(zc_thread);
 
    return true;
 }
@@ -445,6 +444,7 @@ void retro_unload_game(void)
    /* stop zc game loop thread from running */
    zc_state = ZC_EXIT;
    scond_signal(cond);
+   sthread_join(zc_thread);
 
    zc_deinit();
 
