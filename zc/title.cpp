@@ -660,6 +660,7 @@ static bool register_name(void)
       saves[s].maxbombs = zinit.max_bombs;
       load_game_icon(saves + s);
       saves[s].timevalid = 1;
+      save_savedgames();
    }
    else
    {
