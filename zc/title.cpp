@@ -729,7 +729,7 @@ static int game_details(int file)
       advanceframe();
       i -= pos + pos;
    }
-   while (pos && i >= 70);
+   while (pos && i >= 70 && !zc_state);
    destroy_bitmap(info);
 
    char title[23];

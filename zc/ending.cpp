@@ -63,6 +63,8 @@ void putendmsg(const char *s, int x, int y, int speed, void(proc)())
          proc();
       
       advanceframe();
+      if (zc_state)
+         return;
    }
 }
 

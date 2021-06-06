@@ -2309,7 +2309,7 @@ bool LinkClass::startwpn(int wpn)   // an item index
 
          refill_what = REFILL_ALL;
          StartRefill(REFILL_POTION);
-         while (refill())
+         while (refill() && !zc_state)
          {
             putsubscr(framebuf, 0, 0);
             advanceframe();
@@ -2364,15 +2364,6 @@ bool LinkClass::startwpn(int wpn)   // an item index
 
       case iBombs:
       {
-         /*
-           //remote detonation
-           if(Lwpns.idCount(wLitBomb)) {
-             weapon *ew = (weapon*)(Lwpns.spr(Lwpns.idFirst(wLitBomb)));
-             ew->clk=41;
-             ew->id=wBomb;
-             return false;
-           }
-         */
          if (Lwpns.idCount(wLitBomb))
             return false;
          --game.items[itype_bomb];
@@ -2408,35 +2399,6 @@ bool LinkClass::startwpn(int wpn)   // an item index
          if (get_bit(quest_rules, qr_MAGICWAND))
             game.magic -= (WANDDRAINAMOUNT * game.magicdrainrate);
          sfx(SFX_WAND, pan(wx));
-
-         /* Fireball Wand
-           Lwpns.add(new weapon((fix)wx,(fix)wy,ewFireball,0,2*DAMAGE_MULTIPLIER,dir));
-           switch (dir) {
-             case up:
-               Lwpns.spr(Lwpns.Count()-1)->angle=-PI/2;
-               Lwpns.spr(Lwpns.Count()-1)->dir=up;
-               break;
-             case down:
-               Lwpns.spr(Lwpns.Count()-1)->angle=PI/2;
-               Lwpns.spr(Lwpns.Count()-1)->dir=down;
-               break;
-         case left:
-         Lwpns.spr(Lwpns.Count()-1)->angle=PI;
-         Lwpns.spr(Lwpns.Count()-1)->dir=left;
-         break;
-         case right:
-         Lwpns.spr(Lwpns.Count()-1)->angle=0;
-         Lwpns.spr(Lwpns.Count()-1)->dir=right;
-         break;
-         }
-         Lwpns.spr(Lwpns.Count()-1)->id=wRefFireball;
-         Lwpns.spr(Lwpns.Count()-1)->clk=16;
-         ((weapon*)Lwpns.spr(Lwpns.Count()-1))->step=3.5;
-         Lwpns.spr(Lwpns.Count()-1)->dummy_bool[0]=true; //homing
-         if (get_bit(quest_rules,qr_MAGICWAND))
-         game.magic-=(WANDDRAINAMOUNT*game.magicdrainrate);
-         sfx(SFX_WAND,pan(wx));
-         */
          break;
 
       case iSword:
@@ -6650,7 +6612,7 @@ void LinkClass::getTriforce(int id)
       advanceframe();
       ++f;
    }
-   while ((f < 408) || (midi_isplaying()));
+   while ((f < 408 || midi_isplaying()) && !zc_state);
 
    action = none;
    draw_screen_clip_rect_x1 = 0;
