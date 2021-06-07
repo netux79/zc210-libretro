@@ -29,7 +29,7 @@ int draw_screen_clip_rect_y2 = 223;
 bool draw_screen_clip_rect_show_link = true;
 bool draw_screen_clip_rect_show_guys = false;
 
-void clear_dmap(byte i)
+void clear_dmap(uint8_t i)
 {
    memset(&DMaps[i], 0, sizeof(dmap));
 }
@@ -1520,7 +1520,7 @@ void openshutters(void)
 
 void loadscr(int tmp, int scr, int ldir)
 {
-   for (word x = 0; x < animated_combos; x++)
+   for (uint16_t x = 0; x < animated_combos; x++)
    {
       if (combobuf[animated_combo_table4[x][0]].nextcombo != 0)
          animated_combo_table4[x][1] = 0;
@@ -1610,7 +1610,7 @@ void loadscr2(int tmp, int scr, int ldir)
    //these are here to bypass compiler warnings about unused arguments
    ldir = ldir;
 
-   for (word x = 0; x < animated_combos; x++)
+   for (uint16_t x = 0; x < animated_combos; x++)
    {
       if (combobuf[animated_combo_table4[x][0]].nextcombo != 0)
          animated_combo_table4[x][1] = 0;

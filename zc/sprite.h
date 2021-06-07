@@ -123,7 +123,7 @@ public:
    int oldflag;
    int endx, endy;
    bool trigger;
-   byte undercset;
+   uint8_t undercset;
 
    movingblock();
    void push(fix bx, fix by, int d, int f);

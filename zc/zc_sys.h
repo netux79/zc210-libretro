@@ -120,7 +120,7 @@ void stop_sfx(int index);
 void kill_sfx(void);
 int  pan(int x);
 
-char *time_str(dword time);
+char *time_str(uint32_t time);
 
 int  vbound(int x, int low, int high);
 float vbound(float x, float low, float high);
@@ -134,8 +134,8 @@ int encode_file_007(const char *srcfile, const char *destfile, unsigned int key,
 int decode_file_007(const char *srcfile, const char *destfile,
                     const char *header, int method, bool packed);
 
-int  get_bit(byte *bitstr, int bit);
-void set_bit(byte *bitstr, int bit, byte val);
+int  get_bit(uint8_t *bitstr, int bit);
+void set_bit(uint8_t *bitstr, int bit, uint8_t val);
 
 int anim_3_4(int clk, int speed);
 #endif                                                      // _ZC_SYS_H_

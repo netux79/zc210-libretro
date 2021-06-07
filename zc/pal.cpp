@@ -17,7 +17,7 @@
 RGB_MAP rgb_table;
 COLOR_MAP trans_table;
 
-const byte nes_pal[] =
+const uint8_t nes_pal[] =
 {
    31, 31, 31,                                               //  0
    0, 0, 63,                                                 //  1
@@ -85,7 +85,7 @@ const byte nes_pal[] =
    31, 63, 63                                                // 63
 };
 
-RGB _RGB(const byte *si)
+RGB _RGB(const uint8_t *si)
 {
    RGB x;
    x.r = si[0];
@@ -166,7 +166,7 @@ void create_zc_trans_table(COLOR_MAP *table, const PALETTE pal, int r, int g,
 
 void loadlvlpal(int level)
 {
-   byte *si = colordata + CSET(level * pdLEVEL + poLEVEL) * 3;
+   uint8_t *si = colordata + CSET(level * pdLEVEL + poLEVEL) * 3;
 
    for (int i = 0; i < 16 * 3; i++)
    {
@@ -192,7 +192,7 @@ void loadlvlpal(int level)
 
 void loadpalset(int cset, int dataset)
 {
-   byte *si = colordata + CSET(dataset) * 3;
+   uint8_t *si = colordata + CSET(dataset) * 3;
    for (int i = 0; i < 16; i++)
    {
       RAMpal[CSET(cset) + i] = _RGB(si);
@@ -223,7 +223,7 @@ void ringcolor(void)
 
 void loadfadepal(int dataset)
 {
-   byte *si = colordata + CSET(dataset) * 3;
+   uint8_t *si = colordata + CSET(dataset) * 3;
 
    for (int i = 0; i < pdFADE * 16; i++)
    {
@@ -252,7 +252,7 @@ void fade(int level, bool blackall, bool fromblack, bool total)
          }
 
          loadlvlpal(level);
-         byte *si = colordata + CSET(level * pdLEVEL + poFADE1) * 3;
+         uint8_t *si = colordata + CSET(level * pdLEVEL + poFADE1) * 3;
          for (int i = 0; i < 16; i++)
          {
             int light = si[0] + si[1] + si[2];
@@ -317,7 +317,7 @@ void lighting(int funct, int dir)
             darkroom = false;
          }
          break;
-      case 2:                                                 //currently light.  room you are going to is supposed to be dark.
+      case 2: //currently light.  room you are going to is supposed to be dark.
          if (tmpscr->flags & fDARK && !darkroom)
          {
             fade(DMaps[currdmap].color, false, false, false);
@@ -325,7 +325,7 @@ void lighting(int funct, int dir)
 
          }
          break;
-      case 3:                                                 //currently dark.  room you are going to is supposed to be light.
+      case 3: //currently dark.  room you are going to is supposed to be light.
          if ((!(tmpscr->flags & fDARK) && darkroom)
                || (DMaps[currdmap].color != currcset))
          {
@@ -334,7 +334,7 @@ void lighting(int funct, int dir)
          }
          currcset = DMaps[currdmap].color;
          break;
-      case 4:                                                 //currently light.  room you are going to is supposed to be dark.
+      case 4: //currently light.  room you are going to is supposed to be dark.
          if ((tmpscr->flags & fDARK && !darkroom)
                || (DMaps[(tmpscr[((currscr < 128) ? 0 : 1)].sidewarpdmap)].color != currcset))
          {
@@ -345,7 +345,7 @@ void lighting(int funct, int dir)
    }
 }
 
-byte drycolors[11] = {0x12, 0x11, 0x22, 0x21, 0x31, 0x32, 0x33, 0x35, 0x34, 0x36, 0x37};
+uint8_t drycolors[11] = {0x12, 0x11, 0x22, 0x21, 0x31, 0x32, 0x33, 0x35, 0x34, 0x36, 0x37};
 
 void dryuplake(void)
 {
@@ -412,7 +412,8 @@ void cycle_palette(void)
             if (++palpos[i] >= (c.count >> 4))
                palpos[i] = 0;
 
-            byte *si = colordata + CSET(level * pdLEVEL + poFADE1 + 1 + palpos[i]) * 3;
+            uint8_t *si = colordata + CSET(level * pdLEVEL + poFADE1 + 1 + 
+		                  palpos[i]) * 3;
             si += (c.first & 15) * 3;
 
             for (int col = c.first & 15; col <= (c.count & 15); col++)

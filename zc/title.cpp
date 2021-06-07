@@ -31,9 +31,9 @@ static const char *TEMP_SAVEFILE = "tmpsav";
 
 int readsaves(gamedata *savedata, PACKFILE *f)
 {
-   word item_count;
-   word qstpath_len;
-   word save_count;
+   uint16_t item_count;
+   uint16_t qstpath_len;
+   uint16_t save_count;
 
    if (!p_igetw(&save_count, f, true))
       return 1;
@@ -142,8 +142,8 @@ int load_savedgames(void)
 
    int  section_id;
    int  section_size;
-   word section_version;
-   word section_cversion;
+   uint16_t section_version;
+   uint16_t section_cversion;
    
    /* Calculate the save path to use */
    sprintf(spath, "%s%c%s", save_path, OTHER_PATH_SEPARATOR, qst_name);
@@ -216,8 +216,8 @@ init:
 
 int writesaves(gamedata *savedata, PACKFILE *f)
 {
-   word item_count = iMax;
-   word qstpath_len = 0;
+   uint16_t item_count = iMax;
+   uint16_t qstpath_len = 0;
    if (!p_iputw(MAXSAVES, f))
       return 1;
    for (int i = 0; i < MAXSAVES; i++)
@@ -374,7 +374,7 @@ void load_game_icon(gamedata *g)
    if (t < 0 || t >= NEWMAXTILES)
       t = 0;
 
-   byte *si = tilebuf + ((t ? t : 28) << 7);
+   uint8_t *si = tilebuf + ((t ? t : 28) << 7);
 
    for (int j = 0; j < 128; j++)
       g->icon[j] = *(si++);
@@ -423,8 +423,8 @@ static void selectscreen(void)
    select_mode();
 }
 
-static byte left_arrow_str[] = {132, 0};
-static byte right_arrow_str[] = {133, 0};
+static uint8_t left_arrow_str[] = {132, 0};
+static uint8_t right_arrow_str[] = {133, 0};
 
 static int savecnt;
 
@@ -444,7 +444,7 @@ static void list_save(int save_num, int ypos)
                        saves[save_num].deaths);
    }
 
-   byte *hold = tilebuf;
+   uint8_t *hold = tilebuf;
    tilebuf = saves[save_num].icon;
    overtile16(framebuf, 0, 48, ypos + 17, (save_num % 3) + 10, 0);    //link?
    tilebuf = hold;

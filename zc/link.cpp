@@ -22,7 +22,7 @@ extern int draw_screen_clip_rect_y1;
 extern int draw_screen_clip_rect_y2;
 extern bool draw_screen_clip_rect_show_link;
 
-const byte lsteps[8] = {1, 1, 2, 1, 1, 2, 1, 1};
+const uint8_t lsteps[8] = {1, 1, 2, 1, 1, 2, 1, 1};
 
 enum {spr_tile, spr_flip};
 enum {spr_standhold, spr_swimhold};
@@ -3285,7 +3285,7 @@ void LinkClass::move(int d)
    sprite::move((fix)dx, (fix)dy);
 }
 
-bool LinkClass::walkflag(int wx, int wy, int cnt, byte d)
+bool LinkClass::walkflag(int wx, int wy, int cnt, uint8_t d)
 {
    if (blockpath && wy < 88)
       return true;
@@ -4214,7 +4214,7 @@ int selectWlevel(int d)
    if (TriforceCount() == 0)
       return 0;
 
-   byte l = game.wlevel;
+   uint8_t l = game.wlevel;
 
    do
    {
@@ -4235,7 +4235,7 @@ int selectWlevel(int d)
 
 bool LinkClass::dowarp(int type)
 {
-   byte wdmap = 0, wscr = 0, wtype = 0, t = 0;
+   uint8_t wdmap = 0, wscr = 0, wtype = 0, t = 0;
    t = (currscr < 128) ? 0 : 1;
    switch (type)
    {
@@ -4334,7 +4334,7 @@ bool LinkClass::dowarp(int type)
          ALLOFF();
          homescr = currscr;
          currscr = 0x81;
-         byte warpscr = wscr + DMaps[currdmap].xoff;
+         uint8_t warpscr = wscr + DMaps[currdmap].xoff;
          draw_screen(tmpscr, 0, 0);
          fade(DMaps[currdmap].color, true, false, false);
          blackscr(30, true);

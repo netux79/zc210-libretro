@@ -26,7 +26,8 @@
 #define ZCDAT_VERSION   0x0210               /* version of zcdata.dat */
 #define ZCDAT_BUILD     1                    /* build of zcdata.dat */
 
-enum {ENC_METHOD_192B104 = 0, ENC_METHOD_192B105, ENC_METHOD_192B185, ENC_METHOD_MAX};
+enum {ENC_METHOD_192B104 = 0, ENC_METHOD_192B105, ENC_METHOD_192B185, 
+      ENC_METHOD_MAX};
 
 #define PI 3.14159265358979323846
 
@@ -121,12 +122,6 @@ enum {ENC_METHOD_192B104 = 0, ENC_METHOD_192B105, ENC_METHOD_192B185, ENC_METHOD
 #define CV_CHEATS       1
 #define CV_SAVEGAME     1
 
-typedef unsigned char      byte;    //0-                       255  ( 8 bits)
-typedef unsigned short     word;    //0-                    65,535  (16 bits)
-typedef unsigned int       dword;   //0-             4,294,967,295  (32 bits)
-typedef int                long32;  //0-             4,294,967,295  (32 bits)
-typedef unsigned long long qword;   //0-18,446,744,073,709,551,616  (64 bits)
-
 extern int readsize, writesize;
 
 // system colors
@@ -138,22 +133,22 @@ extern int readsize, writesize;
 #define TILE_ROWS_PER_PAGE  13
 #define TILES_PER_PAGE      (TILES_PER_ROW*TILE_ROWS_PER_PAGE)
 #define TILE_PAGES          252
-#define OLDMAXTILES         (TILES_PER_PAGE*6)              // 1560 tiles
-#define NEWMAXTILES         (TILES_PER_PAGE*TILE_PAGES)     // 32760 tiles
-#define NEWTILE_SIZE        (NEWMAXTILES*SINGLE_TILE_SIZE)  // 4193280 bytes (new packed format, 6 pages)
-#define TILEBUF_SIZE        (320*480)                       // 153600 bytes (old unpacked format)
+#define OLDMAXTILES         (TILES_PER_PAGE * 6)               // 1560 tiles
+#define NEWMAXTILES         (TILES_PER_PAGE * TILE_PAGES)      // 32760 tiles
+#define NEWTILE_SIZE        (NEWMAXTILES * SINGLE_TILE_SIZE)   // 4193280 bytes (new packed format, 6 pages)
+#define TILEBUF_SIZE        (320 * 480)                        // 153600 bytes (old unpacked format)
 
 #define COMBOS_PER_ROW      20
 
 // quest stuff
 #define ZQ_TILES        0
 #define ZQ_MIDIS2       1     //4 bytes
-#define ZQ_CHEATS2       5
+#define ZQ_CHEATS2      5
 #define ZQ_MAXDATA      20
 
 #define MAXMIDIS192b177 32    // uses bit string for midi flags, so 32 bytes
 #define MAXMIDIS        252   // uses bit string for midi flags, so 32 bytes
-#define MIDIFLAGS_SIZE  ((MAXMIDIS+7)>>3)
+#define MIDIFLAGS_SIZE  ((MAXMIDIS + 7) >> 3)
 
 #define MAXMAPS2        255   // 4 times the old number
 #define MAPSCRSNORMAL   128
@@ -164,7 +159,7 @@ extern int readsize, writesize;
 #define TEMPLATE2       132
 
 #define MAXQTS          256
-#define MAXMSGS       65535
+#define MAXMSGS         65535
 #define MAXDOORCOMBOSETS 256
 #define MAXDMAPS        256   //this and
 #define MAXLEVELS       256   //this should be the same number (was 32)
@@ -173,7 +168,7 @@ extern int readsize, writesize;
 #define MAXGUYS         256
 #define COMBOS_PER_PAGE 256
 #define COMBO_PAGES     255
-#define MAXCOMBOS       COMBO_PAGES*COMBOS_PER_PAGE
+#define MAXCOMBOS       COMBO_PAGES * COMBOS_PER_PAGE
 
 #define MAGICPERBLOCK   32
 #define PALNAMESIZE     17
@@ -203,8 +198,8 @@ extern int readsize, writesize;
 #define dBOSS           10                                  // 0101    0
 #define dOPENBOSS       11                                  // 0101    1
 
-#define dOPENSHUTTER    12                                  // 0110    0    // special case (don't show on map)
-#define d1WAYSHUTTER    14                                  // 0111    0    // never opens
+#define dOPENSHUTTER    12 // special case (don't show on map) 0110    0
+#define d1WAYSHUTTER    14 // never opens                      0111    0
 
 // screen flags
 #define fSHUTTERS       1
@@ -270,10 +265,6 @@ enum
    wtIWARPZAP, wtIWARPWAVE, wtNOWARP, wtWHISTLE, wtMAX
 };
 
-enum
-{
-   weINSTANT, weCIRCLE, weOVAL, weTRIANGLE, weSMAS, weBLINDS_SMOOTH, weBLINDS_STEPPED, weMOSAIC, weWAVE_WHITE, weWAVE_BLACK, weFADE_WHITE, weFADE_BLACK, weDEFAULT_OC, weDEST_DEFAULT, weMAX
-};
 // sprite palettes
 enum
 {
@@ -346,8 +337,8 @@ enum
    qr_TIME, qr_FREEFORM, qr_KILLALL, qr_NOFLICKER,
    qr_CONTFULL, qr_RLFIX, qr_LENSHINTS, qr_LINKDUNGEONPOSFIX,
 
-   qr_HOLDITEMANIMATION, qr_HESITANTPUSHBLOCKS, qr_HIDECARRIEDITEMS, qr_SASPARKLES,
-   qr_GASPARKLES, qr_MBSPARKLES, qr_FBSPARKLES, qr_NOFLASHDEATH,
+   qr_HOLDITEMANIMATION, qr_HESITANTPUSHBLOCKS, qr_HIDECARRIEDITEMS, 
+   qr_SASPARKLES, qr_GASPARKLES, qr_MBSPARKLES, qr_FBSPARKLES, qr_NOFLASHDEATH,
 
    qr_KEEPOLDITEMS, qr_FIREPROOFLINK, qr_OUCHBOMBS, qr_NOCLOCKS,
    qr_TEMPCLOCKS, qr_BRKBLSHLDS, qr_BRKNSHLDTILES, qr_MEANPLACEDTRAPS,
@@ -356,7 +347,8 @@ enum
    qr_HEARTRINGFIX, qr_NOHEARTRING, qr_DODONGOCOLORFIX, qr_SWORDWANDFLIPFIX,
 
    qr_ENABLEMAGIC, qr_MAGICWAND, qr_MAGICCANDLE, qr_MAGICBOOTS,
-   qr_NONBUBBLEMEDICINE, qr_NONBUBBLEFAIRIES, qr_NONBUBBLETRIFORCE, qr_NEWENEMYTILES,
+   qr_NONBUBBLEMEDICINE, qr_NONBUBBLEFAIRIES, qr_NONBUBBLETRIFORCE, 
+   qr_NEWENEMYTILES,
 
    qr_NOROPE2FLASH, qr_NOBUBBLEFLASH, qr_GHINI2BLINK, qr_WPNANIMFIX,
    qr_PHANTOMGHINI2, qr_Z3BRANG_HSHOT, qr_NOITEMMELEE, qr_SHADOWS,
@@ -530,28 +522,28 @@ enum {pRANDOM, pSIDES};
 
 typedef struct itemdata
 {
-   word tile;
-   byte misc;        // 0000vhtf (vh:flipping, t:two hands, f:flash)
-   byte csets;       // ffffcccc (f:flash cset, c:cset)
-   byte frames;      // animation frame count
-   byte speed;       // animation speed
-   byte delay;       // extra delay factor (-1) for first frame
-   //byte padding;
-   long32 ltm;       // Link Tile Modifier
-   byte exp[10];     // not used
-   //byte padding[2];
+   uint16_t tile;
+   uint8_t misc;        // 0000vhtf (vh:flipping, t:two hands, f:flash)
+   uint8_t csets;       // ffffcccc (f:flash cset, c:cset)
+   uint8_t frames;      // animation frame count
+   uint8_t speed;       // animation speed
+   uint8_t delay;       // extra delay factor (-1) for first frame
+   //uint8_t padding;
+   int32_t ltm;         // Link Tile Modifier
+   uint8_t exp[10];     // not used
+   //uint8_t padding[2];
    // 21 bytes (uses 24)
 } itemdata;
 
 typedef struct wpndata
 {
-   word tile;
-   byte misc;        // 0000vhff (vh:flipping, f:flash (1:NES, 2:BSZ))
-   byte csets;       // ffffcccc (f:flash cset, c:cset)
-   byte frames;      // animation frame count
-   byte speed;       // animation speed
-   byte type;        // used by certain weapons
-   byte exp;         // not used
+   uint16_t tile;
+   uint8_t misc;        // 0000vhff (vh:flipping, f:flash (1:NES, 2:BSZ))
+   uint8_t csets;       // ffffcccc (f:flash cset, c:cset)
+   uint8_t frames;      // animation frame count
+   uint8_t speed;       // animation speed
+   uint8_t type;        // used by certain weapons
+   uint8_t exp;         // not used
    // 8 bytes
 } wpndata;
 
@@ -604,8 +596,8 @@ typedef struct quest_template
 
 typedef struct guydata
 {
-   dword flags;
-   word  tile;
+   uint32_t flags;
+   uint16_t  tile;
    short hp;
 
    short  family, cset, anim, frate;
@@ -621,121 +613,121 @@ typedef struct guydata
 
 typedef struct mapscr2
 {
-   byte valid;
-   byte guy;
-   word str;
-   byte room;
-   byte item;
-   byte warptype;
-   //byte padding;
-   word door_combo_set;
-   byte warpreturnx;
-   byte warpreturny;
-   byte stairx;
-   byte stairy;
-   byte itemx;
-   byte itemy;
-   byte color;
-   byte enemyflags;
-   byte door[4];
-   byte warpdmap;
-   byte warpscr;
-   byte exitdir;
-   byte _FOO3_;
-   word enemy[10];
-   byte pattern;
-   byte warparrivalx;
-   byte warparrivaly;
-   byte path[4];
-   byte sidewarptype;
-   byte sidewarpscr;
-   byte sidewarpdmap;
-   byte itemwarptype;
-   byte itemwarpdmap;
-   byte itemwarpscr;
-   word undercombo;
-   byte old_cpage;
-   byte undercset;
-   word catchall;
-   byte flags;
-   byte flags2;
-   byte flags3;
-   byte flags4;
-   byte layermap[6];
-   byte layerscreen[6];
-   byte layerxsize[6];
-   byte layerxspeed[6];
-   byte layerxdelay[6];
-   byte layerysize[6];
-   byte layeryspeed[6];
-   byte layerydelay[6];
-   byte layeropacity[6];
-   //byte padding;
-   word timedwarptics;
-   byte extra[62];
-   word secretcombo[128];
-   byte secretcset[128];
-   byte secretflag[128];
-   word data[16 * 11];
-   byte sflag[16 * 11];
-   byte cset[16 * 11];
+   uint8_t valid;
+   uint8_t guy;
+   uint16_t str;
+   uint8_t room;
+   uint8_t item;
+   uint8_t warptype;
+   //uint8_t padding;
+   uint16_t door_combo_set;
+   uint8_t warpreturnx;
+   uint8_t warpreturny;
+   uint8_t stairx;
+   uint8_t stairy;
+   uint8_t itemx;
+   uint8_t itemy;
+   uint8_t color;
+   uint8_t enemyflags;
+   uint8_t door[4];
+   uint8_t warpdmap;
+   uint8_t warpscr;
+   uint8_t exitdir;
+   uint8_t _FOO3_;
+   uint16_t enemy[10];
+   uint8_t pattern;
+   uint8_t warparrivalx;
+   uint8_t warparrivaly;
+   uint8_t path[4];
+   uint8_t sidewarptype;
+   uint8_t sidewarpscr;
+   uint8_t sidewarpdmap;
+   uint8_t itemwarptype;
+   uint8_t itemwarpdmap;
+   uint8_t itemwarpscr;
+   uint16_t undercombo;
+   uint8_t old_cpage;
+   uint8_t undercset;
+   uint16_t catchall;
+   uint8_t flags;
+   uint8_t flags2;
+   uint8_t flags3;
+   uint8_t flags4;
+   uint8_t layermap[6];
+   uint8_t layerscreen[6];
+   uint8_t layerxsize[6];
+   uint8_t layerxspeed[6];
+   uint8_t layerxdelay[6];
+   uint8_t layerysize[6];
+   uint8_t layeryspeed[6];
+   uint8_t layerydelay[6];
+   uint8_t layeropacity[6];
+   //uint8_t padding;
+   uint16_t timedwarptics;
+   uint8_t extra[62];
+   uint16_t secretcombo[128];
+   uint8_t secretcset[128];
+   uint8_t secretflag[128];
+   uint16_t data[16 * 11];
+   uint8_t sflag[16 * 11];
+   uint8_t cset[16 * 11];
 } mapscr2;
 typedef struct mapscr
 {
-   byte valid;
-   byte guy;
-   word str;
-   byte room;
-   byte item;
-   byte tilewarptype;
-   //byte padding;
-   word door_combo_set;
-   byte warpreturnx;
-   byte warpreturny;
-   byte stairx;
-   byte stairy;
-   byte itemx;
-   byte itemy;
-   byte color;
-   byte enemyflags;
-   byte door[4];
-   byte tilewarpdmap;
-   byte tilewarpscr;
-   byte exitdir;
-   byte _FOO3_;
-   word enemy[10];
-   byte pattern;
-   byte sidewarptype;
-   byte warparrivalx;
-   byte warparrivaly;
-   byte path[4];
-   byte sidewarpscr;
-   byte sidewarpdmap;
-   word undercombo;
-   byte old_cpage;
-   byte undercset;
-   word catchall;
-   byte flags;
-   byte flags2;
-   byte flags3;
-   byte layermap[6];
-   byte layerscreen[6];
-   byte layerxsize[6];
-   byte layerxspeed[6];
-   byte layerxdelay[6];
-   byte layerysize[6];
-   byte layeryspeed[6];
-   byte layerydelay[6];
-   byte layeropacity[6];
-   //byte padding;
-   word timedwarptics;
-   byte extra[62];
-   word secretcombo[128];
-   byte secretcset[128];
-   byte secretflag[128];
-   word data[16 * 11];
-   byte sflag[16 * 11];
-   byte cset[16 * 11];
+   uint8_t valid;
+   uint8_t guy;
+   uint16_t str;
+   uint8_t room;
+   uint8_t item;
+   uint8_t tilewarptype;
+   //uint8_t padding;
+   uint16_t door_combo_set;
+   uint8_t warpreturnx;
+   uint8_t warpreturny;
+   uint8_t stairx;
+   uint8_t stairy;
+   uint8_t itemx;
+   uint8_t itemy;
+   uint8_t color;
+   uint8_t enemyflags;
+   uint8_t door[4];
+   uint8_t tilewarpdmap;
+   uint8_t tilewarpscr;
+   uint8_t exitdir;
+   uint8_t _FOO3_;
+   uint16_t enemy[10];
+   uint8_t pattern;
+   uint8_t sidewarptype;
+   uint8_t warparrivalx;
+   uint8_t warparrivaly;
+   uint8_t path[4];
+   uint8_t sidewarpscr;
+   uint8_t sidewarpdmap;
+   uint16_t undercombo;
+   uint8_t old_cpage;
+   uint8_t undercset;
+   uint16_t catchall;
+   uint8_t flags;
+   uint8_t flags2;
+   uint8_t flags3;
+   uint8_t layermap[6];
+   uint8_t layerscreen[6];
+   uint8_t layerxsize[6];
+   uint8_t layerxspeed[6];
+   uint8_t layerxdelay[6];
+   uint8_t layerysize[6];
+   uint8_t layeryspeed[6];
+   uint8_t layerydelay[6];
+   uint8_t layeropacity[6];
+   //uint8_t padding;
+   uint16_t timedwarptics;
+   uint8_t extra[62];
+   uint16_t secretcombo[128];
+   uint8_t secretcset[128];
+   uint8_t secretflag[128];
+   uint16_t data[16 * 11];
+   uint8_t sflag[16 * 11];
+   uint8_t cset[16 * 11];
 } mapscr;
 
 
@@ -754,29 +746,29 @@ enum {cfOFFSET, cfMAX};
 
 typedef struct newcombo
 {
-   word tile;
-   byte flip;
-   byte walk;
-   byte type;
-   byte csets;
-   word foo;   //do not change!  used for positioning!  no idea why.
-   byte frames;
-   byte speed;
-   word nextcombo;
-   byte nextcset;
-   byte expansion[11];
+   uint16_t tile;
+   uint8_t flip;
+   uint8_t walk;
+   uint8_t type;
+   uint8_t csets;
+   uint16_t foo;   //do not change!  used for positioning!  no idea why.
+   uint8_t frames;
+   uint8_t speed;
+   uint16_t nextcombo;
+   uint8_t nextcset;
+   uint8_t expansion[11];
    //24
 } newcombo;
 
 typedef struct tiletype
 {
-   byte bitplanes;
-   byte *data;
+   uint8_t bitplanes;
+   uint8_t *data;
 } tiletype;
 
 typedef struct ZCHEATS
 {
-   dword flags;
+   uint32_t flags;
    char  codes[4][41];
    //168
 } ZCHEATS;
@@ -787,14 +779,14 @@ typedef struct zquestheader
    //byte  padding;
    //32
    short zelda_version;
-   word  internal;
-   byte  quest_number;
-   byte  old_rules[2];
-   byte  old_map_count;
+   uint16_t  internal;
+   uint8_t  quest_number;
+   uint8_t  old_rules[2];
+   uint8_t  old_map_count;
    char  old_str_count;
    //41
-   byte  data_flags[ZQ_MAXDATA];
-   byte  old_rules2[2];
+   uint8_t  data_flags[ZQ_MAXDATA];
+   uint8_t  old_rules2[2];
    char  old_options;
    char  version[9];
    //73
@@ -806,20 +798,20 @@ typedef struct zquestheader
    char  password[30];
    //236
    char  minver[9];
-   byte  build;
-   byte  use_keyfile;
-   byte  old_foo[9];
-   byte  old_rules3[2];
-   byte  old_rules4[2];
-   byte  old_rules5[2];
-   byte  old_rules6[2];
-   byte  old_rules7[2];
-   byte  old_rules8[2];
-   byte  old_rules9[2];
-   byte  old_rules10[2];
-   byte  old_midi_flags[MIDIFLAGS_SIZE];
+   uint8_t  build;
+   uint8_t  use_keyfile;
+   uint8_t  old_foo[9];
+   uint8_t  old_rules3[2];
+   uint8_t  old_rules4[2];
+   uint8_t  old_rules5[2];
+   uint8_t  old_rules6[2];
+   uint8_t  old_rules7[2];
+   uint8_t  old_rules8[2];
+   uint8_t  old_rules9[2];
+   uint8_t  old_rules10[2];
+   uint8_t  old_midi_flags[MIDIFLAGS_SIZE];
    //304
-   byte  old_foo2[18];
+   uint8_t  old_foo2[18];
    char  templatepath[280];
    //602
 } zquestheader;
@@ -831,12 +823,13 @@ typedef struct MsgStr
    char s[73];
    //byte padding
    //74
-   word nextstring;
-   word expansion[16];
+   uint16_t nextstring;
+   uint16_t expansion[16];
    //108
 } MsgStr;
 
-enum {dt_pass = 0, dt_lock, dt_shut, dt_boss, dt_olck, dt_osht, dt_obos, dt_wall, dt_bomb, dt_walk, dt_max};
+enum {dt_pass = 0, dt_lock, dt_shut, dt_boss, dt_olck, dt_osht, dt_obos, 
+      dt_wall, dt_bomb, dt_walk, dt_max};
 enum {df_walktrans = 0};
 
 typedef struct DoorComboSet
@@ -844,66 +837,66 @@ typedef struct DoorComboSet
    char name[21];
    //byte padding;
    //22
-   word doorcombo_u[9][4];       //[door type][door combo]
-   byte doorcset_u[9][4];        //[door type][door combo]
-   word doorcombo_d[9][4];       //[door type][door combo]
-   byte doorcset_d[9][4];        //[door type][door combo]
+   uint16_t doorcombo_u[9][4];      //[door type][door combo]
+   uint8_t doorcset_u[9][4];        //[door type][door combo]
+   uint16_t doorcombo_d[9][4];      //[door type][door combo]
+   uint8_t doorcset_d[9][4];        //[door type][door combo]
    //238 (216)
-   word doorcombo_l[9][6];       //[door type][door combo]
-   byte doorcset_l[9][6];        //[door type][door combo]
-   word doorcombo_r[9][6];       //[door type][door combo]
-   byte doorcset_r[9][6];        //[door type][door combo]
+   uint16_t doorcombo_l[9][6];      //[door type][door combo]
+   uint8_t doorcset_l[9][6];        //[door type][door combo]
+   uint16_t doorcombo_r[9][6];      //[door type][door combo]
+   uint8_t doorcset_r[9][6];        //[door type][door combo]
    //562 (324)
-   word bombdoorcombo_u[2];      //rubble
-   byte bombdoorcset_u[2];       //rubble
-   word bombdoorcombo_d[2];      //rubble
-   byte bombdoorcset_d[2];       //rubble
+   uint16_t bombdoorcombo_u[2];     //rubble
+   uint8_t bombdoorcset_u[2];       //rubble
+   uint16_t bombdoorcombo_d[2];     //rubble
+   uint8_t bombdoorcset_d[2];       //rubble
    //574 (12)
-   word bombdoorcombo_l[3];      //rubble
-   byte bombdoorcset_l[3];       //rubble
-   //byte padding;
-   word bombdoorcombo_r[3];      //rubble
-   byte bombdoorcset_r[3];       //rubble
-   //byte padding;
+   uint16_t bombdoorcombo_l[3];     //rubble
+   uint8_t bombdoorcset_l[3];       //rubble
+   //uint8_t padding;
+   uint16_t bombdoorcombo_r[3];     //rubble
+   uint8_t bombdoorcset_r[3];       //rubble
+   //uint8_t padding;
    //594 (18)
-   word walkthroughcombo[4];     //[n, s, e, w]
-   byte walkthroughcset[4];      //[n, s, e, w]
+   uint16_t walkthroughcombo[4];    //[n, s, e, w]
+   uint8_t walkthroughcset[4];      //[n, s, e, w]
 
-   byte flags[2];
-   byte expansion[30];
+   uint8_t flags[2];
+   uint8_t expansion[30];
    //638 (44)
 } DoorComboSet;
 
 typedef struct dmap
 {
-   byte map;
-   byte level;
+   uint8_t map;
+   uint8_t level;
    char xoff;
-   byte compass;
-   byte color;
-   byte midi;
-   byte cont;
-   byte type;
+   uint8_t compass;
+   uint8_t color;
+   uint8_t midi;
+   uint8_t cont;
+   uint8_t type;
    //8
-   byte grid[8];
+   uint8_t grid[8];
    //16
    char name[21];
    char title[21];
    char intro[73];
    //byte padding;
    //132
-   word minimap_1_tile;    //before getting map
-   byte minimap_1_cset;    //cset for minimap 1
+   uint16_t minimap_1_tile;   //before getting map
+   uint8_t minimap_1_cset;    //cset for minimap 1
    //byte padding;
-   word minimap_2_tile;    //after getting map
-   byte minimap_2_cset;    //cset for minimap 2
+   uint16_t minimap_2_tile;   //after getting map
+   uint8_t minimap_2_cset;    //cset for minimap 2
    //byte padding;
    //140
-   word largemap_1_tile;   //large map
-   byte largemap_1_cset;   //cset for large
+   uint16_t largemap_1_tile;  //large map
+   uint8_t largemap_1_cset;   //cset for large
    //byte padding;
-   word largemap_2_tile;   //large map
-   byte largemap_2_cset;   //cset for large
+   uint16_t largemap_2_tile;  //large map
+   uint8_t largemap_2_cset;   //cset for large
    char tmusic[56];
    //byte padding;
    //204
@@ -911,94 +904,94 @@ typedef struct dmap
 
 typedef struct shoptype
 {
-   byte item[3];
-   byte d1;
-   word price[3];
+   uint8_t item[3];
+   uint8_t d1;
+   uint16_t price[3];
    //10
 } shoptype;
 
 typedef struct pondtype
 {
-   byte olditem[3];
-   byte d1;
-   byte newitem[3];
-   byte fairytile;
-   byte aframes;
-   byte aspeed;
-   word msg[15];
-   byte foo[32];
+   uint8_t olditem[3];
+   uint8_t d1;
+   uint8_t newitem[3];
+   uint8_t fairytile;
+   uint8_t aframes;
+   uint8_t aspeed;
+   uint16_t msg[15];
+   uint8_t foo[32];
    //72
 } pondtype;
 
 typedef struct infotype192b145
 {
-   byte str[3];
-   byte d1;
-   word price[3];
+   uint8_t str[3];
+   uint8_t d1;
+   uint16_t price[3];
    //10
 } infotype192b145;
 
 typedef struct infotype
 {
-   word str[3];
-   byte d1;
+   uint16_t str[3];
+   uint8_t d1;
    //byte padding;
-   word price[3];
+   uint16_t price[3];
    //14
 } infotype;
 
 typedef struct warpring
 {
-   byte dmap[8];
-   byte scr[8];
-   byte size;
-   byte d1;
+   uint8_t dmap[8];
+   uint8_t scr[8];
+   uint8_t size;
+   uint8_t d1;
    //18
 } warpring;
 
 typedef struct windwarp
 {
-   byte dmap;
-   byte scr;
+   uint8_t dmap;
+   uint8_t scr;
 
    //2
 } windwarp;
 
 typedef struct zcolors
 {
-   byte text, caption;
-   byte overw_bg, dngn_bg;
-   byte dngn_fg, cave_fg;
-   byte bs_dk, bs_goal;
-   byte compass_lt, compass_dk;
+   uint8_t text, caption;
+   uint8_t overw_bg, dngn_bg;
+   uint8_t dngn_fg, cave_fg;
+   uint8_t bs_dk, bs_goal;
+   uint8_t compass_lt, compass_dk;
    //10
-   byte subscr_bg, triframe_color;
-   byte link_dot;
-   byte bmap_bg, bmap_fg;
+   uint8_t subscr_bg, triframe_color;
+   uint8_t link_dot;
+   uint8_t bmap_bg, bmap_fg;
    //15
-   byte triforce_cset;
-   byte triframe_cset;
-   byte overworld_map_cset;
-   byte dungeon_map_cset;
-   byte blueframe_cset;
+   uint8_t triforce_cset;
+   uint8_t triframe_cset;
+   uint8_t overworld_map_cset;
+   uint8_t dungeon_map_cset;
+   uint8_t blueframe_cset;
    //20
-   word triforce_tile;
-   word triframe_tile;
-   word overworld_map_tile;
-   word dungeon_map_tile;
-   word blueframe_tile;
+   uint16_t triforce_tile;
+   uint16_t triframe_tile;
+   uint16_t overworld_map_tile;
+   uint16_t dungeon_map_tile;
+   uint16_t blueframe_tile;
    //30
-   word HCpieces_tile;
-   byte HCpieces_cset;
-   byte foo[7];
+   uint16_t HCpieces_tile;
+   uint8_t HCpieces_cset;
+   uint8_t foo[7];
    //40
-   byte foo2[256];
+   uint8_t foo2[256];
    //296 bytes
 } zcolors;
 
 typedef struct palcycle
 {
-   byte first, count, speed;
+   uint8_t first, count, speed;
    //3
 } palcycle;
 
@@ -1014,17 +1007,17 @@ typedef struct miscQdata
    //2832 (2304=3*256*3)
    windwarp wind[9];          // destination of whirlwind for each level
    //2850 (18=2*2)
-   byte triforce[8];          // positions of triforce pieces on subscreen
+   uint8_t triforce[8];       // positions of triforce pieces on subscreen
    //2858 (8)
    zcolors  colors;
    //3154 (296)
-   word icons[4];
+   uint16_t icons[4];
    //3162 (8=2*4)
    pondtype pond[16];
    //4314 (1152=72*16)
-   word endstring;
+   uint16_t endstring;
    //  byte dummy;            // left over from a word
-   word expansion[98];
+   uint16_t expansion[98];
    //4512
 } miscQdata;
 
@@ -1032,9 +1025,9 @@ typedef struct music
 {
    char title[20];
    //20
-   long32 start;
-   long32 loop_start;
-   long32 loop_end;
+   int32_t start;
+   int32_t loop_start;
+   int32_t loop_end;
    //32
    short loop;
    short volume;
@@ -1087,46 +1080,46 @@ enum {i_nayruslove = 1, imax_nayruslove};
 typedef struct gamedata
 {
    char  name[9];
-   byte  quest;
+   uint8_t  quest;
    //10
    short life, maxlife, drupy, rupies, deaths;
    //20
-   byte  keys, maxbombs, wlevel, cheat;
+   uint8_t  keys, maxbombs, wlevel, cheat;
    //24
-   byte  items[MAXITEMS];
+   uint8_t  items[MAXITEMS];
    //280
 
    char  version[9];
    char  title[65];
    //354
-   byte  hasplayed;
+   uint8_t  hasplayed;
    //byte  padding;
    //356
-   dword time;
+   uint32_t time;
    //360
-   byte  timevalid;
-   byte  lvlitems[256];
-   byte  HCpieces;
-   byte  continue_scrn;
-   byte  continue_dmap;
+   uint8_t  timevalid;
+   uint8_t  lvlitems[256];
+   uint8_t  HCpieces;
+   uint8_t  continue_scrn;
+   uint8_t  continue_dmap;
    //620
    short maxmagic;
    short magic;
    short dmagic;
-   byte  magicdrainrate;
-   byte  canslash;               //Link slashes instead of stabs.
+   uint8_t  magicdrainrate;
+   uint8_t  canslash;               //Link slashes instead of stabs.
    //636
-   byte  visited[MAXDMAPS];
+   uint8_t  visited[MAXDMAPS];
    //892 (256)
-   byte  bmaps[MAXDMAPS * 64];   // the dungeon progress maps
+   uint8_t  bmaps[MAXDMAPS * 64];   // the dungeon progress maps
    //17276 (16384)
-   word  maps[MAXMAPS2 * 128];   // info on map changes, items taken, etc.
+   uint16_t  maps[MAXMAPS2 * 128];  // info on map changes, items taken, etc.
    //82556 (65280)
-   byte  guys[MAXMAPS2 * 128];   // guy counts (though dungeon guys are reset on entry)
+   uint8_t  guys[MAXMAPS2 * 128];   // guy counts (though dungeon guys are reset on entry)
    //115196 (32640)
    char  qstpath[1024];
-   byte  icon[128];
-   byte  pal[48];
+   uint8_t  icon[128];
+   uint8_t  pal[48];
    //115456 (260)
 } gamedata;
 
@@ -1152,39 +1145,39 @@ enum
 
 typedef struct zinitdata
 {
-   byte raft, ladder, book, key, flippers, boots;
-   byte ring, sword, shield, wallet, bracelet, amulet, bow;
-   byte more_eq[32];
+   uint8_t raft, ladder, book, key, flippers, boots;
+   uint8_t ring, sword, shield, wallet, bracelet, amulet, bow;
+   uint8_t more_eq[32];
    //45
-   byte candle, boomerang, arrow, potion, whistle, bombs, super_bombs;
-   byte wand, letter, lens, hookshot, bait, hammer, dins_fire, farores_wind;
-   byte nayrus_love, cloak;
-   byte more_items[32];
+   uint8_t candle, boomerang, arrow, potion, whistle, bombs, super_bombs;
+   uint8_t wand, letter, lens, hookshot, bait, hammer, dins_fire, farores_wind;
+   uint8_t nayrus_love, cloak;
+   uint8_t more_items[32];
    //94
-   byte hc, start_heart, cont_heart, hcp, max_bombs, keys;
-   word rupies;
-   byte triforce;             // bit flags
-   byte map[32];
-   byte compass[32];
-   byte boss_key[32];
-   byte misc[16];
-   byte sword_hearts[4];
-   byte last_map;             //last map worked on
+   uint8_t hc, start_heart, cont_heart, hcp, max_bombs, keys;
+   uint16_t rupies;
+   uint8_t triforce;             // bit flags
+   uint8_t map[32];
+   uint8_t compass[32];
+   uint8_t boss_key[32];
+   uint8_t misc[16];
+   uint8_t sword_hearts[4];
+   uint8_t last_map;             // last map worked on
    //220
-   byte last_screen;          //last screen worked on
-   byte max_magic;
-   byte magic;
-   byte beam_hearts[4];
-   byte beam_percent;         //bit flags
+   uint8_t last_screen;          // last screen worked on
+   uint8_t max_magic;
+   uint8_t magic;
+   uint8_t beam_hearts[4];
+   uint8_t beam_percent;         // bit flags
    //228
-   byte beam_power[4];
-   byte hookshot_links;
-   byte msg_more_x, msg_more_y;
-   byte subscreen;
-   byte start_dmap;
-   byte linkwalkstyle;
+   uint8_t beam_power[4];
+   uint8_t hookshot_links;
+   uint8_t msg_more_x, msg_more_y;
+   uint8_t subscreen;
+   uint8_t start_dmap;
+   uint8_t linkwalkstyle;
    //238
-   byte expansion[98];
+   uint8_t expansion[98];
    //336 bytes total
 } zinitdata;
 
@@ -1319,8 +1312,8 @@ inline bool p_iputw(int c, PACKFILE *f)
 
 inline bool p_igetl(void *p, PACKFILE *f, bool keepdata)
 {
-   dword *cp = (dword *)p;
-   long32 c;
+   uint32_t *cp = (uint32_t *)p;
+   int32_t c;
    if (!f)
       return false;
 
@@ -1399,8 +1392,8 @@ inline bool p_mputw(int c, PACKFILE *f)
 
 inline bool p_mgetl(void *p, PACKFILE *f, bool keepdata)
 {
-   dword *cp = (dword *)p;
-   long32 c;
+   uint32_t *cp = (uint32_t *)p;
+   int32_t c;
    
    if (!f)
       return false;

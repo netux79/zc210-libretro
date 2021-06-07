@@ -590,8 +590,8 @@ void movingblock::push(fix bx, fix by, int d, int f)
    endy = y = by;
    dir = d;
    oldflag = f;
-   word *di = &(tmpscr->data[(int(y) & 0xF0) + (int(x) >> 4)]);
-   byte *ci = &(tmpscr->cset[(int(y) & 0xF0) + (int(x) >> 4)]);
+   uint16_t *di = &(tmpscr->data[(int(y) & 0xF0) + (int(x) >> 4)]);
+   uint8_t *ci = &(tmpscr->cset[(int(y) & 0xF0) + (int(x) >> 4)]);
    bcombo =  tmpscr->data[(int(y) & 0xF0) + (int(x) >> 4)];
    cs     =  tmpscr->cset[(int(y) & 0xF0) + (int(x) >> 4)];
    tile = combobuf[bcombo].tile;

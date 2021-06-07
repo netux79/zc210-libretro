@@ -45,8 +45,8 @@ enum
 };
 
 extern const char *qst_error[];
-extern word msg_count;
-extern word door_combo_set_count;
+extern uint16_t msg_count;
+extern uint16_t door_combo_set_count;
 
 char *VerStr(int version);
 
@@ -72,20 +72,21 @@ int readheader(PACKFILE *f, zquestheader *header, bool keepdata);
 int readrules(PACKFILE *f, zquestheader *header, bool keepdata);
 int readstrings(PACKFILE *f, zquestheader *header, bool keepdata);
 int readdoorcombosets(PACKFILE *f, zquestheader *header, bool keepdata);
-int readdmaps(PACKFILE *f, zquestheader *header, word start_dmap,
-              word max_dmaps, bool keepdata);
+int readdmaps(PACKFILE *f, zquestheader *header, uint16_t start_dmap,
+              uint16_t max_dmaps, bool keepdata);
 int readmisc(PACKFILE *f, zquestheader *header, miscQdata *misc, bool keepdata);
-int readitems(PACKFILE *f, word version, word build, bool keepdata);
+int readitems(PACKFILE *f, uint16_t version, uint16_t build, bool keepdata);
 int readweapons(PACKFILE *f, zquestheader *header, bool keepdata);
 int readguys(PACKFILE *f, zquestheader *header, bool keepdata);
 int readmapscreen(PACKFILE *f, zquestheader *header, mapscr *temp_mapscr);
 int readmaps(PACKFILE *f, zquestheader *header, bool keepdata);
-int readcombos(PACKFILE *f, word version, word build, word start_combo, 
-               word max_combos, bool keepdata);
-int readcolordata(PACKFILE *f, miscQdata *misc, word version, word build,
+int readcombos(PACKFILE *f, uint16_t version, uint16_t build, uint16_t start_combo, 
+               uint16_t max_combos, bool keepdata);
+int readcolordata(PACKFILE *f, miscQdata *misc, uint16_t version, uint16_t build,
                   bool keepdata);
-int readtiles(PACKFILE *f, byte *buf, zquestheader *header, word version,
-              word build, word start_tile, word max_tiles, bool from_init, bool keepdata);
+int readtiles(PACKFILE *f, uint8_t *buf, zquestheader *header, uint16_t version,
+              uint16_t build, uint16_t start_tile, uint16_t max_tiles, 
+			  bool from_init, bool keepdata);
 int readmidis(PACKFILE *f, zquestheader *header, music *midis, bool keepdata);
 int readcheatcodes(PACKFILE *f, zquestheader *header, bool keepdata);
 int readinitdata(PACKFILE *f, zquestheader *header, bool keepdata);

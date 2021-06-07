@@ -51,24 +51,24 @@ BITMAP *framebuf, *scrollbuf, *tempbuf, *msgdisplaybuf, *pricesdisplaybuf;
 DATAFILE *data = NULL, *sfxdata, *mididata;
 FONT *zfont, *font;
 PALETTE RAMpal;
-byte *tilebuf, *colordata;
+uint8_t *tilebuf, *colordata;
 newcombo *combobuf;
 itemdata *itemsbuf;
 wpndata *wpnsbuf;
 guydata *guysbuf;
 ZCHEATS zcheats;
-byte use_tiles, oldflags3;
-word animated_combo_table[MAXCOMBOS][2];  //[0]=position in act2, [1]=original tile
-word animated_combo_table4[MAXCOMBOS][2]; //[0]=combo, [1]=clock
-word animated_combos;
+uint8_t use_tiles, oldflags3;
+uint16_t animated_combo_table[MAXCOMBOS][2];  //[0]=position in act2, [1]=original tile
+uint16_t animated_combo_table4[MAXCOMBOS][2]; //[0]=combo, [1]=clock
+uint16_t animated_combos;
 bool blank_tile_table[NEWMAXTILES]; //keeps track of blank tiles
 bool blank_tile_quarters_table[NEWMAXTILES * 4];  //keeps track of blank tiles
 bool ewind_restart = false;
-word msgclk, msgstr, msgpos, msg_count;
-word door_combo_set_count;
-word introclk, intropos, dmapmsgclk, linkedmsgclk;
+uint16_t msgclk, msgstr, msgpos, msg_count;
+uint16_t door_combo_set_count;
+uint16_t introclk, intropos, dmapmsgclk, linkedmsgclk;
 short Bpos, lensclk, lenscnt;
-byte screengrid[22];
+uint8_t screengrid[22];
 bool screenscrolling = false;
 bool anymsg = false;
 bool anyprice = false;
@@ -110,7 +110,7 @@ bool Udown, Ddown, Ldown, Rdown, Adown, Bdown, Edown, Sdown, LBdown, RBdown,
 int  add_asparkle = 0, add_bsparkle = 0;
 
 short  visited[6];
-byte   guygrid[176];
+uint8_t   guygrid[176];
 mapscr tmpscr[2];
 mapscr tmpscr2[6];
 mapscr tmpscr3[6];
@@ -120,9 +120,9 @@ int cheat = 0;       // 0 = none; 1,2,3,4 = cheat level
 
 // quest file data
 zquestheader QHeader;
-byte         quest_rules[QUESTRULES_SIZE];
-byte         midi_flags[MIDIFLAGS_SIZE];
-word         map_count;
+uint8_t      quest_rules[QUESTRULES_SIZE];
+uint8_t      midi_flags[MIDIFLAGS_SIZE];
+uint16_t     map_count;
 MsgStr       *MsgStrings;
 DoorComboSet *DoorComboSets;
 dmap         *DMaps;
@@ -146,14 +146,14 @@ const char gambledat[12 * 6] =
    -10, -10, 20, -10, -10, 20, -10, -40, 20, -40, -10, 20,
    -10, -10, 50, -10, -10, 50, -10, -40, 50, -40, -10, 50
 };
-const byte stx[4][9] =
+const uint8_t stx[4][9] =
 {
    { 48, 80, 80, 96, 112, 144, 160, 160, 192},
    { 48, 80, 80, 96, 128, 144, 160, 160, 192},
    { 80, 80, 128, 128, 160, 160, 192, 192, 208},
    { 32, 48, 48, 80, 80, 112, 112, 160, 160}
 };
-const byte sty[4][9] =
+const uint8_t sty[4][9] =
 {
    {112, 64, 128, 96, 80, 96, 64, 128, 112},
    { 48, 32, 96, 64, 80, 64, 32, 96, 48},
@@ -161,8 +161,8 @@ const byte sty[4][9] =
    { 80, 48, 112, 64, 96, 64, 96, 32, 128}
 };
 
-const byte ten_rupies_x[10] = {120, 112, 128, 96, 112, 128, 144, 112, 128, 120};
-const byte ten_rupies_y[10] = {49, 65, 65, 81, 81, 81, 81, 97, 97, 113};
+const uint8_t ten_rupies_x[10] = {120, 112, 128, 96, 112, 128, 144, 112, 128, 120};
+const uint8_t ten_rupies_y[10] = {49, 65, 65, 81, 81, 81, 81, 97, 97, 113};
 
 music tunes[MAXMUSIC] =
 {
@@ -751,7 +751,7 @@ void putintro(void)
 void do_magic_casting(void)
 {
    static int tempx, tempy;
-   static byte linktilebuf[256];
+   static uint8_t linktilebuf[256];
    int ltile = 0;
    int lflip = 0;
    switch (magictype)

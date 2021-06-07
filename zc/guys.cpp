@@ -9866,7 +9866,7 @@ void loadguys(void)
 
    loaded_guys = true;
 
-   byte Guy = 0, Item = 0;
+   uint8_t Guy = 0, Item = 0;
    repaircharge = false;
    adjustmagic = false;
    learnslash = false;
@@ -10379,7 +10379,7 @@ void loadenemies(void)
 
    // dungeon basements
 
-   static byte dngn_enemy_x[4] = {32, 96, 144, 208};
+   static uint8_t dngn_enemy_x[4] = {32, 96, 144, 208};
 
    if (currscr >= 128)
    {
@@ -10613,7 +10613,7 @@ void putprices(bool sign)
 void setupscreen(void)
 {
    int t = currscr < 128 ? 0 : 1;
-   word str = tmpscr[t].str;
+   uint16_t str = tmpscr[t].str;
 
    for (int i = 0; i < 3; i++)
    {

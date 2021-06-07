@@ -12,7 +12,7 @@
 #define _MAPS_H_
 #include "zdefs.h"
 
-void clear_dmap(byte i);
+void clear_dmap(uint8_t i);
 void clear_dmaps(void);
 int count_dmaps(void);
 int isdungeon(void);

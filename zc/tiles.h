@@ -13,21 +13,21 @@
 
 #include "zdefs.h"
 
-extern byte *tilebuf;
+extern uint8_t *tilebuf;
 extern newcombo *combobuf;
-extern byte unpackbuf[256];
+extern uint8_t unpackbuf[256];
 
 void register_blank_tiles(void);
-word count_tiles(byte *buf);
-word count_combos(void);
+uint16_t count_tiles(uint8_t *buf);
+uint16_t count_combos(void);
 void setup_combo_animations(void);
 void reset_combo_animations(void);
 void animate_combos(void);
-void clear_tiles(byte *buf);
+void clear_tiles(uint8_t *buf);
 void unpack_tile(int tile, int flip, bool force);
 
-void pack_tile(byte *src, int tile);
-void pack_tiles(byte *buf);
+void pack_tile(uint8_t *src, int tile);
+void pack_tiles(uint8_t *buf);
 int rotate_value(int flip);
 
 void puttile8(BITMAP *dest, int tile, int x, int y, int cset, int flip);

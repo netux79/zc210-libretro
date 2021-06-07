@@ -75,7 +75,7 @@ void brick(int x, int y)
 
 void endingpal(void)
 {
-   byte pal[16 * 3] =
+   uint8_t pal[16 * 3] =
    {
       0, 0, 0,                                                // clear
       63, 63, 63,                                             // white
@@ -85,7 +85,7 @@ void endingpal(void)
       26, 34, 63,                                             // blue
       22, 54, 21                                              // green
    };
-   byte *hold = colordata;
+   uint8_t *hold = colordata;
    colordata = pal;
    loadpalset(csBOSS, 0);
    colordata = hold;
@@ -241,7 +241,7 @@ void zc_ending(void)
       }
       if (f >= 733 && f < 861)
       {
-         static byte flash[4] = {0x12, 0x16, 0x2A, 0x0F};
+         static uint8_t flash[4] = {0x12, 0x16, 0x2A, 0x0F};
          RAMpal[16] = NESpal(flash[(f - 733) & 3]);
          zc_sync_pal = true;
       }

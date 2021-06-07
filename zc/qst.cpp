@@ -21,8 +21,8 @@ extern MsgStr       *MsgStrings;
 extern DoorComboSet *DoorComboSets;
 extern dmap         *DMaps;
 extern newcombo     *combobuf;
-extern byte         *colordata;
-extern byte         *tilebuf;
+extern uint8_t      *colordata;
+extern uint8_t      *tilebuf;
 extern itemdata     *itemsbuf;
 extern wpndata      *wpnsbuf;
 extern guydata      *guysbuf;
@@ -52,12 +52,12 @@ char *VerStr(int version)
 }
 
 /*
-int get_version_and_build(PACKFILE* f, word* version, word* build) {
+int get_version_and_build(PACKFILE* f, uint16_t* version, uint16_t* build) {
    int ret;
    *version = 0;
    *build = 0;
-   byte temp_map_count = map_count;
-   byte temp_midi_flags[MIDIFLAGS_SIZE];
+   uint8_t temp_map_count = map_count;
+   uint8_t temp_midi_flags[MIDIFLAGS_SIZE];
    memcpy(temp_midi_flags, midi_flags, MIDIFLAGS_SIZE);
 
    zquestheader tempheader;
@@ -85,7 +85,7 @@ bool find_section(PACKFILE* f, long section_id_requested) {
    }
 
    int  section_id_read;
-   word dummy;
+   uint16_t dummy;
    char tempbuf[65536];
 
    switch (section_id_requested) {
@@ -96,7 +96,7 @@ bool find_section(PACKFILE* f, long section_id_requested) {
          break;
    }
 
-   dword section_size;
+   uint32_t section_size;
 
    //section id
    if (!p_mgetl(&section_id_read, f, true)) {
@@ -232,7 +232,7 @@ bool init_section(zquestheader* Header, long section_id) {
    }
 
    int ret;
-   word version, build;
+   uint16_t version, build;
    PACKFILE* f = NULL;
 
    char deletefilename[1024];
@@ -314,10 +314,10 @@ int alloc_qst_buffers(void)
    if (!(combobuf = (newcombo *)malloc(sizeof(newcombo) * MAXCOMBOS)))
       RETURN_ERROR;
 
-   if (!(colordata = (byte *)malloc(psTOTAL)))
+   if (!(colordata = (uint8_t *)malloc(psTOTAL)))
       RETURN_ERROR;
 
-   if (!(tilebuf = (byte *)malloc(NEWTILE_SIZE)))
+   if (!(tilebuf = (uint8_t *)malloc(NEWTILE_SIZE)))
       RETURN_ERROR;
 
    if (!(itemsbuf = (itemdata *)malloc(sizeof(itemdata) * MAXITEMS)))
@@ -402,7 +402,7 @@ void reset_midis(music *m)
 
 void reset_scr(int scr)
 {
-   byte *di = ((byte *)TheMaps) + (scr * sizeof(mapscr));
+   uint8_t *di = ((uint8_t *)TheMaps) + (scr * sizeof(mapscr));
    memset(di, 0, sizeof(mapscr));
    for (int i = 0; i < 6; i++)
    {
@@ -673,8 +673,8 @@ int readheader(PACKFILE *f, zquestheader *header, bool keepdata)
    zquestheader tempheader;
    memcpy(&tempheader, header, sizeof(tempheader));
    char dummybuf[80];
-   byte temp_map_count;
-   byte temp_midi_flags[MIDIFLAGS_SIZE];
+   uint8_t temp_map_count;
+   uint8_t temp_midi_flags[MIDIFLAGS_SIZE];
 
    memset(temp_midi_flags, 0, MIDIFLAGS_SIZE);
 
@@ -688,9 +688,9 @@ int readheader(PACKFILE *f, zquestheader *header, bool keepdata)
          return qe_invalid;
    }
 
-   if (!strcmp(tempheader.id_str, QH_IDSTR))                    //pre-1.93 version
+   if (!strcmp(tempheader.id_str, QH_IDSTR))   //pre-1.93 version
    {
-      byte padding;
+      uint8_t padding;
       if (!p_getc(&padding, f, true))
          return qe_invalid;
       if (!p_igetw(&tempheader.zelda_version, f, true))
@@ -749,18 +749,17 @@ int readheader(PACKFILE *f, zquestheader *header, bool keepdata)
             return qe_invalid;
          if (!pfread(dummybuf, 9, f, false))
             return qe_invalid;
-      }                                                       // starting at minver
-      if (tempheader.zelda_version <
-            0x187)                      // lacks newer header stuff...
+      }
+	  // starting at minver
+      if (tempheader.zelda_version < 0x187)   // lacks newer header stuff...
       {
-         memset(&quest_rules[4], 0, 16);                        //   word rules3..rules10
+         memset(&quest_rules[4], 0, 16);   //   uint16_t rules3..rules10
       }
       else
       {
-         if (!pfread(&quest_rules[4], 16, f,
-                     true))                  // read new header additions
+         if (!pfread(&quest_rules[4], 16, f, true)) // read new header additions
          {
-            return qe_invalid;                                  // starting at rules3
+            return qe_invalid;   // starting at rules3
          }
       }
       if ((tempheader.zelda_version < 0x192) ||
@@ -770,20 +769,18 @@ int readheader(PACKFILE *f, zquestheader *header, bool keepdata)
          set_bit(quest_rules, qr_BRKBLSHLDS, 1);
       }
 
-      if (tempheader.zelda_version >=
-            0x192)                      //  lacks newer header stuff...
+      if (tempheader.zelda_version >= 0x192)   //  lacks newer header stuff...
       {
-         byte *mf = temp_midi_flags;
+         uint8_t *mf = temp_midi_flags;
          if ((tempheader.zelda_version == 0x192) && (tempheader.build < 178))
-            mf = (byte *)dummybuf;
-         if (!pfread(mf, 32, f, true))              // read new header additions
+            mf = (uint8_t *)dummybuf;
+         if (!pfread(mf, 32, f, true))   // read new header additions
          {
-            return qe_invalid;                                  // starting at foo2
+            return qe_invalid;   // starting at foo2
          }
-         if (!pfread(dummybuf, 18, f,
-                     false))                    // read new header additions
+         if (!pfread(dummybuf, 18, f, false))   // read new header additions
          {
-            return qe_invalid;                                  // starting at foo2
+            return qe_invalid;   // starting at foo2
          }
       }
       if ((tempheader.zelda_version < 0x192) ||
@@ -793,7 +790,7 @@ int readheader(PACKFILE *f, zquestheader *header, bool keepdata)
       else
       {
          if (!pfread(tempheader.templatepath, 280, f,
-                     true))           // read templatepath
+                     true)) // read templatepath
             return qe_invalid;
       }
       if ((tempheader.zelda_version < 0x192) ||
@@ -930,11 +927,11 @@ int readstrings(PACKFILE *f, zquestheader *header, bool keepdata)
    }
 
    MsgStr tempMsgString;
-   word temp_msg_count;
+   uint16_t temp_msg_count;
 
    if (header->zelda_version < 0x193)
    {
-      byte tempbyte;
+      uint8_t tempbyte;
       int strings_to_read = 0;
 
       if ((header->zelda_version < 0x192) ||
@@ -1022,11 +1019,11 @@ int readdoorcombosets(PACKFILE *f, zquestheader *header, bool keepdata)
          ((header->zelda_version == 0x192) && (header->build < 158)))
       return 0;
 
-   word temp_door_combo_set_count = 0;
+   uint16_t temp_door_combo_set_count = 0;
    DoorComboSet tempDoorComboSet;
-   word dummy_word;
+   uint16_t dummy_word;
    long dummy_long;
-   byte padding;
+   uint8_t padding;
 
    if (keepdata == true)
    {
@@ -1358,15 +1355,15 @@ void clear_screen(mapscr *temp_scr)
       temp_scr->layeropacity[j] = 255;
 }
 
-int readdmaps(PACKFILE *f, zquestheader *Header, word start_dmap,
-              word max_dmaps, bool keepdata)
+int readdmaps(PACKFILE *f, zquestheader *Header, uint16_t start_dmap,
+              uint16_t max_dmaps, bool keepdata)
 {
-   word dmapstoread = 0;
+   uint16_t dmapstoread = 0;
    dmap tempDMap;
 
    int dummy;
-   word s_version = 0, s_cversion = 0;
-   byte padding;
+   uint16_t s_version = 0, s_cversion = 0;
+   uint8_t padding;
    if (keepdata == true)
    {
       for (int i = 0; i < max_dmaps; i++)
@@ -1515,14 +1512,14 @@ int readdmaps(PACKFILE *f, zquestheader *Header, word start_dmap,
 
 int readmisc(PACKFILE *f, zquestheader *header, miscQdata *misc, bool keepdata)
 {
-   word maxinfos = 16;
-   word maxshops = 16;
-   word shops = 16, infos = 16, warprings = 8, palcycles = 256, windwarps = 9,
-        triforces = 8, icons = 4;
-   word ponds = 16, pondsize = 72, expansionsize = 98 * 2;
-   byte tempbyte, padding;
+   uint16_t maxinfos = 16;
+   uint16_t maxshops = 16;
+   uint16_t shops = 16, infos = 16, warprings = 8, palcycles = 256, 
+            windwarps = 9, triforces = 8, icons = 4;
+   uint16_t ponds = 16, pondsize = 72, expansionsize = 98 * 2;
+   uint8_t tempbyte, padding;
    miscQdata temp_misc;
-   word swaptmp;
+   uint16_t swaptmp;
 
    memset(&temp_misc, 0, sizeof(temp_misc));
 
@@ -1856,11 +1853,11 @@ int readmisc(PACKFILE *f, zquestheader *header, miscQdata *misc, bool keepdata)
    return 0;
 }
 
-int readitems(PACKFILE *f, word version, word build, bool keepdata)
+int readitems(PACKFILE *f, uint16_t version, uint16_t build, bool keepdata)
 {
-   byte padding;
+   uint8_t padding;
    int  dummy;
-   word items_to_read = MAXITEMS;
+   uint16_t items_to_read = MAXITEMS;
    itemdata tempitem;
    if (version < 0x186)
       items_to_read = 64;
@@ -1940,9 +1937,9 @@ int readitems(PACKFILE *f, word version, word build, bool keepdata)
 
 int readweapons(PACKFILE *f, zquestheader *header, bool keepdata)
 {
-   word weapons_to_read = MAXWPNS;
+   uint16_t weapons_to_read = MAXWPNS;
    int dummy;
-   byte padding;
+   uint8_t padding;
    wpndata tempweapon;
 
    if (header->zelda_version < 0x186)
@@ -2015,7 +2012,7 @@ int init_guys(void)
 
 int readguys(PACKFILE *f, zquestheader *header, bool keepdata)
 {
-   dword dummy;
+   uint32_t dummy;
 
    if (header->zelda_version >= 0x193)
    {
@@ -2041,7 +2038,7 @@ int readguys(PACKFILE *f, zquestheader *header, bool keepdata)
 
 int readmapscreen(PACKFILE *f, zquestheader *header, mapscr *temp_mapscr)
 {
-   byte tempbyte, padding;
+   uint8_t tempbyte, padding;
    int extras, secretcombos;
 
    if (!p_getc(&(temp_mapscr->valid), f, true))
@@ -2453,11 +2450,11 @@ int readmaps(PACKFILE *f, zquestheader *header, bool keepdata)
 {
    int scr = 0;
 
-   dword dummy;
+   uint32_t dummy;
    int screens_to_read;
 
    mapscr temp_mapscr;
-   word temp_map_count;
+   uint16_t temp_map_count;
 
    if ((header->zelda_version < 0x192) || ((header->zelda_version == 0x192)
                                            && (header->build < 137)))
@@ -2537,18 +2534,18 @@ int readmaps(PACKFILE *f, zquestheader *header, bool keepdata)
    return 0;
 }
 
-int readcombos(PACKFILE *f, word version, word build, word start_combo, 
-               word max_combos, bool keepdata)
+int readcombos(PACKFILE *f, uint16_t version, uint16_t build, 
+               uint16_t start_combo, uint16_t max_combos, bool keepdata)
 {
    reset_combo_animations();
 
    // combos
-   word combos_used = 0;
+   uint16_t combos_used = 0;
    int dummy;
-   byte padding;
+   uint8_t padding;
    newcombo temp_combo;
-   word section_version = 0;
-   word section_cversion = 0;
+   uint16_t section_version = 0;
+   uint16_t section_cversion = 0;
    if (keepdata == true)
       memset(combobuf + start_combo, 0, sizeof(newcombo)*max_combos);
 
@@ -2650,14 +2647,14 @@ int readcombos(PACKFILE *f, word version, word build, word start_combo,
    return 0;
 }
 
-int readcolordata(PACKFILE *f, miscQdata *misc, word version, word build,
+int readcolordata(PACKFILE *f, miscQdata *misc, uint16_t version, uint16_t build,
                   bool keepdata)
 {
    miscQdata temp_misc;
-   byte temp_colordata[48];
+   uint8_t temp_colordata[48];
    char temp_palname[PALNAMESIZE];
    int dummy;
-   word palcycles;
+   uint16_t palcycles;
 
    if (version > 0x192)
    {
@@ -2750,12 +2747,13 @@ int readcolordata(PACKFILE *f, miscQdata *misc, word version, word build,
    return 0;
 }
 
-int readtiles(PACKFILE *f, byte *buf, zquestheader *header, word version,
-              word build, word start_tile, word max_tiles, bool from_init, bool keepdata)
+int readtiles(PACKFILE *f, uint8_t *buf, zquestheader *header, uint16_t version,
+              uint16_t build, uint16_t start_tile, uint16_t max_tiles, 
+			  bool from_init, bool keepdata)
 {
    int dummy;
-   word tiles_used = 0;
-   byte temp_tile[SINGLE_TILE_SIZE];
+   uint16_t tiles_used = 0;
+   uint8_t temp_tile[SINGLE_TILE_SIZE];
 
    if (header != NULL && (!header->data_flags[ZQ_TILES]
                           && !from_init))   //keep for old quests
@@ -2798,7 +2796,7 @@ int readtiles(PACKFILE *f, byte *buf, zquestheader *header, word version,
 
       tiles_used = min(tiles_used, NEWMAXTILES - start_tile);
 
-      for (dword i = 0; i < tiles_used; ++i)
+      for (uint32_t i = 0; i < tiles_used; ++i)
       {
          memset(&temp_tile, 0, SINGLE_TILE_SIZE);
          if (!pfread(temp_tile, SINGLE_TILE_SIZE, f, true))
@@ -2815,7 +2813,7 @@ int readtiles(PACKFILE *f, byte *buf, zquestheader *header, word version,
       {
          if (get_bit(quest_rules, qr_BSZELDA))
          {
-            byte tempbyte;
+            uint8_t tempbyte;
             int swimtile = wpnsbuf[iwSwim].tile;
             for (int i = 0; i < SINGLE_TILE_SIZE; i++)
             {
@@ -2842,7 +2840,7 @@ int readtiles(PACKFILE *f, byte *buf, zquestheader *header, word version,
 
 int readmidis(PACKFILE *f, zquestheader *header, music *midis, bool keepdata)
 {
-   byte *mf;
+   uint8_t *mf;
    long dummy;
    music temp_midi;
    int midis_to_read;
@@ -2964,7 +2962,7 @@ int readcheatcodes(PACKFILE *f, zquestheader *header, bool keepdata)
 int readinitdata(PACKFILE *f, zquestheader *header, bool keepdata)
 {
    int dummy;
-   byte padding;
+   uint8_t padding;
 
    zinitdata temp_zinit;
    memset(&temp_zinit, 0, sizeof(zinitdata));
@@ -3106,7 +3104,7 @@ int readinitdata(PACKFILE *f, zquestheader *header, bool keepdata)
       //old only
       if ((header->zelda_version == 0x192) && (header->build < 174))
       {
-         byte equipment, items;                                //bit flags
+         uint8_t equipment, items; //bit flags
          if (!p_getc(&equipment, f, true))
             return qe_invalid;
          temp_zinit.raft = get_bit(&equipment, idE_RAFT);
@@ -3229,7 +3227,7 @@ int readinitdata(PACKFILE *f, zquestheader *header, bool keepdata)
       //old only
       if ((header->zelda_version == 0x192) && (header->build < 174))
       {
-         byte items2;
+         uint8_t items2;
          if (!p_getc(&items2, f, true))
             return qe_invalid;
          temp_zinit.dins_fire = get_bit(&items2, idI_DFIRE);
@@ -3333,7 +3331,7 @@ int loadquest(const char *qstpath, zquestheader *Header, miscQdata *Misc,
    const char *TMP007 = "tmp007.tmp";
    char tpath[MAX_STRLEN];
    bool catchup = false;
-   byte tempbyte;
+   uint8_t tempbyte;
    zquestheader tempheader;
 
    // oldquest flag is set when an unencrypted qst file is suspected.
@@ -3359,13 +3357,13 @@ int loadquest(const char *qstpath, zquestheader *Header, miscQdata *Misc,
             return qe_internal;
             // be sure not to delete tpath now...
       }
-      if (ret == 5)                                           //old encryption?
+      if (ret == 5) //old encryption?
          ret = decode_file_007(qstpath, tpath, ENC_STR, ENC_METHOD_192B185,
                                strstr(qstpath, ".dat#") != NULL);
-      if (ret == 5)                                           //old encryption?
+      if (ret == 5) //old encryption?
          ret = decode_file_007(qstpath, tpath, ENC_STR, ENC_METHOD_192B105,
                                strstr(qstpath, ".dat#") != NULL);
-      if (ret == 5)                                           //old encryption?
+      if (ret == 5) //old encryption?
          ret = decode_file_007(qstpath, tpath, ENC_STR, ENC_METHOD_192B104,
                                strstr(qstpath, ".dat#") != NULL);
       if (ret)
@@ -3392,7 +3390,7 @@ int loadquest(const char *qstpath, zquestheader *Header, miscQdata *Misc,
 
    if (tempheader.zelda_version >= 0x193)
    {
-      dword section_id;
+      uint32_t section_id;
       //section id
       if (!p_mgetl(&section_id, f, true))
          return qe_invalid;

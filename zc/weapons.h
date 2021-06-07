@@ -16,8 +16,8 @@
 /***********  Weapon Class  ***********/
 /**************************************/
 
-extern byte boomframe[16];
-extern byte bszboomflip[4];
+extern uint8_t boomframe[16];
+extern uint8_t bszboomflip[4];
 
 class weapon : public sprite
 {
@@ -29,7 +29,7 @@ public:
    int dragging;
    fix step;
    bool bounce, ignoreLink;
-   word flash, wid, aframe, csclk;
+   uint16_t flash, wid, aframe, csclk;
 
    weapon(fix X, fix Y, int Id, int Type, int pow, int Dir);
    void LOADGFX(int wpn);

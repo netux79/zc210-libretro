@@ -36,7 +36,7 @@
 #define psFADE   ((pdFADE<<4)*3)
 #define psTOTAL  ((newpdTOTAL<<4)*3)
 
-extern const byte nes_pal[];
+extern const uint8_t nes_pal[];
 extern COLOR_MAP trans_table;
 
 #define CSET_SIZE 16                                        // this is only changed to 4 in the NES title screen
@@ -44,7 +44,7 @@ extern COLOR_MAP trans_table;
 #define CSET(x)         ((x)<<CSET_SHFT)
 #define csBOSS          14
 
-RGB _RGB(const byte *si);
+RGB _RGB(const uint8_t *si);
 RGB _RGB(int r, int g, int b);
 void loadfullpal(void);
 void loadlvlpal(int level);

@@ -42,7 +42,7 @@ public:
    guydata *d;
    int  clk2, clk3, stunclk, hclk, sclk, timer;
    int  hp, fading, superman, frate;
-   byte movestatus, item_set, grumble, foobyte;
+   uint8_t movestatus, item_set, grumble, foobyte;
    bool mainguy, leader, itemguy, count_enemy, dying, scored;
    fix  step;
 

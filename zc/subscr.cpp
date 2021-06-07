@@ -75,7 +75,7 @@ void drawgrid(BITMAP *dest, int c1, int c2)
    int si = 0;
    for (int y = 16; y < 48; y += 4)
    {
-      byte dl = DMaps[currdmap].grid[si];
+      uint8_t dl = DMaps[currdmap].grid[si];
       for (int x = 16; x < 76; x += 8)
       {
          if (c2 == -1)
@@ -464,8 +464,8 @@ void markBmap(int dir)
    if (currscr >= 128)
       return;
 
-   byte drow = DMaps[currdmap].grid[currscr >> 4];
-   byte mask = 1 << (7 - ((currscr & 15) - DMaps[currdmap].xoff));
+   uint8_t drow = DMaps[currdmap].grid[currscr >> 4];
+   uint8_t mask = 1 << (7 - ((currscr & 15) - DMaps[currdmap].xoff));
    int di = ((currdmap - 1) << 6) + ((currscr >> 4) << 3) + ((
                currscr & 15) - DMaps[currdmap].xoff);
    int code = 0;

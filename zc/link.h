@@ -24,7 +24,7 @@
 extern movingblock mblock2;                                 //mblock[4]?
 extern sprite_list  guys, items, Ewpns, Lwpns, Sitems, chainlinks, decorations;
 
-extern const byte lsteps[8];
+extern const uint8_t lsteps[8];
 
 enum {did_fairy = 1, did_candle = 2, did_whistle = 4};
 
@@ -44,10 +44,10 @@ enum
 
 typedef struct tilesequence
 {
-   word tile;
-   byte frames;                                              // animation frame count
-   byte speed;                                               // animation speed
-   byte exp;                                                 // not used
+   uint16_t tile;
+   uint8_t frames;                                              // animation frame count
+   uint8_t speed;                                               // animation speed
+   uint8_t exp;                                                 // not used
 } tilesequence;
 
 class LinkClass : public sprite
@@ -56,11 +56,11 @@ class LinkClass : public sprite
    bool autostep, superman, refilling, inlikelike, inwallm;
    int attackclk, ladderx, laddery, pushing, fairyclk, refillclk, hclk;
    int warpx, warpy, holdclk, holditem, attack, swordclk, didstuff, blowcnt;
-   byte skipstep, lstep, hopclk, diveclk, whirlwind;
-   byte hitdir, ladderdir, lastdir[4];
+   uint8_t skipstep, lstep, hopclk, diveclk, whirlwind;
+   uint8_t hitdir, ladderdir, lastdir[4];
    actiontype action;
    int hshandle_id, hshead_id, itemclk;
-   byte conveyor_flags;
+   uint8_t conveyor_flags;
    fix climb_cover_x, climb_cover_y;
    bool dontdraw;
    void movelink();
@@ -85,7 +85,7 @@ class LinkClass : public sprite
    bool can_attack();
    void do_rafting();
    void do_hopping();
-   bool walkflag(int wx, int wy, int cnt, byte d);
+   bool walkflag(int wx, int wy, int cnt, uint8_t d);
    bool checkmaze(mapscr *scr);
    void scrollscr(int dir, int destscr = -1, int destdmap = -1);
    void scrollscr2(int dir, int destscr = -1, int destdmap = -1);

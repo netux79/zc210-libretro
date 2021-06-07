@@ -112,26 +112,26 @@ extern BITMAP *framebuf, *scrollbuf, *tempbuf, *msgdisplaybuf, *pricesdisplaybuf
 extern DATAFILE *data, *sfxdata, *mididata;
 extern FONT *zfont, *font;
 extern PALETTE RAMpal;
-extern byte *tilebuf, *colordata;
+extern uint8_t *tilebuf, *colordata;
 extern newcombo *combobuf;
 extern itemdata *itemsbuf;
 extern wpndata *wpnsbuf;
 extern guydata *guysbuf;
 extern ZCHEATS zcheats;
-extern byte use_tiles;
+extern uint8_t use_tiles;
 
 //[0]=position in act2, [1]=original tile
-extern word animated_combo_table[MAXCOMBOS][2];
-extern word animated_combo_table4[MAXCOMBOS][2]; //[0]=combo, [1]=clock
-extern word animated_combos;
+extern uint16_t animated_combo_table[MAXCOMBOS][2];
+extern uint16_t animated_combo_table4[MAXCOMBOS][2]; //[0]=combo, [1]=clock
+extern uint16_t animated_combos;
 extern bool blank_tile_table[NEWMAXTILES]; //keeps track of blank tiles
 extern bool blank_tile_quarters_table[NEWMAXTILES * 4]; //keeps track of blank tiles
 extern bool ewind_restart;
-extern word msgclk, msgstr, msgpos, msg_count;
-extern word door_combo_set_count;
-extern word introclk, intropos, dmapmsgclk, linkedmsgclk;
+extern uint16_t msgclk, msgstr, msgpos, msg_count;
+extern uint16_t door_combo_set_count;
+extern uint16_t introclk, intropos, dmapmsgclk, linkedmsgclk;
 extern short Bpos, lensclk, lenscnt;
-extern byte screengrid[22];
+extern uint8_t screengrid[22];
 extern bool screenscrolling;
 extern bool anymsg, anyprice;
 
@@ -163,7 +163,7 @@ extern bool is_on_conveyor, activated_timed_warp;
 extern int add_asparkle, add_bsparkle;
 
 extern short  visited[6];
-extern byte   guygrid[176];
+extern uint8_t   guygrid[176];
 extern mapscr tmpscr[2];
 extern mapscr tmpscr2[6];
 extern mapscr tmpscr3[6];
@@ -176,9 +176,9 @@ extern gamedata game;
 
 // quest file data
 extern zquestheader QHeader;
-extern byte         quest_rules[QUESTRULES_SIZE];
-extern byte         midi_flags[MIDIFLAGS_SIZE];
-extern word         map_count;
+extern uint8_t      quest_rules[QUESTRULES_SIZE];
+extern uint8_t      midi_flags[MIDIFLAGS_SIZE];
+extern uint16_t     map_count;
 extern MsgStr       *MsgStrings;
 extern DoorComboSet *DoorComboSets;
 extern dmap         *DMaps;
@@ -191,9 +191,9 @@ extern mapscr       *TheMaps;
 
 extern const char startguy[8];
 extern const char gambledat[12 * 6];
-extern const byte stx[4][9];
-extern const byte sty[4][9];
-extern const byte ten_rupies_x[10];
-extern const byte ten_rupies_y[10];
+extern const uint8_t stx[4][9];
+extern const uint8_t sty[4][9];
+extern const uint8_t ten_rupies_x[10];
+extern const uint8_t ten_rupies_y[10];
 extern music tunes[MAXMUSIC];
 #endif
