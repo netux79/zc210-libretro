@@ -1853,14 +1853,6 @@ void update_video_frame(void)
       --black_opening_count;
    }
 
-   if (zc_sync_pal)
-   {
-      /* weird hack to keep these entries
-       * the same every time */
-      RAMpal[253] = _RGB(0, 0, 0);
-      RAMpal[254] = _RGB(63, 63, 63);
-   }
-
    if (Link.DrunkClock())
       draw_wavy(Link.DrunkClock() / (MAXDRUNKCLOCK / 32));
 
