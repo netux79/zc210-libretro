@@ -147,21 +147,6 @@ void retro_set_environment(retro_environment_t cb)
       log_cb = logging.log;
    else
       log_cb = fallback_log;
-
-   static const struct retro_controller_description controllers[] =
-   {
-      { "Dummy Controller #1", RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 0) },
-      { "Dummy Controller #2", RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 1) },
-      { "Augmented Joypad", RETRO_DEVICE_JOYPAD },
-   };
-
-   static const struct retro_controller_info ports[] =
-   {
-      { controllers, 3 },
-      { NULL, 0 },
-   };
-
-   cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void *)ports);
 }
 
 void retro_set_audio_sample(retro_audio_sample_t cb)
