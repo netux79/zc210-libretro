@@ -704,6 +704,7 @@ static bool copy_file(int file)
       saves[savecnt] = saves[file];
       ++savecnt;
       listpos = ((savecnt - 1) / 3) * 3;
+      save_savedgames();
       sfx(SFX_SCALE);
       select_mode();
       return true;
@@ -716,6 +717,7 @@ static bool delete_file(int file)
    if (file < savecnt)
    {
       delete_save_entry(file);
+      save_savedgames();
       sfx(SFX_OUCH);
       select_mode();
       return true;
