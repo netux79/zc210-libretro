@@ -1107,7 +1107,7 @@ typedef struct gamedata
    short magic;
    short dmagic;
    uint8_t  magicdrainrate;
-   uint8_t  canslash;               //Link slashes instead of stabs.
+   uint8_t  canslash;               // Link slashes instead of stabs.
    //636
    uint8_t  visited[MAXDMAPS];
    //892 (256)

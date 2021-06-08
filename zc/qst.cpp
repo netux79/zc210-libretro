@@ -38,9 +38,9 @@ const char *qst_error[] =
 {
    "OK", "File not found", "Invalid quest file",
    "Version not supported", "Obsolete version",
-   "Missing new data",                                       /* but let it pass in ZQuest */
+   "Missing new data",  /* but let it pass in ZQuest */
    "Internal error occurred", "Invalid password",
-   "Doesn't match saved game", "New quest version; please restart game",
+   "Doesn't match loaded quest", "Doesn't match quest version",
    "Out of memory", "File Debug Mode"
 };
 

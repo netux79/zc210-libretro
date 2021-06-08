@@ -23,111 +23,133 @@
 /****  Game Selection Screens  *****/
 /***********************************/
 
-// first the game saving & loading system
-
+/* first the game saving & loading system */
 static const char *SAVE_HEADER = "Zelda Classic Save File";
-static const char *TEMP_SAVEFILE = "tmpsav";
-
+static const char *TEMP_SAVEFILE = "tmpsav.tmp";
 
 int readsaves(gamedata *savedata, PACKFILE *f)
 {
    uint16_t item_count;
    uint16_t qstpath_len;
    uint16_t save_count;
+   uint16_t save_idx = 0;
+   gamedata g;
 
    if (!p_igetw(&save_count, f, true))
       return 1;
+
    for (int i = 0; i < save_count; i++)
    {
-      if (!pfread(savedata[i].name, sizeof(savedata[i].name), f, true))
+      if (!pfread(g.name, sizeof(g.name), f, true))
          return 2;
-      if (!p_getc(&(savedata[i].quest), f, true))
+      if (!p_getc(&g.quest, f, true))
          return 3;
-      if (!p_igetw(&savedata[i].life, f, true))
+      if (!p_igetw(&g.life, f, true))
          return 4;
-      if (!p_igetw(&savedata[i].maxlife, f, true))
+      if (!p_igetw(&g.maxlife, f, true))
          return 5;
-      if (!p_igetw(&savedata[i].drupy, f, true))
+      if (!p_igetw(&g.drupy, f, true))
          return 6;
-      if (!p_igetw(&savedata[i].rupies, f, true))
+      if (!p_igetw(&g.rupies, f, true))
          return 7;
-      if (!p_igetw(&savedata[i].deaths, f, true))
+      if (!p_igetw(&g.deaths, f, true))
          return 8;
-      if (!p_getc(&(savedata[i].keys), f, true))
+      if (!p_getc(&g.keys, f, true))
          return 9;
-      if (!p_getc(&(savedata[i].maxbombs), f, true))
+      if (!p_getc(&g.maxbombs, f, true))
          return 10;
-      if (!p_getc(&(savedata[i].wlevel), f, true))
+      if (!p_getc(&g.wlevel, f, true))
          return 11;
-      if (!p_getc(&(savedata[i].cheat), f, true))
+      if (!p_getc(&g.cheat, f, true))
          return 12;
       if (!p_igetw(&item_count, f, true))
          return 13;
       for (int j = 0; j < item_count; ++j)
       {
-         if (!p_getc(&(savedata[i].items[j]), f, true))
+         if (!p_getc(&g.items[j], f, true))
             return 14;
       }
-      if (!pfread(savedata[i].version, sizeof(savedata[i].version), f, true))
+      if (!pfread(g.version, sizeof(g.version), f, true))
          return 15;
-      if (!pfread(savedata[i].title, sizeof(savedata[i].title), f, true))
+      if (!pfread(g.title, sizeof(g.title), f, true))
          return 16;
-      if (!p_getc(&(savedata[i].hasplayed), f, true))
+      if (!p_getc(&g.hasplayed, f, true))
          return 17;
-      if (!p_igetl(&savedata[i].time, f, true))
+      if (!p_igetl(&g.time, f, true))
          return 18;
-      if (!p_getc(&(savedata[i].timevalid), f, true))
+      if (!p_getc(&g.timevalid, f, true))
          return 19;
       for (int j = 0; j < MAXLEVELS; ++j)
       {
-         if (!p_getc(&(savedata[i].lvlitems[j]), f, true))
+         if (!p_getc(&g.lvlitems[j], f, true))
             return 20;
       }
-      if (!p_getc(&(savedata[i].HCpieces), f, true))
+      if (!p_getc(&g.HCpieces, f, true))
          return 21;
-      if (!p_getc(&(savedata[i].continue_scrn), f, true))
+      if (!p_getc(&g.continue_scrn, f, true))
          return 22;
-      if (!p_getc(&(savedata[i].continue_dmap), f, true))
+      if (!p_getc(&g.continue_dmap, f, true))
          return 23;
-      if (!p_igetw(&savedata[i].magic, f, true))
+      if (!p_igetw(&g.magic, f, true))
          return 24;
-      if (!p_igetw(&savedata[i].maxmagic, f, true))
+      if (!p_igetw(&g.maxmagic, f, true))
          return 25;
-      if (!p_igetw(&savedata[i].dmagic, f, true))
+      if (!p_igetw(&g.dmagic, f, true))
          return 26;
-      if (!p_getc(&(savedata[i].magicdrainrate), f, true))
+      if (!p_getc(&(g.magicdrainrate), f, true))
          return 27;
-      if (!p_getc(&(savedata[i].canslash), f, true))
+      if (!p_getc(&g.canslash, f, true))
          return 28;
       for (int j = 0; j < MAXDMAPS; ++j)
       {
-         if (!p_getc(&(savedata[i].visited[j]), f, true))
+         if (!p_getc(&g.visited[j], f, true))
             return 29;
       }
       for (int j = 0; j < MAXDMAPS * 64; ++j)
       {
-         if (!p_getc(&(savedata[i].bmaps[j]), f, true))
+         if (!p_getc(&g.bmaps[j], f, true))
             return 29;
       }
       for (int j = 0; j < MAXMAPS2 * MAPSCRSNORMAL; j++)
       {
-         if (!p_igetw(&savedata[i].maps[j], f, true))
+         if (!p_igetw(&g.maps[j], f, true))
             return 31;
       }
       for (int j = 0; j < MAXMAPS2 * MAPSCRSNORMAL; ++j)
       {
-         if (!p_getc(&(savedata[i].guys[j]), f, true))
+         if (!p_getc(&g.guys[j], f, true))
             return 32;
       }
       if (!p_igetw(&qstpath_len, f, true))
          return 33;
-      if (!pfread(savedata[i].qstpath, qstpath_len, f, true))
+      if (!pfread(g.qstpath, qstpath_len, f, true))
          return 34;
-      savedata[i].qstpath[qstpath_len] = 0;
-      if (!pfread(savedata[i].icon, sizeof(savedata[i].icon), f, true))
+      g.qstpath[qstpath_len] = 0;
+      if (!pfread(g.icon, sizeof(g.icon), f, true))
          return 35;
-      if (!pfread(savedata[i].pal, sizeof(savedata[i].pal), f, true))
+      if (!pfread(g.pal, sizeof(g.pal), f, true))
          return 36;
+
+      /* Confirm the entry matches the loaded quest; skip if error */
+      if (g.title[0] && strcmp(g.title, QHeader.title))
+      {
+         zc_error("Save entry #%d: %s. Skipping", i + 1, qst_error[qe_match]);
+         continue;
+      }
+
+      /* Confirm the save version is valid; skip if error */
+      if (g.version[0] && (strcmp(g.version, QHeader.minver) < 0))
+      {
+         zc_error("Save entry #%d: %s. Skipping", i + 1, qst_error[qe_minver]);
+         continue;
+      }
+
+      /* Keep the save entry */
+      savedata[save_idx++] = g;
+
+      /* if # of saves gets larger than MAXSAVES, we are done */
+      if (save_idx == MAXSAVES)
+         break;
    }
 
    return 0;
@@ -152,12 +174,9 @@ int load_savedgames(void)
    /* Calculate the temp file path */
    replace_filename(tpath, spath, TEMP_SAVEFILE);
 
+   saves = (gamedata *)calloc(MAXSAVES, sizeof(gamedata));
    if (saves == NULL)
-   {
-      saves = (gamedata *)malloc(sizeof(gamedata) * MAXSAVES);
-      if (saves == NULL)
-         return -1;
-   }
+      return -1;
 
    /* see if it already exists */
    if (!file_exists(spath))
@@ -207,9 +226,8 @@ reset:
    zc_error("Format error. Resetting game data...");
 
 init:
-   int *di = (int *)saves;
-   for (unsigned i = 0; i < sizeof(gamedata) * MAXSAVES / sizeof(int); i++)
-      *(di++) = 0;
+   /* Clear all data with zeroes */
+   memset(saves, 0, sizeof(gamedata) * MAXSAVES);
 
    return 0;
 }
@@ -487,6 +505,16 @@ static void draw_cursor(int pos, int mode)
       overtile8(framebuf, 0, 40, (pos - 3) * 16 + 153, 1, 0);
 }
 
+static void delete_save_entry(int entry)
+{
+   for (int i = entry; i < MAXSAVES - 1; i++)
+      saves[i] = saves[i + 1];
+   memset(&saves[MAXSAVES - 1], 0, sizeof(gamedata));
+   --savecnt;
+   if (listpos > savecnt - 1)
+      listpos = max(listpos - 3, 0);
+}
+
 static bool register_name(void)
 {
    if (savecnt >= MAXSAVES)
@@ -648,7 +676,7 @@ static bool register_name(void)
 
    if (done)
    {
-      saves[s].quest = 0xFF;
+      saves[s].quest = 0xFF; /* Always a custom quest for libretro */
       strncpy(saves[s].qstpath, qst_name, sizeof(saves[s].qstpath));
       strncpy(saves[s].version, QHeader.version, sizeof(saves[s].version));
       strncpy(saves[s].title, QHeader.title, sizeof(saves[s].title));
@@ -663,16 +691,7 @@ static bool register_name(void)
       save_savedgames();
    }
    else
-   {
-      for (int i = s; i < MAXSAVES - 1; i++)
-         saves[i] = saves[i + 1];
-      int *di = (int *)(saves + MAXSAVES - 1);
-      for (unsigned i = 0; i < sizeof(gamedata) / sizeof(int); i++)
-         *(di++) = 0;
-      --savecnt;
-      if (listpos > savecnt - 1)
-         listpos = max(listpos - 3, 0);
-   }
+      delete_save_entry(s);
 
    selectscreen();
    return done;
@@ -692,18 +711,11 @@ static bool copy_file(int file)
    return false;
 }
 
-static bool delete_save(int file)
+static bool delete_file(int file)
 {
    if (file < savecnt)
    {
-      for (int i = file; i < MAXSAVES - 1; i++)
-         saves[i] = saves[i + 1];
-      int *di = (int *)(saves + MAXSAVES - 1);
-      for (unsigned i = 0; i < sizeof(gamedata) / sizeof(int); i++)
-         *(di++) = 0;
-      --savecnt;
-      if (listpos > savecnt - 1)
-         listpos = max(listpos - 3, 0);
+      delete_save_entry(file);
       sfx(SFX_OUCH);
       select_mode();
       return true;
@@ -848,7 +860,7 @@ static void select_game(void)
                      break;
 
                   case 3:
-                     if (delete_save(pos + listpos))
+                     if (delete_file(pos + listpos))
                      {
                         mode = 0;
                         pos = 3;
