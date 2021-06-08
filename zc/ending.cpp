@@ -176,7 +176,7 @@ void zc_ending(void)
       draw_screen(tmpscr, 0, 0);
       advanceframe();
       if (zc_state)
-         return;
+         goto skip_ending;
    }
 
    draw_screen_clip_rect_x1 = 0;
@@ -262,7 +262,7 @@ void zc_ending(void)
          put_triforce();
       advanceframe();
       if (zc_state)
-         return;
+         goto skip_ending;
    }
 
    if (QMisc.endstring == 0)
@@ -286,7 +286,7 @@ void zc_ending(void)
          blit(tmp_bmp, framebuf, 0, 0, 120, 113, 32, 32);
       advanceframe();
       if (zc_state)
-         return;
+         goto skip_ending;
    }
 
    clear_bitmap(scrollbuf);
@@ -391,7 +391,7 @@ void zc_ending(void)
       blit(scrollbuf, framebuf, 0, 0, 0, 0, 256, 224);
       advanceframe();
       if (zc_state)
-         return;
+         goto skip_ending;
       rSbtn();
    }
 
@@ -405,10 +405,11 @@ void zc_ending(void)
 
       advanceframe();
       if (zc_state)
-         return;
+         goto skip_ending;
    }
    while (!rSbtn());
 
+skip_ending:
    destroy_bitmap(tmp_bmp);
    reset_status();
    ringcolor();
