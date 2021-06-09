@@ -171,7 +171,7 @@ else
    SHARED := -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=link.T -Wl,--no-undefined
 endif
 
-LDFLAGS += $(LIBM) -L./alport -lalport
+LDFLAGS += $(LIBM)
 
 ifeq ($(DEBUG), 1)
    CFLAGS += -O0 -g

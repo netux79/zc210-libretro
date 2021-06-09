@@ -10,7 +10,22 @@ endif
 
 SOURCES_C   := $(LIBRETRO_COMM_DIR)/rthreads/rthreads.c \
 				$(LIBRETRO_COMM_DIR)/memmap/memalign.c
-SOURCES_CXX := $(CORE_DIR)/zc/zelda.cpp \
+
+SOURCES_CXX := $(CORE_DIR)/alport/bitmap.cpp \
+				 $(CORE_DIR)/alport/datafile.cpp \
+				 $(CORE_DIR)/alport/file.cpp \
+				 $(CORE_DIR)/alport/fix.cpp \
+				 $(CORE_DIR)/alport/font.cpp \
+				 $(CORE_DIR)/alport/lzss.cpp \
+				 $(CORE_DIR)/alport/midi.cpp \
+				 $(CORE_DIR)/alport/packfile.cpp \
+				 $(CORE_DIR)/alport/palette.cpp \
+				 $(CORE_DIR)/alport/primitive.cpp \
+				 $(CORE_DIR)/alport/sound.cpp \
+				 $(CORE_DIR)/alport/fmmidi/midisynth.cpp \
+				 $(CORE_DIR)/alport/fmmidi/sequencer.cpp
+
+SOURCES_CXX += $(CORE_DIR)/zc/zelda.cpp \
 				 $(CORE_DIR)/zc/zc_sys.cpp \
 				 $(CORE_DIR)/zc/weapons.cpp \
 				 $(CORE_DIR)/zc/title.cpp \
@@ -26,4 +41,4 @@ SOURCES_CXX := $(CORE_DIR)/zc/zelda.cpp \
 				 $(CORE_DIR)/zc/guys.cpp \
 				 $(CORE_DIR)/zc/ending.cpp \
 				 $(CORE_DIR)/zc/decorations.cpp \
-				 $(CORE_DIR)//libretro.cpp
+				 $(CORE_DIR)/libretro.cpp
