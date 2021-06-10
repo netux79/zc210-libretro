@@ -189,8 +189,8 @@ extern mapscr       *TheMaps;
 /*********** Misc Data ************/
 /**********************************/
 
-extern const char startguy[8];
-extern const char gambledat[12 * 6];
+extern const int startguy[8];
+extern const int gambledat[12 * 6];
 extern const uint8_t stx[4][9];
 extern const uint8_t sty[4][9];
 extern const uint8_t ten_rupies_x[10];
