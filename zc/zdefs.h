@@ -12,6 +12,7 @@
 
 #include <math.h>
 #include <string.h>
+#include <stdlib.h>
 #include <alport.h>
 #include "zcdata.h"
 #include "zc_exports.h"
