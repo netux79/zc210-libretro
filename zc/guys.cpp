@@ -10365,8 +10365,7 @@ void loadenemies(void)
    if (loaded_enemies)
       return;
 
-   if (tmpscr->pattern ==
-         pSIDES)                            // enemies enter from sides
+   if (tmpscr->pattern == pSIDES)   // enemies enter from sides
    {
       side_load_enemies();
       return;
@@ -10386,8 +10385,8 @@ void loadenemies(void)
       if (dlevel == 0)
          return;
       for (int i = 0; i < 4; i++)
-         addenemy(dngn_enemy_x[i], 96, tmpscr->enemy[i] ? tmpscr->enemy[i] : eKEESE1,
-                  -14 - i);
+         addenemy(dngn_enemy_x[i], 96, 
+                  tmpscr->enemy[i] ? tmpscr->enemy[i] : eKEESE1, -14 - i);
       return;
    }
 
@@ -10432,8 +10431,7 @@ void loadenemies(void)
 
    // load enemies
 
-   if (tmpscr->pattern ==
-         pRANDOM)                           // enemies appear at random places
+   if (tmpscr->pattern == pRANDOM)  // enemies appear at random places
    {
       int pos = rand() % 9;
       int clk = -15, x, y, fastguys = 0;
@@ -10551,7 +10549,7 @@ void loadenemies(void)
                if (index != -1)
                   ((enemy *)guys.spr(index))->itemguy = true;
             }
-         }                                                     // if(t < 20)
+         }     // if(t < 20)
 placed_enemy:
          if (placed)
          {
@@ -10570,7 +10568,7 @@ placed_enemy:
             }
          }
          --clk;
-      }                                                       // for
+      }     // for
       game.guys[s] = guycnt;
    }
 }
@@ -10603,8 +10601,8 @@ void putprices(bool sign)
 
          int l = strlen(buf);
          anyprice = true;
-         textout_ex(pricesdisplaybuf, zfont, buf, x - (l > 3 ? (l - 3) << 3 : 0), 112,
-                    CSET(0) + 1, 0);
+         textout_ex(pricesdisplaybuf, zfont, buf,
+                    x - (l > 3 ? (l - 3) << 3 : 0), 112, CSET(0) + 1, 0);
       }
       x += step;
    }
@@ -10623,11 +10621,11 @@ void setupscreen(void)
 
    switch (tmpscr[t].room)
    {
-      case rSP_ITEM:                                          // special item
+      case rSP_ITEM:    // special item
          additem(120, 89, tmpscr[t].catchall, ipONETIME + ipHOLDUP + ipCHECK);
          break;
 
-      case rINFO:                                             // pay for info
+      case rINFO:       // pay for info
       {
          int count = 0;
          int base  = 88;
@@ -10658,11 +10656,11 @@ void setupscreen(void)
          break;
       }
 
-      case rMONEY:                                            // secret money
+      case rMONEY:      // secret money
          additem(120, 89, iRupy, ipONETIME + ipDUMMY + ipMONEY);
          break;
 
-      case rGAMBLE:                                           // gambling
+      case rGAMBLE:     // gambling
          prices[0][0] = prices[1][0] = prices[2][0] = -10;
          moneysign();
          additem(88, 89, iRupy, ipMONEY + ipDUMMY);
@@ -10670,25 +10668,25 @@ void setupscreen(void)
          additem(152, 89, iRupy, ipMONEY + ipDUMMY);
          break;
 
-      case rREPAIR:                                           // door repair
+      case rREPAIR:     // door repair
          setmapflag();
          repaircharge = true;
          break;
 
-      case rMUPGRADE:                                         // upgrade magic
+      case rMUPGRADE:   // upgrade magic
          adjustmagic = true;
          break;
 
-      case rLEARNSLASH:                                       // learn slash attack
+      case rLEARNSLASH: // learn slash attack
          learnslash = true;
          break;
 
-      case rRP_HC:                                            // heart container or red potion
+      case rRP_HC:      // heart container or red potion
          additem(88, 89, iRPotion, ipONETIME + ipHOLDUP + ipFADE);
          additem(152, 89, iHeartC, ipONETIME + ipHOLDUP + ipFADE);
          break;
 
-      case rP_SHOP:                                           // potion shop
+      case rP_SHOP:     // potion shop
          if (!(game.items[itype_letter]&i_letter_used))
          {
             str = 0;
@@ -10696,7 +10694,7 @@ void setupscreen(void)
          }
       // fall through
 
-      case rSHOP:                                             // shop
+      case rSHOP:       // shop
       {
          int count = 0;
          int base  = 88;
@@ -10707,20 +10705,9 @@ void setupscreen(void)
          for (int i = 0; i < 3; ++i)
          {
             if (QMisc.shop[tmpscr[t].catchall].item[count])
-            {
-               prices[count][0] = QMisc.shop[tmpscr[t].catchall].price[count];
-               prices[count][1] = QMisc.shop[tmpscr[t].catchall].item[count];
                ++count;
-            }
             else
-            {
-               QMisc.shop[tmpscr[t].catchall].item[count] =
-                  QMisc.shop[tmpscr[t].catchall].item[i + 1];
-               QMisc.shop[tmpscr[t].catchall].price[count] =
-                  QMisc.shop[tmpscr[t].catchall].price[i + 1];
-               QMisc.shop[tmpscr[t].catchall].item[i + 1] = 0;
-               QMisc.shop[tmpscr[t].catchall].price[i + 1] = 0;
-            }
+               break;
          }
 
          if (count == 1)
@@ -10729,18 +10716,21 @@ void setupscreen(void)
             step = 6;
 
          for (int i = 0; i < count; i++)
-            additem((i << step) + base,
-                    89 + (QMisc.shop[tmpscr[t].catchall].item[i] ? 0 : 0),
-                    QMisc.shop[tmpscr[t].catchall].item[i], ipHOLDUP + ipCHECK + ipFADE);
+         {
+            additem((i << step) + base, 89,
+                    QMisc.shop[tmpscr[t].catchall].item[i], 
+                    ipHOLDUP + ipCHECK + ipFADE);
+            prices[i][0] = QMisc.shop[tmpscr[t].catchall].price[i];
+         }
       }
       break;
 
-      case rBOMBS:                                            // more bombs
+      case rBOMBS:      // more bombs
          additem(120, 89, iRupy, ipDUMMY + ipMONEY);
          prices[0][0] = -tmpscr[t].catchall;
          break;
 
-      case rSWINDLE:                                          // leave heart container or money
+      case rSWINDLE:    // leave heart container or money
          additem(88, 89, iHeartC, ipDUMMY + ipMONEY);
          additem(152, 89, iRupy, ipDUMMY + ipMONEY);
          prices[0][0] = -1;
@@ -10884,7 +10874,7 @@ void domoney(void)
       sfx(SFX_MSG);
 }
 
-void domagic(void)                                              //basically a copy of domoney()
+void domagic(void)      //basically a copy of domoney()
 {
    if (magicdrainclk == 32767)
       magicdrainclk = -1;
@@ -11040,13 +11030,9 @@ void roaming_item()
    if (hasitem != 2 || !loaded_enemies)
       return;
 
-   if (guys.Count() ==
-         0)                                    // Only case is when you clear all the guys and
-   {
-      // leave w/out getting item, then return to room.
-      return;                                                 // We'll let LinkClass::checkspecial() handle it.
-   }
-
+   if (guys.Count() == 0)  // Only case is when you clear all the guys and
+      return;              // leave w/out getting item, then return to room.
+                           // We'll let LinkClass::checkspecial() handle it.
    if (itemindex == -1)
    {
       guyindex = -1;
@@ -11055,11 +11041,9 @@ void roaming_item()
          if (((enemy *)guys.spr(i))->itemguy)
             guyindex = i;
       }
-      if (guyindex ==
-            -1)                                     //This happens when "default enemies" such as
-      {
-         return;                                               //eFBALL are alive but enemies from the list
-      }                                                       //are not. Defer to LinkClass::checkspecial().
+      if (guyindex == -1)  //This happens when "default enemies" such as
+         return;  //eFBALL are alive but enemies from the list
+                  //are not. Defer to LinkClass::checkspecial().
 
       int Item = tmpscr->item;
       if (getmapflag())
