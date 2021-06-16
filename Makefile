@@ -174,11 +174,11 @@ endif
 LDFLAGS += $(LIBM)
 
 ifeq ($(DEBUG), 1)
-   CFLAGS += -O0 -g
-   CXXFLAGS += -O0 -g
+   CFLAGS += -O0 -g -fsigned-char
+   CXXFLAGS += -O0 -g -fsigned-char
 else
-   CFLAGS += -O3
-   CXXFLAGS += -O3
+   CFLAGS += -O3 -fsigned-char
+   CXXFLAGS += -O3 -fsigned-char
 endif
 
 CORE_DIR := .
