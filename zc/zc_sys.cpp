@@ -1894,11 +1894,10 @@ void advanceframe(void)
    /* prepare the video frame */
    update_video_frame();
 
-   /* wait the main thread's
-    * signal to continue.
-    * Since we regain the ownership
-    * of the mutex there is no need
-    * to lock it again. */
+   /* signal main thread to continue
+    * and wait for it to ask for the
+    * next iteration. */
+   scond_signal(cond);
    scond_wait(cond, mutex);
 
    sfx_cleanup();

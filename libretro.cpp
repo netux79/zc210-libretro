@@ -351,16 +351,21 @@ void retro_run(void)
 
    slock_lock(mutex);
 
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
+      check_variables();
+
    update_input();
+
+   /* wake up gameloop thread and
+    * wait for it to run one
+    * frame of audio and video */
+   scond_signal(cond);
+   scond_wait(cond, mutex);
+
    render_audio();
    render_video();
 
-   /* wake up core thread */
    slock_unlock(mutex);
-   scond_signal(cond);
-
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
-      check_variables();
 }
 
 bool retro_load_game(const struct retro_game_info *info)
@@ -426,7 +431,8 @@ bool retro_load_game(const struct retro_game_info *info)
 
 void retro_unload_game(void)
 {
-   /* stop zc game loop thread from running */
+   /* stop zc game loop thread 
+    * from running */
    zc_state = ZC_EXIT;
    scond_signal(cond);
    sthread_join(zc_thread);

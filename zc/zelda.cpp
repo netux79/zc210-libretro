@@ -1218,11 +1218,13 @@ error:
 
 void zc_gameloop(void *arg)
 {
-   /* make the main thread wait
-    * until one frame is done */
    slock_lock(mutex);
    
-   // play the game
+   /* wait the main thread's
+    * signal to continue. */
+   scond_wait(cond, mutex);
+
+   /* main loop iteration */
    while (zc_state != ZC_EXIT)
    {
       titlescreen();
@@ -1233,7 +1235,7 @@ void zc_gameloop(void *arg)
          advanceframe();
       }
 
-      // save subscreen status
+      /* save subscreen status */
       oldflags3 = tmpscr->flags3;
       tmpscr->flags3 = 0;
       is_playing = false;
