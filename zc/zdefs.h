@@ -17,10 +17,11 @@
 #include "zcdata.h"
 #include "zc_exports.h"
 
-#define SYSTEM_FILE     "zcdata.dat"         /* system file required for ZC */
-#define ZELDA_VERSION   0x0210               /* version of the engine */
-#define VERSION_BUILD   1                    /* build number of this version */
-#define DATE_STR        "January 1, 2007"    /* Original ZC Engine Build Date */
+#define SYSTEM_FILE     "zcdata.dat"      /* system file required for ZC */
+#define ZCSF_FILE       "zcsf.sf2"        /* sf2 file required for midi play */
+#define ZELDA_VERSION   0x0210            /* version of the engine */
+#define VERSION_BUILD   1                 /* build number of this version */
+#define DATE_STR        "January 1, 2007" /* Original ZC Engine Build Date */
 
 #define MIN_VERSION     0x0184
 

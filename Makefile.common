@@ -21,9 +21,7 @@ SOURCES_CXX := $(CORE_DIR)/alport/bitmap.cpp \
 				 $(CORE_DIR)/alport/packfile.cpp \
 				 $(CORE_DIR)/alport/palette.cpp \
 				 $(CORE_DIR)/alport/primitive.cpp \
-				 $(CORE_DIR)/alport/sound.cpp \
-				 $(CORE_DIR)/alport/fmmidi/midisynth.cpp \
-				 $(CORE_DIR)/alport/fmmidi/sequencer.cpp
+				 $(CORE_DIR)/alport/sound.cpp
 
 SOURCES_CXX += $(CORE_DIR)/zc/zelda.cpp \
 				 $(CORE_DIR)/zc/zc_sys.cpp \

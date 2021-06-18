@@ -2226,13 +2226,21 @@ static int sfx_voice[SFX_COUNT];
 
 bool zc_initsound(void)
 {
+   char temp[MAX_STRLEN];
+
    /* Init mixer */
    if (!mixer_init(sampling_rate / TIMING_FPS, sampling_rate, mix_quality,
          MIXER_MAX_SFX))
       return false;
 
+   /* calculate the Sound Font path to load with the midi engine */
+   sprintf(temp, "%s%c%s", system_path, OTHER_PATH_SEPARATOR, ZCSF_FILE);
+   
+   if (!file_exists(temp))
+      return false;
+
    /* Setup the midi processor */
-   if (!midi_init(sampling_rate, 1 / TIMING_FPS))
+   if (!midi_init(sampling_rate, 1 / TIMING_FPS, temp))
       return false;
 
    /* Apply master volume */
