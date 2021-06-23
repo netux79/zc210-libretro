@@ -13,7 +13,6 @@ endif
 
 include $(CLEAR_VARS)
 LOCAL_MODULE       := retro
-LOCAL_MODULE_FILENAME:= zc210_libretro_android
 LOCAL_SRC_FILES    := $(SOURCES_CXX) $(SOURCES_C)
 LOCAL_CPPFLAGS     := -std=gnu++11
 LOCAL_CFLAGS       := -O3 -std=gnu99 $(COREFLAGS)
