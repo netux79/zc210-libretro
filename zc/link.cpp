@@ -2490,10 +2490,10 @@ bool LinkClass::startwpn(int wpn)   // an item index
          {
             if (int(x) & 8)
             {
-               if ((combobuf[MAPDATA(x + 16, y + 23)].type == cHSGRAB))
+               if (combobuf[MAPDATA(x + 16, y + 23)].type == cHSGRAB)
                   use_hookshot = false;
             }
-            else if ((combobuf[MAPDATA(x, y + 23)].type == cHSGRAB))
+            else if (combobuf[MAPDATA(x, y + 23)].type == cHSGRAB)
                use_hookshot = false;
          }
 
@@ -2501,10 +2501,10 @@ bool LinkClass::startwpn(int wpn)   // an item index
          {
             if (int(y) & 8)
             {
-               if ((combobuf[MAPDATA(x - 7, y + 16)].type == cHSGRAB))
+               if (combobuf[MAPDATA(x - 7, y + 16)].type == cHSGRAB)
                   use_hookshot = false;
             }
-            else if ((combobuf[MAPDATA(x - 7, y)].type == cHSGRAB))
+            else if (combobuf[MAPDATA(x - 7, y)].type == cHSGRAB)
                use_hookshot = false;
          }
 
@@ -2512,10 +2512,10 @@ bool LinkClass::startwpn(int wpn)   // an item index
          {
             if (int(y) & 8)
             {
-               if ((combobuf[MAPDATA(x + 23, y + 16)].type == cHSGRAB))
+               if (combobuf[MAPDATA(x + 23, y + 16)].type == cHSGRAB)
                   use_hookshot = false;
             }
-            else if ((combobuf[MAPDATA(x + 23, y)].type == cHSGRAB))
+            else if (combobuf[MAPDATA(x + 23, y)].type == cHSGRAB)
                use_hookshot = false;
          }
 
@@ -3002,13 +3002,13 @@ void LinkClass::movelink()
             if (int(x) & 8)
             {
                if (!walkflag(x, y + 8 - (lsteps[int(y) & 7]), 2, up))
-                  move(up);
+                  movedir(up);
 
                else
                   action = none;
             }
             else if (!walkflag(x, y + 8 - (lsteps[int(y) & 7]), 2, up))
-               move(up);
+               movedir(up);
 
             else
                action = none;
@@ -3018,13 +3018,13 @@ void LinkClass::movelink()
             if (int(x) & 8)
             {
                if (!walkflag(x, y + 15 + (lsteps[int(y) & 7]), 2, down))
-                  move(down);
+                  movedir(down);
 
                else
                   action = none;
             }
             else if (!walkflag(x, y + 15 + (lsteps[int(y) & 7]), 2, down))
-               move(down);
+               movedir(down);
 
             else
                action = none;
@@ -3032,7 +3032,7 @@ void LinkClass::movelink()
          if (dir == left)
          {
             if (!walkflag(x - (lsteps[int(x) & 7]), y + 8, 1, left))
-               move(left);
+               movedir(left);
 
             else
                action = none;
@@ -3040,7 +3040,7 @@ void LinkClass::movelink()
          if (dir == right)
          {
             if (!walkflag(x + 15 + (lsteps[int(x) & 7]), y + 8, 1, right))
-               move(right);
+               movedir(right);
 
             else
                action = none;
@@ -3059,13 +3059,13 @@ void LinkClass::movelink()
    if (isdungeon() && DrunkLeft() && x == 32 && y == 80
          && !walkflag(x - (lsteps[int(x) & 7]), y + 8, 1, left))
    {
-      move(left);
+      movedir(left);
       return;
    }
    if (isdungeon() && DrunkRight() && x == 208 && y == 80
          && !walkflag(x + 15 + (lsteps[int(x) & 7]), y + 8, 1, right))
    {
-      move(right);
+      movedir(right);
       return;
    }
 
@@ -3076,13 +3076,13 @@ void LinkClass::movelink()
          if (dir != up && dir != down)
          {
             if (xoff > 2 && xoff < 6)
-               move(dir);
+               movedir(dir);
 
             else if (xoff >= 6)
-               move(right);
+               movedir(right);
 
             else if (xoff >= 1)
-               move(left);
+               movedir(left);
          }
       }
       else
@@ -3091,7 +3091,7 @@ void LinkClass::movelink()
          {
             if (!walkflag(x, y + 8 - (lsteps[int(y) & 7]), 2, up))
             {
-               move(up);
+               movedir(up);
                return;
             }
          }
@@ -3099,7 +3099,7 @@ void LinkClass::movelink()
          {
             if (!walkflag(x, y + 8 - (lsteps[int(y) & 7]), 2, up))
             {
-               move(up);
+               movedir(up);
                return;
             }
          }
@@ -3125,13 +3125,13 @@ void LinkClass::movelink()
          if (dir != up && dir != down)
          {
             if (xoff > 2 && xoff < 6)
-               move(dir);
+               movedir(dir);
 
             else if (xoff >= 6)
-               move(right);
+               movedir(right);
 
             else if (xoff >= 1)
-               move(left);
+               movedir(left);
          }
       }
       else
@@ -3140,7 +3140,7 @@ void LinkClass::movelink()
          {
             if (!walkflag(x, y + 15 + (lsteps[int(y) & 7]), 2, down))
             {
-               move(down);
+               movedir(down);
                return;
             }
          }
@@ -3148,7 +3148,7 @@ void LinkClass::movelink()
          {
             if (!walkflag(x, y + 15 + (lsteps[int(y) & 7]), 2, down))
             {
-               move(down);
+               movedir(down);
                return;
             }
          }
@@ -3178,19 +3178,19 @@ LEFTRIGHT:
          if (dir != left && dir != right)
          {
             if (yoff > 2 && yoff < 6)
-               move(dir);
+               movedir(dir);
 
             else if (yoff >= 6)
-               move(down);
+               movedir(down);
 
             else if (yoff >= 1)
-               move(up);
+               movedir(up);
          }
       }
       else
       {
          if (!walkflag(x - (lsteps[int(x) & 7]), y + 8, 1, left))
-            move(left);
+            movedir(left);
 
          else if (!DrunkUp() && !DrunkDown())
          {
@@ -3211,19 +3211,19 @@ LEFTRIGHT:
          if (dir != left && dir != right)
          {
             if (yoff > 2 && yoff < 6)
-               move(dir);
+               movedir(dir);
 
             else if (yoff >= 6)
-               move(down);
+               movedir(down);
 
             else if (yoff >= 1)
-               move(up);
+               movedir(up);
          }
       }
       else
       {
          if (!walkflag(x + 15 + (lsteps[int(x) & 7]), y + 8, 1, right))
-            move(right);
+            movedir(right);
 
          else if (!DrunkUp() && !DrunkDown())
          {
@@ -3237,7 +3237,7 @@ LEFTRIGHT:
    }
 }
 
-void LinkClass::move(int d)
+void LinkClass::movedir(int d)
 {
    if (inlikelike)
       return;
@@ -4732,7 +4732,7 @@ void LinkClass::stepforward(int steps)
 
       else
          s -= lsteps[int(x) & 7];
-      move(dir);
+      movedir(dir);
       draw_screen(tmpscr, 0, 0);
       advanceframe();
       if (zc_state)
@@ -5735,9 +5735,9 @@ void dospecialmoney(int index)
       break;
 
       case rBOMBS:
-         if (game.rupies < abs(tmpscr[tmp].catchall))
+         if (game.rupies < tmpscr[tmp].catchall)
             return;
-         game.drupy -= abs(tmpscr[tmp].catchall);
+         game.drupy -= tmpscr[tmp].catchall;
          setmapflag();
          game.maxbombs += 4;
          game.items[itype_bomb] = game.maxbombs;
@@ -5754,9 +5754,9 @@ void dospecialmoney(int index)
       case rSWINDLE:
          if (items.spr(index)->id == iRupy)
          {
-            if (game.rupies < abs(tmpscr[tmp].catchall))
+            if (game.rupies < tmpscr[tmp].catchall)
                return;
-            game.drupy -= abs(tmpscr[tmp].catchall);
+            game.drupy -= tmpscr[tmp].catchall;
          }
          else
          {

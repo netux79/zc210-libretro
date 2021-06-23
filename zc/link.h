@@ -64,7 +64,7 @@ class LinkClass : public sprite
    fix climb_cover_x, climb_cover_y;
    bool dontdraw;
    void movelink();
-   void move(int d);
+   void movedir(int d);
    void hitlink(int hit);
    int  nextcombo(int cx, int cy, int cdir);
    int  nextflag(int cx, int cy, int cdir);

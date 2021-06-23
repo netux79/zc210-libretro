@@ -1605,11 +1605,8 @@ void loadscr(int tmp, int scr, int ldir)
    }
 }
 
-void loadscr2(int tmp, int scr, int ldir)
+void loadscr2(int tmp, int scr)
 {
-   //these are here to bypass compiler warnings about unused arguments
-   ldir = ldir;
-
    for (uint16_t x = 0; x < animated_combos; x++)
    {
       if (combobuf[animated_combo_table4[x][0]].nextcombo != 0)
@@ -1890,7 +1887,7 @@ void ViewMap(void)
             rectfill(scrollbuf, 256, 0, 511, 223, WHITE);
          else
          {
-            loadscr2(1, s, -1);
+            loadscr2(1, s);
             for (int i = 0; i < 6; i++)
             {
                if (tmpscr[1].layermap[i] > 0)
@@ -2045,7 +2042,7 @@ void ViewMap(void)
    while (!(rSbtn() || rMbtn() || zc_state));
    
    destroy_bitmap(mappic);
-   loadscr2(0, currscr, -1);
+   loadscr2(0, currscr);
    for (int i = 0; i < 6; ++i)
    {
       memcpy(&(tmpscr2[i]), &(tmpscr_c[i]), sizeof(mapscr));

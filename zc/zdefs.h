@@ -674,6 +674,7 @@ typedef struct mapscr2
    uint8_t sflag[16 * 11];
    uint8_t cset[16 * 11];
 } mapscr2;
+
 typedef struct mapscr
 {
    uint8_t valid;

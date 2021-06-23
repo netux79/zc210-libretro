@@ -969,7 +969,7 @@ bool weapon::animate(int index)
 
             if (dir == up)
             {
-               if ((combobuf[MAPDATA(x + 2, y + 7)].type == cHSGRAB))
+               if (combobuf[MAPDATA(x + 2, y + 7)].type == cHSGRAB)
                   hooked = true;
                if (!hooked && _walkflag(x + 2, y + 7, 1)
                      && !isstepable(MAPDATA(int(x + 2), int(y + 7)))
@@ -979,7 +979,7 @@ bool weapon::animate(int index)
 
             if (dir == down)
             {
-               if ((combobuf[MAPDATA(x + 12, y + 12)].type == cHSGRAB))
+               if (combobuf[MAPDATA(x + 12, y + 12)].type == cHSGRAB)
                   hooked = true;
                if (!hooked && _walkflag(x + 12, y + 12, 1)
                      && !isstepable(MAPDATA(int(x + 12), int(y + 12)))
@@ -989,7 +989,7 @@ bool weapon::animate(int index)
 
             if (dir == left)
             {
-               if ((combobuf[MAPDATA(x + 6, y + 13)].type == cHSGRAB))
+               if (combobuf[MAPDATA(x + 6, y + 13)].type == cHSGRAB)
                   hooked = true;
                if (!hooked && _walkflag(x + 6, y + 13, 1)
                      && !isstepable(MAPDATA(int(x + 6), int(y + 13)))
@@ -999,7 +999,7 @@ bool weapon::animate(int index)
 
             if (dir == right)
             {
-               if ((combobuf[MAPDATA(x + 9, y + 13)].type == cHSGRAB))
+               if (combobuf[MAPDATA(x + 9, y + 13)].type == cHSGRAB)
                   hooked = true;
                if (!hooked && _walkflag(x + 9, y + 13, 1)
                      && !isstepable(MAPDATA(int(x + 9), int(y + 13)))

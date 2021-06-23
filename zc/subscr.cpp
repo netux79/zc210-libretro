@@ -295,10 +295,10 @@ void update_subscr_items(void)
 static int stripspaces(char *source, char *target, int stop)
 {
    int begin, end;
-   for (begin = 0; ((begin < stop) && (source[begin] == ' ')); begin++);
+   for (begin = 0; (begin < stop) && (source[begin] == ' '); begin++);
    if (begin == stop)
       return 0;
-   for (end = stop - 1; ((source[end] == ' ')); end--);
+   for (end = stop - 1; source[end] == ' '; end--);
    sprintf(target, "%.*s", (end - begin + 1), source + begin);
    return (end - begin + 1);
 }
