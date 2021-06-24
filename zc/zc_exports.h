@@ -1,7 +1,10 @@
 #ifndef _ZC_EXPORTS_H_
 #define _ZC_EXPORTS_H_
 
+/* hack to avoid conflict with Windows BITMAP typedef */
+#define BITMAP WINDOWS_BITMAP
 #include <rthreads/rthreads.h>
+#undef BITMAP
 
 #define TIMING_FPS   60.0
 #define MAX_STRLEN   1024

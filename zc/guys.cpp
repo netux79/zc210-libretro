@@ -3864,7 +3864,7 @@ eZora::eZora(fix X, fix Y, int Id, int Clk) : enemy(X, Y, Id, 0)
 {
    mainguy = false;
    count_enemy = false;
-   if (iswater(tmpscr->data[(((int)y & 0xF0) + (x >> 4))]) &&
+   if (iswater(tmpscr->data[(((int)y & 0xF0) + ((int)x >> 4))]) &&
          (x > -17 && x < 0))
       clk = 1;
    if (get_bit(quest_rules, qr_NEWENEMYTILES))
