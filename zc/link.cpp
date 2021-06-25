@@ -1880,6 +1880,7 @@ bool LinkClass::animate(int index)
       ++clockclk;
       if (clockclk == 256)
       {
+         setClock(false);
          watch = false;
          for (int zoras = 0; zoras < clock_zoras; zoras++)
             addenemy(0, 0, eZORA, 0);
