@@ -128,7 +128,7 @@ void retro_set_environment(retro_environment_t cb)
 
    static const struct retro_variable vars[] =
    {
-      { "zc_samplerate", "Sample Rate (requires restart); 22050|32000|44100" },
+      { "zc_samplerate", "Sample Rate (requires restart); 22050|32000|44100|48000" },
       { "zc_mix_quality", "Sound Quality (requires restart); Normal|High|Low" },
       { "zc_master_vol", "Master Volume; 16|0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15" },
       { "zc_sfx_vol", "SFX Volume; 16|0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15" },
