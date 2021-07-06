@@ -2176,13 +2176,12 @@ void jukebox(int index)
    music_stop();
    update_music_volume();
    midi_play(tunes[sel_music].midi, tunes[sel_music].loop);
+   
+   if (tunes[sel_music].start > 0)
+      midi_fastforward(tunes[sel_music].start);
 
-   /* This functionality is not supported for now :( 
-    * if (tunes[index].start > 0)
-    *    midi_seek(tunes[index].start);
-    * midi_loop_end = tunes[index].loop_end;
-    * midi_loop_start = tunes[index].loop_start;
-    * */
+   midi_loopend(tunes[sel_music].loop_end);
+   midi_loopstart(tunes[sel_music].loop_start);
 }
 
 void play_DmapMusic(void)
