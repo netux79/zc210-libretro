@@ -413,6 +413,7 @@ skip_ending:
    destroy_bitmap(tmp_bmp);
    reset_status();
    ringcolor();
+   load_game_icon(&game);
    game.continue_dmap = zinit.start_dmap;
    game.continue_scrn = 0xFF;
    saves[currgame] = game;

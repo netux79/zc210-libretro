@@ -13,36 +13,37 @@
 
 #include "zdefs.h"
 
-// offsets in "data sets"
-#define poFULL   0                                          // main palette
-#define poLEVEL  15                                         // first level palette
-#define poFADE1  15+4                                       //
-#define poFADE2  15+7                                       //
-#define poFADE3  15+10                                      //
-#define oldpoSPRITE 210                                     // first sprite pal
-#define newpoSPRITE 3343                                    // first sprite pal
+/* offsets in "data sets" */
+#define poFULL   0         /* main palette */
+#define poLEVEL  15        /* first level palette */
+#define poFADE1  15 + 4
+#define poFADE2  15 + 7
+#define poFADE3  15 + 10
+#define oldpoSPRITE 210    /* first sprite pal */
+#define newpoSPRITE 3343   /* first sprite pal */
 #define pSprite(x) ((x)+newpoSPRITE)
 
-// palette data sizes in "data sets"
-#define pdFULL   15                                         // number of csets in the full palette
-#define pdLEVEL  13                                         // complete level pal (normal & fade pals)
-#define pdFADE   3                                          // size of a fade pal
-#define oldpdTOTAL  240                                     // total data sets
-#define newpdTOTAL  3373                                    // total data sets
+/* palette data sizes in "data sets" */
+#define pdFULL       15     /* number of csets in the full palette */
+#define pdLEVEL      13     /* complete level pal (normal & fade pals) */
+#define pdFADE       3      /* size of a fade pal */
+#define oldpdTOTAL   240    /* total data sets */
+#define newpdTOTAL   3373   /* total data sets */
 
-// palette data sizes in bytes
-#define psFULL   ((pdFULL<<4)*3)
-#define psLEVEL  ((pdLEVEL<<4)*3)
-#define psFADE   ((pdFADE<<4)*3)
-#define psTOTAL  ((newpdTOTAL<<4)*3)
+/* palette data sizes in bytes */
+#define psFULL   ((pdFULL << 4) * 3)
+#define psLEVEL  ((pdLEVEL << 4) * 3)
+#define psFADE   ((pdFADE << 4) * 3)
+#define psTOTAL  ((newpdTOTAL << 4) * 3)
 
 extern const uint8_t nes_pal[];
 extern COLOR_MAP trans_table;
 
-#define CSET_SIZE 16                                        // this is only changed to 4 in the NES title screen
-#define CSET_SHFT 4                                         // log2 of CSET_SIZE
-#define CSET(x)         ((x)<<CSET_SHFT)
-#define csBOSS          14
+#define CSET_SIZE    16 /* this is only changed to 4 in the NES title screen */
+#define CSET_SHFT    4  /* log2 of CSET_SIZE */
+#define CSET(x)      ((x) << CSET_SHFT)
+#define csBOSS       14
+#define csICON       6  /* Colors used for link icons in main menu */
 
 RGB _RGB(const uint8_t *si);
 RGB _RGB(int r, int g, int b);
@@ -64,4 +65,4 @@ inline RGB NESpal(int i)
    return   _RGB(nes_pal + i * 3);
 }
 
-#endif                                                      // _ZC_PAL_H_
+#endif   /* _ZC_PAL_H_ */

@@ -397,14 +397,16 @@ void load_game_icon(gamedata *g)
    for (int j = 0; j < 128; j++)
       g->icon[j] = *(si++);
 
+   /* Even when in this port the color data is not required to be kept
+    * in the save entry we will do it for compatibility with the savefiles
+    * on the original ZC */
+
    if (t)
       si = colordata + CSET(pSprite(i + spICON1)) * 3;
-
    else
    {
       if (i)
          si = colordata + CSET(pSprite(i - 1 + spBLUE)) * 3;
-
       else
          si = colordata + CSET(6) * 3;
    }
@@ -432,7 +434,6 @@ static void delete_mode(void)
 
 static void selectscreen(void)
 {
-   loadfullpal();
    clear_bitmap(scrollbuf);
    blueframe(scrollbuf, 24, 48, 26, 20);
    textout_ex(scrollbuf, zfont, "- S E L E C T -", 64, 24, 1, 0);
@@ -448,8 +449,6 @@ static int savecnt;
 
 static void list_save(int save_num, int ypos)
 {
-   bool r = zc_sync_pal;
-
    if (save_num < savecnt)
    {
       game.maxlife = game.life = saves[save_num].maxlife;
@@ -461,20 +460,14 @@ static void list_save(int save_num, int ypos)
          textprintf_ex(framebuf, zfont, 72, ypos + 24, 1, -1, "%3d",
                        saves[save_num].deaths);
    }
-
+   
+   /* Display Link icon */
    uint8_t *hold = tilebuf;
    tilebuf = saves[save_num].icon;
-   overtile16(framebuf, 0, 48, ypos + 17, (save_num % 3) + 10, 0);    //link?
+   overtile16(framebuf, 0, 48, ypos + 17, csICON, 0);
    tilebuf = hold;
 
-   hold = colordata;
-   colordata = saves[save_num].pal;
-   loadpalset((save_num % 3) + 10, 0);
-   colordata = hold;
-
    textout_ex(framebuf, zfont, "-", 136, ypos + 16, 1, -1);
-
-   zc_sync_pal = r;
 }
 
 static void list_saves(void)
@@ -534,7 +527,6 @@ static bool register_name(void)
    int spos = 0;
    char name[9] = "        ";
 
-   zc_sync_pal = true;
    bool done = false;
    bool cancel = false;
 
@@ -793,6 +785,7 @@ static void select_game(void)
    /* Use zelda title music in the selection screen */
    jukebox(MUSIC_TITLE);
 
+   loadfullpal();
    selectscreen();
 
    savecnt = 0;
@@ -820,7 +813,6 @@ static void select_game(void)
                   pos = 3;
                else
                   pos = (savecnt - 1) % 3;
-               zc_sync_pal = true;
                break;
 
             case 4:
@@ -830,7 +822,6 @@ static void select_game(void)
                   pos = 0;
                   copy_mode();
                }
-               zc_sync_pal = true;
                break;
 
             case 5:
@@ -840,7 +831,6 @@ static void select_game(void)
                   pos = 0;
                   delete_mode();
                }
-               zc_sync_pal = true;
                break;
 
             default:
@@ -857,7 +847,6 @@ static void select_game(void)
                      {
                         mode = 0;
                         pos = (savecnt - 1) % 3;
-                        zc_sync_pal = true;
                      }
                      break;
 
@@ -866,7 +855,6 @@ static void select_game(void)
                      {
                         mode = 0;
                         pos = 3;
-                        zc_sync_pal = true;
                      }
                      break;
                }
@@ -890,13 +878,11 @@ static void select_game(void)
       {
          listpos -= 3;
          sfx(SFX_CHIME);
-         zc_sync_pal = true;
       }
       if (rRight() && listpos + 3 < savecnt)
       {
          listpos += 3;
          sfx(SFX_CHIME);
-         zc_sync_pal = true;
       }
       if (rBbtn() && mode)
       {
@@ -1089,3 +1075,4 @@ void zc_quit(void)
 }
 
 /*** end of title.cpp ***/
+ 
