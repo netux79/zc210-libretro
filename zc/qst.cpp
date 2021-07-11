@@ -416,7 +416,10 @@ void reset_scr(int scr)
 
 int operator ==(DoorComboSet a, DoorComboSet b)
 {
-   for (int i = 0; i < 9; i++)
+   /* There is a certain bug in newer compilers with this code
+    * if the "for" statement go from 0 to 8. Changing it to backwards
+    * solves the issue. */
+   for (int i = 8; i >= 0; i--)
    {
       for (int j = 0; j < 6; j++)
       {
