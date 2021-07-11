@@ -1176,7 +1176,7 @@ bool zc_init(const char *qpath)
    if ((data = load_datafile(temp)) == NULL)
       RETURN_ERROR_M("Error loading " SYSTEM_FILE " system datafile.");
    
-   sprintf(temp, "zcdata.dat %s Build %d", VerStr(ZCDAT_VERSION), ZCDAT_BUILD);
+   sprintf(temp, "zcdata.dat v%s Build %d", VerStr(ZCDAT_VERSION), ZCDAT_BUILD);
    
    if (strncmp((char *)data[_SIGNATURE].dat, temp, 24))
       RETURN_ERROR_M("Not a valid " SYSTEM_FILE " file.");

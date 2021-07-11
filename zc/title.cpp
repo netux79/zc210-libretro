@@ -745,11 +745,11 @@ static int game_details(int file)
    textout_ex(framebuf, zfont, title, 40, 104, 1, -1);
 
    textout_ex(framebuf, zfont, "FILE NAME", 40, 112, 3, -1);
-   textout_ex(framebuf, zfont, "QUEST VER", 40, 120, 3, -1);
+   textout_ex(framebuf, zfont, "ZELDA VER", 40, 120, 3, -1);
    textout_ex(framebuf, zfont, "PLAY TIME", 40, 128, 3, -1);
 
    textout_ex(framebuf, zfont, saves[file].qstpath, 120, 112, 1, -1);
-   textout_ex(framebuf, zfont, saves[file].version, 120, 120, 1, -1);
+   textout_ex(framebuf, zfont, VerStr(QHeader.zelda_version), 120, 120, 1, -1);
 
    if (!saves[file].hasplayed)
       textout_ex(framebuf, zfont, "Empty Game", 120, 128, 1, -1);

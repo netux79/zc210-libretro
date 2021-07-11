@@ -47,7 +47,7 @@ const char *qst_error[] =
 char *VerStr(int version)
 {
    static char ver_str[16];
-   sprintf(ver_str, "v%d.%02X", version >> 8, version & 0xFF);
+   sprintf(ver_str, "%d.%02X", version >> 8, version & 0xFF);
    return ver_str;
 }
 
