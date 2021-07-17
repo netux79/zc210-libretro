@@ -10,7 +10,6 @@
 #define _SPRITE_H_
 
 #include "zdefs.h"
-// this code needs some patching for use in zquest.cpp
 
 extern itemdata *itemsbuf;
 extern wpndata  *wpnsbuf;
@@ -37,27 +36,23 @@ public:
    int lasthit, lasthitclk;
    int dummy_int[10];
    bool dummy_bool[10];
-   int drawstyle;                                          //0=normal, 1=translucent, 2=cloaked
+   int drawstyle; /* 0=normal, 1=translucent, 2=cloaked */
 
    sprite();
    sprite(fix X, fix Y, int T, int CS, int F, int Clk, int Yofs);
    virtual ~sprite();
-   virtual void draw(BITMAP *dest);                        // main layer
-   virtual void draw8(BITMAP *dest);                       // main layer
-   virtual void drawcloaked(BITMAP *dest);                 // main layer
-   virtual void drawshadow(BITMAP *dest, bool translucent);// main layer
-   virtual void draw2(BITMAP
-                      *dest);                       // top layer for special needs
-   virtual void drawcloaked2(BITMAP
-                             *dest);                // top layer for special needs
+   virtual void draw(BITMAP *dest);                        /* main layer */
+   virtual void draw8(BITMAP *dest);                       /* main layer */
+   virtual void drawcloaked(BITMAP *dest);                 /* main layer */
+   virtual void drawshadow(BITMAP *dest, bool translucent);/* main layer */
+   virtual void draw2(BITMAP *dest);         /* top layer for special needs */
+   virtual void drawcloaked2(BITMAP *dest);  /* top layer for special needs */
    virtual bool animate(int index);
    virtual void check_conveyor();
    int real_x(fix fx);
    int real_y(fix fy);
    virtual bool hit(sprite *s);
    virtual bool hit(int tx, int ty, int txsz, int tysz);
-
-
    virtual int hitdir(int tx, int ty, int txsz, int tysz, int dir);
    virtual void move(fix dx, fix dy);
    virtual void move(fix s);
@@ -82,7 +77,7 @@ public:
    sprite *spr(int index);
    bool swap(int a, int b);
    bool add(sprite *s);
-   // removes pointer from list but doesn't delete it
+   /* removes pointer from list but doesn't delete it */
    bool remove(sprite *s);
    fix getX(int j);
    fix getY(int j);
@@ -98,17 +93,17 @@ public:
    int Count();
    int hit(sprite *s);
    int hit(int x, int y, int xsize, int ysize);
-   // returns the number of sprites with matching id
+   /* returns the number of sprites with matching id */
    int idCount(int id, int mask);
-   // returns index of first sprite with matching id, -1 if none found
+   /* returns index of first sprite with matching id, -1 if none found */
    int idFirst(int id, int mask);
-   // returns index of last sprite with matching id, -1 if none found
+   /* returns index of last sprite with matching id, -1 if none found */
    int idLast(int id, int mask);
-   // returns the number of sprites with matching id
+   /* returns the number of sprites with matching id */
    int idCount(int id);
-   // returns index of first sprite with matching id, -1 if none found
+   /* returns index of first sprite with matching id, -1 if none found */
    int idFirst(int id);
-   // returns index of last sprite with matching id, -1 if none found
+   /* returns index of last sprite with matching id, -1 if none found */
    int idLast(int id);
 };
 

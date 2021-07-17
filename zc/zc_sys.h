@@ -88,7 +88,6 @@ int high_item(int jmax, int item_type, bool consecutive, int itemcluster,
 int current_item(int item_type, bool consecutive);
 int high_flag(int i, int item_type, bool consecutive);
 int item_tile_mod(void);
-int dmap_tile_mod(void);
 
 void jukebox(int index);
 void play_DmapMusic(void);

@@ -258,8 +258,7 @@ int high_item(int jmax, int item_type, bool consecutive, int itemcluster,
    return 0;
 }
 
-int current_item(int item_type,
-                 bool consecutive)           //item currently being used
+int current_item(int item_type, bool consecutive)/* item currently being used */
 {
    int jmax = 0;
    switch (item_type)
@@ -360,7 +359,7 @@ int current_item(int item_type,
       {
          int count = 0;
          for (int i = 0; i < MAXLEVELS; i++)
-            count += (game.lvlitems[i] | liTRIFORCE) ? 1 : 0;
+            count += (game.lvlitems[i] & liTRIFORCE) ? 1 : 0;
          return 0;
          break;
       }
@@ -368,7 +367,7 @@ int current_item(int item_type,
       {
          int count = 0;
          for (int i = 0; i < MAXLEVELS; i++)
-            count += (game.lvlitems[i] | liMAP) ? 1 : 0;
+            count += (game.lvlitems[i] & liMAP) ? 1 : 0;
          return count;
          break;
       }
@@ -376,7 +375,7 @@ int current_item(int item_type,
       {
          int count = 0;
          for (int i = 0; i < MAXLEVELS; i++)
-            count += (game.lvlitems[i] | liCOMPASS) ? 1 : 0;
+            count += (game.lvlitems[i] & liCOMPASS) ? 1 : 0;
          return count;
          break;
       }
@@ -384,7 +383,7 @@ int current_item(int item_type,
       {
          int count = 0;
          for (int i = 0; i < MAXLEVELS; i++)
-            count += (game.lvlitems[i] | liBOSSKEY) ? 1 : 0;
+            count += (game.lvlitems[i] & liBOSSKEY) ? 1 : 0;
          return count;
          break;
       }
@@ -399,6 +398,7 @@ int item_tile_mod(void)
 {
    long tile = 0;
    int ret = 0;
+
    ret = current_item(itype_sword, true);
    switch (ret)
    {
@@ -482,6 +482,7 @@ int item_tile_mod(void)
          break;
    }
    tile += ret;
+
    ret = current_item(itype_bait, true);
    switch (ret)
    {
@@ -566,6 +567,7 @@ int item_tile_mod(void)
          break;
    }
    tile += ret;
+
    ret = current_item(itype_amulet, true);
    switch (ret)
    {
@@ -611,7 +613,6 @@ int item_tile_mod(void)
       default:
          ret = 0;
          break;
-
    }
    tile += ret;
 
@@ -650,6 +651,7 @@ int item_tile_mod(void)
          break;
    }
    tile += ret;
+
    ret = current_item(itype_magickey, true);
    switch (ret)
    {
@@ -724,6 +726,7 @@ int item_tile_mod(void)
          break;
    }
    tile += ret;
+
    ret = current_item(itype_hammer, true);
    switch (ret)
    {
@@ -880,11 +883,6 @@ int item_tile_mod(void)
    }
    tile += ret;
    return tile;
-}
-
-int dmap_tile_mod(void)
-{
-   return 0;
 }
 
 void draw_lens_under(void)

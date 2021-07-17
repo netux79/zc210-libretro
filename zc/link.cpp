@@ -852,10 +852,11 @@ void LinkClass::draw(BITMAP *dest)
 
    if (useltm && action != casting)
       tile += item_tile_mod();
-   tile += dmap_tile_mod();
+
    if (!(get_bit(quest_rules, qr_LINKFLICKER) && ((superman || hclk)
          && (frame & 1))))
       masked_draw(dest);
+
    if ((didstuff & did_fairy) || fairyclk == 0
          || (get_bit(quest_rules, qr_NOHEARTRING)))
       return;
