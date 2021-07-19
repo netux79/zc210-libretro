@@ -1190,6 +1190,27 @@ bool zc_init(const char *qpath)
 
    packfile_password(NULL);
 
+   /* Use custom SFX dat file if required by replacing the internal one */
+   if (custom_sfx)
+   {
+      sprintf(temp, "%s%c%s", system_path, OTHER_PATH_SEPARATOR, ZCSFX_FILE);
+      if (file_exists(temp))
+      {
+         if ((sfxdata = load_datafile(temp)) == NULL)
+            RETURN_ERROR_M("Error loading optional " ZCSFX_FILE " file.");
+         
+         /* Just check it is a ZC sfx.dat file, no matter its version */
+         if (strstr((char *)sfxdata[SFX_SIGNATURE].dat, "SFX.Dat"))
+         {
+            /* unload old sfx datafile and remap it to the new one */
+            unload_datafile((DATAFILE *)data[SFX].dat);
+            data[SFX].dat = sfxdata;
+         }
+         else
+            RETURN_ERROR_M(ZCSFX_FILE " is not a valid ZC sfx.dat file.");
+      }
+   }
+
    /* Setting up base assets */
    sfxdata = (DATAFILE *)data[SFX].dat;
    mididata = (DATAFILE *)data[MUSIC].dat;

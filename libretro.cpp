@@ -37,6 +37,7 @@ float sampling_rate;
 char game_path[MAX_STRLEN];
 char *save_path;
 char *system_path;
+bool custom_sfx;
 
 /* threads stuff */
 static sthread_t *zc_thread;
@@ -128,14 +129,15 @@ void retro_set_environment(retro_environment_t cb)
 
    static const struct retro_variable vars[] =
    {
-      { "zc_samplerate", "Sample Rate (requires restart); 22050|32000|44100|48000" },
-      { "zc_mix_quality", "Sound Quality (requires restart); Normal|High|Low" },
+      { "zc_samplerate", "Sample Rate (Requires Restart); 22050|32000|44100|48000" },
+      { "zc_mix_quality", "Sound Quality (Requires Restart); Normal|High|Low" },
       { "zc_master_vol", "Master Volume; 16|0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15" },
       { "zc_sfx_vol", "SFX Volume; 16|0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15" },
       { "zc_music_vol", "Music Volume; 16|0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15" },
       { "zc_pan_style", "Sound Pan Style; 1/2|3/4|Full|Mono" },
       { "zc_heart_beep", "Enable Low Health Beep; true|false" },
       { "zc_trans_layers", "Show Transparent Layers; true|false" },
+      { "zc_custom_sfx", "Use Custom zcsfx.dat If Available in System Dir (Requires Restart); false|true" },
       { NULL, NULL },
    };
 
@@ -321,6 +323,10 @@ static void check_variables(bool startup = false)
          else
             mix_quality = 1; /* Normal */
       }
+
+      var.key = "zc_custom_sfx";
+      if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+         custom_sfx = !strcmp(var.value, "true") ? true : false;
    }
    else
    {

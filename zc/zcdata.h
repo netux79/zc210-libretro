@@ -1,6 +1,6 @@
 /* Allegro datafile object indexes, produced by grabber v4.4.3, Unix */
-/* Datafile: /home/joe/Dev/Libretro/zc210-libretro/datfile/zcdata.dat */
-/* Date: Fri May 14 11:57:37 2021 */
+/* Datafile: zcdata.dat */
+/* Date: Sun Jul 18 11:13:40 2021 */
 /* Do not hand edit! */
 
 #define _SIGNATURE                       0        /* DATA */
@@ -20,40 +20,40 @@
 
 #define SFX                              5        /* FILE */
 
-#define SFX_ARROW                        0        /* SAMP */
-#define SFX_BEAM                         1        /* SAMP */
-#define SFX_BOMB                         2        /* SAMP */
-#define SFX_BRANG                        3        /* SAMP */
-#define SFX_CHIME                        4        /* SAMP */
-#define SFX_CHINK                        5        /* SAMP */
-#define SFX_CLEARED                      6        /* SAMP */
-#define SFX_DODONGO                      7        /* SAMP */
-#define SFX_DOOR                         8        /* SAMP */
-#define SFX_EDEAD                        9        /* SAMP */
-#define SFX_EHIT                         10       /* SAMP */
-#define SFX_ER                           11       /* SAMP */
-#define SFX_FIRE                         12       /* SAMP */
-#define SFX_GANON                        13       /* SAMP */
-#define SFX_GASP                         14       /* SAMP */
-#define SFX_HAMMER                       15       /* SAMP */
-#define SFX_HOOKSHOT                     16       /* SAMP */
-#define SFX_MSG                          17       /* SAMP */
-#define SFX_OUCH                         18       /* SAMP */
-#define SFX_PICKUP                       19       /* SAMP */
-#define SFX_PLACE                        20       /* SAMP */
-#define SFX_PLINK                        21       /* SAMP */
-#define SFX_REFILL                       22       /* SAMP */
-#define SFX_ROAR                         23       /* SAMP */
-#define SFX_SCALE                        24       /* SAMP */
-#define SFX_SEA                          25       /* SAMP */
-#define SFX_SECRET                       26       /* SAMP */
-#define SFX_SPIRAL                       27       /* SAMP */
-#define SFX_STAIRS                       28       /* SAMP */
-#define SFX_SWORD                        29       /* SAMP */
-#define SFX_VADER                        30       /* SAMP */
-#define SFX_WAND                         31       /* SAMP */
-#define SFX_WHISTLE                      32       /* SAMP */
-#define SFX_ZELDA                        33       /* SAMP */
-#define SFX_COUNT                        34
-
+#define SFX_SIGNATURE                    0        /* DATA */
+#define SFX_ARROW                        1        /* SAMP */
+#define SFX_BEAM                         2        /* SAMP */
+#define SFX_BOMB                         3        /* SAMP */
+#define SFX_BRANG                        4        /* SAMP */
+#define SFX_CHIME                        5        /* SAMP */
+#define SFX_CHINK                        6        /* SAMP */
+#define SFX_CLEARED                      7        /* SAMP */
+#define SFX_DODONGO                      8        /* SAMP */
+#define SFX_DOOR                         9        /* SAMP */
+#define SFX_EDEAD                        10       /* SAMP */
+#define SFX_EHIT                         11       /* SAMP */
+#define SFX_ER                           12       /* SAMP */
+#define SFX_FIRE                         13       /* SAMP */
+#define SFX_GANON                        14       /* SAMP */
+#define SFX_GASP                         15       /* SAMP */
+#define SFX_HAMMER                       16       /* SAMP */
+#define SFX_HOOKSHOT                     17       /* SAMP */
+#define SFX_MSG                          18       /* SAMP */
+#define SFX_OUCH                         19       /* SAMP */
+#define SFX_PICKUP                       20       /* SAMP */
+#define SFX_PLACE                        21       /* SAMP */
+#define SFX_PLINK                        22       /* SAMP */
+#define SFX_REFILL                       23       /* SAMP */
+#define SFX_ROAR                         24       /* SAMP */
+#define SFX_SCALE                        25       /* SAMP */
+#define SFX_SEA                          26       /* SAMP */
+#define SFX_SECRET                       27       /* SAMP */
+#define SFX_SPIRAL                       28       /* SAMP */
+#define SFX_STAIRS                       29       /* SAMP */
+#define SFX_SWORD                        30       /* SAMP */
+#define SFX_VADER                        31       /* SAMP */
+#define SFX_WAND                         32       /* SAMP */
+#define SFX_WHISTLE                      33       /* SAMP */
+#define SFX_ZELDA                        34       /* SAMP */
+#define SFX_COUNT                        35
 
