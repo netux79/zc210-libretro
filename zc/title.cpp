@@ -744,7 +744,7 @@ static int game_details(int file)
    temp[22] = '\0';
    textout_ex(framebuf, zfont, temp, 40, 104, 1, -1);
 
-   textout_ex(framebuf, zfont, "  CREATOR", 40, 112, 3, -1);
+   textout_ex(framebuf, zfont, "CREATOR", 40, 112, 3, -1);
    textout_ex(framebuf, zfont, "ZELDA VER", 40, 120, 3, -1);
    textout_ex(framebuf, zfont, "PLAY TIME", 40, 128, 3, -1);
 
