@@ -107,7 +107,7 @@ void retro_get_system_info(struct retro_system_info *info)
 {
    memset(info, 0, sizeof(*info));
    info->library_name     = "Zelda Classic v2.10";
-   info->library_version  = "Alpha 1";
+   info->library_version  = "Beta 1";
    info->need_fullpath    = true;
    info->valid_extensions = "qst";
 }
