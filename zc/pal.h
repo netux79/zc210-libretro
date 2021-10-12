@@ -43,7 +43,7 @@ extern COLOR_MAP trans_table;
 #define CSET_SHFT    4  /* log2 of CSET_SIZE */
 #define CSET(x)      ((x) << CSET_SHFT)
 #define csBOSS       14
-#define csICON       6  /* Colors used for link icons in main menu */
+#define csICON       12  /* Colors used for link icons in main menu 12 13 14 */
 
 RGB _RGB(const uint8_t *si);
 RGB _RGB(int r, int g, int b);
