@@ -187,6 +187,7 @@ void selectBwpn(int xstep, int ystep);
 bool canget(int id);
 void dospecialmoney(int index);
 void getitem(int id);
+void checkCheat(void);
 void getdraggeditem(int j);
 void setup_red_screen();
 void slide_in_color(int color);

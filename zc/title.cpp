@@ -764,6 +764,9 @@ static int game_details(int file)
       textout_ex(framebuf, zfont, "Time Unknown", 120, 128, 1, -1);
    else
       textout_ex(framebuf, zfont, time_str(saves[file].time), 120, 128, 1, -1);
+   
+   if (saves[file].cheat)
+      textout_ex(framebuf, zfont, "*Cheats*", 120, 136, 1, -1);
 
    textout_ex(framebuf, zfont, "START: PLAY QUEST", 56, 152, 1, -1);
    textout_ex(framebuf, zfont, "    B: CANCEL", 56, 168, 1, -1);

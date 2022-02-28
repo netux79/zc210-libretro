@@ -137,6 +137,7 @@ void retro_set_environment(retro_environment_t cb)
       { "zc_pan_style", "Sound Pan Style; 1/2|3/4|Full|Mono" },
       { "zc_heart_beep", "Enable Low Health Beep; true|false" },
       { "zc_trans_layers", "Show Transparent Layers; true|false" },
+      { "zc_allow_cheats", "Allow cheats (press 'Cheat' and L, R, Map, Select, or Start); false|true" },
       { "zc_custom_sfx", "Use Custom zcsfx.dat If Available in System Dir (Requires Restart); false|true" },
       { NULL, NULL },
    };
@@ -193,6 +194,7 @@ static void update_input(void)
    Akey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
    Bkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
    Mkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
+   Ckey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
    Lkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L);
    Rkey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R);
    Ekey = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT);
@@ -306,6 +308,10 @@ static void check_variables(bool startup = false)
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
       trans_layers = !strcmp(var.value, "true") ? true : false;
 
+   var.key = "zc_allow_cheats";
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+      allow_cheats = !strcmp(var.value, "true") ? true : false;
+
    if (startup)
    {
       /* For these we require restart */
@@ -385,6 +391,7 @@ bool retro_load_game(const struct retro_game_info *info)
       { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      "B"      },
       { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      "A"      },
       { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      "Map"    },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      "Cheat"  },
       { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      "L"      },
       { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      "R"      },
       { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  "Start"  },

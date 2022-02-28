@@ -31,11 +31,12 @@ extern int sfx_vol;
 extern int music_vol;
 extern int pan_style;
 extern bool trans_layers;
+extern bool allow_cheats;
 extern bool heart_beep;
 extern bool custom_sfx;
 
 /* input keys */
-extern int Akey, Bkey, Ekey, Skey, Lkey, Rkey, Mkey;
+extern int Akey, Bkey, Ekey, Skey, Lkey, Rkey, Mkey, Ckey;
 extern int DUkey, DDkey, DLkey, DRkey;
 
 /* thread stuff */

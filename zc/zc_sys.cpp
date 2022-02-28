@@ -2468,6 +2468,11 @@ bool cMbtn(void)
 {
    return Mkey;
 }
+bool cCbtn(void)
+{
+   return Ckey;
+}
+
 
 bool rUp(void)
 {
@@ -2513,6 +2518,10 @@ bool rMbtn(void)
 {
    return rButton(cMbtn, Mdown);
 }
+bool rCbtn(void)
+{
+   return rButton(cCbtn, Cdown);
+}
 
 bool drunk(void)
 {
@@ -2536,47 +2545,11 @@ bool DrunkRight(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !Right() : Right();
 }
-bool DrunkcAbtn(void)
-{
-   return drunk() ? (rand() % 2) ? 0 : !cAbtn() : cAbtn();
-}
 bool DrunkcBbtn(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !cBbtn() : cBbtn();
 }
-bool DrunkcSbtn(void)
-{
-   return drunk() ? (rand() % 2) ? 0 : !cSbtn() : cSbtn();
-}
-bool DrunkcLbtn(void)
-{
-   return drunk() ? (rand() % 2) ? 0 : !cLbtn() : cLbtn();
-}
-bool DrunkcRbtn(void)
-{
-   return drunk() ? (rand() % 2) ? 0 : !cRbtn() : cRbtn();
-}
-bool DrunkcMbtn(void)
-{
-   return drunk() ? (rand() % 2) ? 0 : !cMbtn() : cMbtn();
-}
 
-bool DrunkrUp(void)
-{
-   return drunk() ? (rand() % 2) ? 0 : !rUp() : rUp();
-}
-bool DrunkrDown(void)
-{
-   return drunk() ? (rand() % 2) ? 0 : !rDown() : rDown();
-}
-bool DrunkrLeft(void)
-{
-   return drunk() ? (rand() % 2) ? 0 : !rLeft() : rLeft();
-}
-bool DrunkrRight(void)
-{
-   return drunk() ? (rand() % 2) ? 0 : !rRight() : rRight();
-}
 bool DrunkrAbtn(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !rAbtn() : rAbtn();
@@ -2584,22 +2557,6 @@ bool DrunkrAbtn(void)
 bool DrunkrBbtn(void)
 {
    return drunk() ? (rand() % 2) ? 0 : !rBbtn() : rBbtn();
-}
-bool DrunkrSbtn(void)
-{
-   return drunk() ? (rand() % 2) ? 0 : !rSbtn() : rSbtn();
-}
-bool DrunkrLbtn(void)
-{
-   return drunk() ? (rand() % 2) ? 0 : !rLbtn() : rLbtn();
-}
-bool DrunkrRbtn(void)
-{
-   return drunk() ? (rand() % 2) ? 0 : !rRbtn() : rRbtn();
-}
-bool DrunkrMbtn(void)
-{
-   return drunk() ? (rand() % 2) ? 0 : !rMbtn() : rMbtn();
 }
 
 void eat_buttons(void)
@@ -2611,6 +2568,7 @@ void eat_buttons(void)
    rLbtn();
    rRbtn();
    rMbtn();
+   rCbtn();
 }
 
 char *time_str(uint32_t time)

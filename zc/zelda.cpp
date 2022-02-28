@@ -81,7 +81,7 @@ int newscr_clk = 0, opendoors = 0, currdmap = 0, fadeclk = -1, currgame = 0,
 int lastentrance = 0, lastentrance_dmap = 0, prices[3][2], loadside, Bwpn, Awpn;
 int master_vol, sfx_vol, music_vol, pan_style, mix_quality;
 int sel_music, wand_x, wand_y, hasitem, whistleclk;
-int Akey, Bkey, Ekey, Skey, Lkey, Rkey, Mkey;
+int Akey, Bkey, Ekey, Skey, Lkey, Rkey, Mkey, Ckey;
 int DUkey, DDkey, DLkey, DRkey, zc_state = ZC_RUN;
 int arrow_x, arrow_y, brang_x, brang_y, chainlink_x, chainlink_y;
 int hs_startx, hs_starty, hs_xdist, hs_ydist, clockclk, clock_zoras;
@@ -93,13 +93,13 @@ int nets = 1580, magictype = mgc_none, magiccastclk, castx, casty, df_x, df_y,
 int magicdrainclk = 0, conveyclk = 3;
 int checkx, checky;
 bool nosecretsounds = false;
-bool trans_layers, heart_beep;
+bool trans_layers, heart_beep, allow_cheats;
 bool is_playing;
 bool zc_sync_pal, blockpath, wand_dead, loaded_guys, freeze_guys,
      loaded_enemies, drawguys, watch;
 bool darkroom = false, BSZ, COOLSCROLL;
-bool Udown, Ddown, Ldown, Rdown, Adown, Bdown, Edown, Sdown, LBdown, RBdown,
-     Mdown,
+bool Udown, Ddown, Ldown, Rdown, Adown, Bdown, Edown, Sdown,
+     LBdown, RBdown, Mdown, Cdown,
      fixed_door = false, hookshot_used = false, hookshot_frozen = false,
      pull_link = false, add_chainlink = false, del_chainlink = false,
      checklink = true, didpit = false, hs_fix = false,

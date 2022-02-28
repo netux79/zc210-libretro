@@ -36,10 +36,6 @@ bool rUp(void);
 bool rDown(void);
 bool rLeft(void);
 bool rRight(void);
-bool DrunkrUp(void);
-bool DrunkrDown(void);
-bool DrunkrLeft(void);
-bool DrunkrRight(void);
 
 bool cAbtn(void);
 bool cBbtn(void);
@@ -48,12 +44,8 @@ bool cSbtn(void);
 bool cLbtn(void);
 bool cRbtn(void);
 bool cMbtn(void);
-bool DrunkcAbtn(void);
+bool cCbtn(void);
 bool DrunkcBbtn(void);
-bool DrunkcSbtn(void);
-bool DrunkcLbtn(void);
-bool DrunkcRbtn(void);
-bool DrunkcMbtn(void);
 
 bool rAbtn(void);
 bool rBbtn(void);
@@ -62,12 +54,9 @@ bool rSbtn(void);
 bool rLbtn(void);
 bool rRbtn(void);
 bool rMbtn(void);
+bool rCbtn(void);
 bool DrunkrAbtn(void);
 bool DrunkrBbtn(void);
-bool DrunkrSbtn(void);
-bool DrunkrLbtn(void);
-bool DrunkrRbtn(void);
-bool DrunkrMbtn(void);
 
 void zapout(void);
 void zapin(void);

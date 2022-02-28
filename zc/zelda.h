@@ -150,8 +150,8 @@ extern bool blockmoving;
 extern bool is_playing;
 extern bool blockpath, wand_dead, loaded_guys, freeze_guys;
 extern bool loaded_enemies, drawguys, watch;
-extern bool Udown, Ddown, Ldown, Rdown, Adown, Bdown, Edown, Sdown, Mdown,
-       LBdown, RBdown, Mdown;
+extern bool Udown, Ddown, Ldown, Rdown, Adown, Bdown, Edown, Sdown,
+       Mdown, LBdown, RBdown, Cdown;
 extern bool fixed_door, darkroom, BSZ, COOLSCROLL;
 extern bool hookshot_used, hookshot_frozen, pull_link, add_chainlink;
 extern bool del_chainlink, hs_fix, checklink;

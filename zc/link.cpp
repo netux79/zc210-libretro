@@ -1954,13 +1954,6 @@ bool LinkClass::animate(int index)
       }
 
    }
-   if (DrunkrLbtn())
-      selectBwpn(-1, 0);
-
-   else if (DrunkrRbtn())
-      selectBwpn(1, 0);
-   if (rMbtn())
-      onViewMap();
 
    // make the flames from the wand
    if (wand_dead)
@@ -2149,6 +2142,7 @@ bool LinkClass::animate(int index)
       default:
          movelink();    // call the main movement routine
    }
+
    // check for ladder removal
    if ((abs(laddery - int(y)) >= 16) || (abs(ladderx - int(x)) >= 16))
       ladderx = laddery = 0;
@@ -2224,6 +2218,7 @@ bool LinkClass::animate(int index)
          dir = right;
       }
    }
+
    if (walk)
    {
       hclk = 0;
@@ -2257,16 +2252,27 @@ bool LinkClass::animate(int index)
       heart_beep_timer = -1;
       stop_sfx(SFX_ER);
    }
-
-   if (rSbtn()) /* Show subscreen */
+   
+   if (cCbtn())            /* process cheat if cheat button pressed */
+      checkCheat();
+   else
    {
-      conveyclk = 3;
-      int tmp_subscr_clk = frame;
-      dosubscr();
-      newscr_clk += frame - tmp_subscr_clk;
+      if (rSbtn())         /* Show subscreen */
+      {
+         conveyclk = 3;
+         int tmp_subscr_clk = frame;
+         dosubscr();
+         newscr_clk += frame - tmp_subscr_clk;
+      }
+      else if (rEbtn())    /* SELECT button, show quit menu */
+         zc_action(ZC_QUIT);
+      else if (rMbtn())    /* View Map */
+         onViewMap();
+      else if (rLbtn())    /* Select "B button" item to the left */
+         selectBwpn(-1, 0);
+      else if (rRbtn())    /* Select "B button" item to the right */
+         selectBwpn(1, 0);
    }
-   else if (rEbtn()) /* SELECT button, show quit menu */
-      zc_action(ZC_QUIT);
 
    checkstab();
 
@@ -6892,6 +6898,43 @@ void LinkClass::gameover()
    dontdraw = false;
 }
 
+void checkCheat(void)
+{
+   bool c_applied = false;
+   
+   if (!allow_cheats)
+      return;
+
+   if (rRbtn())
+   {
+      getitem(iHeart);
+      c_applied = true;
+   }
+   else if (rLbtn())
+   {
+      getitem(iBombs);
+      c_applied = true;
+   }
+   else if (rMbtn())
+   {
+      getitem(i5Rupies);
+      c_applied = true;
+   }
+   else if (rSbtn())
+   {
+      getitem(iClock);
+      c_applied = true;
+   }
+   else if (rEbtn())
+   {
+      getitem(iFairyMoving);
+      c_applied = true;
+   }
+   
+   /* Mark the save file as a cheat quest */
+   if (c_applied)
+      cheat = 1;
+}
 
 void LinkClass::ganon_intro()
 {
