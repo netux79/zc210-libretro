@@ -1,5 +1,6 @@
-STATIC_LINKING := 0
-AR             := ar
+GX_PTHREAD_LEGACY := 1
+STATIC_LINKING    := 0
+AR                := ar
 
 ifeq ($(platform),)
 platform = unix
@@ -155,6 +156,8 @@ else ifneq (,$(filter $(platform), ngc wii wiiu))
    FLAGS += -DGEKKO -mcpu=750 -meabi -mhard-float -malign-natural 
    FLAGS += -fsingle-precision-constant -mno-bit-align
    FLAGS += -DHAVE_STRTOUL
+   FLAGS += -I$(DEVKITPRO)/libogc/include
+   ENDIANNESS_DEFINES = -DMSB_FIRST
    ifneq (,$(findstring wiiu,$(platform)))
       FLAGS += -DWIIU -DHW_RVL -mwup
    else ifneq (,$(findstring wii,$(platform)))
@@ -163,8 +166,12 @@ else ifneq (,$(filter $(platform), ngc wii wiiu))
       FLAGS += -DHW_DOL -mogc
    endif
    CFLAGS += $(FLAGS)
-   CXXFLAGS += $(FLAGS)  -fno-merge-constants 
+   CXXFLAGS += $(FLAGS) -fno-merge-constants 
    STATIC_LINKING = 1
+   ifeq ($(GX_PTHREAD_LEGACY), 1)
+      CFLAGS   += -DGX_PTHREAD_LEGACY
+      CXXFLAGS += -DGX_PTHREAD_LEGACY
+   endif
 else
    CC = gcc
    TARGET := $(TARGET_NAME)_libretro.dll
@@ -174,11 +181,11 @@ endif
 LDFLAGS += $(LIBM)
 
 ifeq ($(DEBUG), 1)
-   CFLAGS += -O0 -g -fsigned-char
-   CXXFLAGS += -O0 -g -fsigned-char
+   CFLAGS += -O0 -g
+   CXXFLAGS += -O0 -g
 else
-   CFLAGS += -O3 -fsigned-char
-   CXXFLAGS += -O3 -fsigned-char
+   CFLAGS += -O3
+   CXXFLAGS += -O3
 endif
 
 CORE_DIR := .
@@ -187,8 +194,8 @@ include Makefile.common
 
 OBJECTS := $(SOURCES_CXX:.cpp=.o) $(SOURCES_C:.c=.o)
 
-CFLAGS += -Wall -pedantic
-CXXFLAGS += -Wall -pedantic -std=gnu++11
+CFLAGS += -Wall -pedantic -fsigned-char $(ENDIANNESS_DEFINES)
+CXXFLAGS += -Wall -pedantic -fsigned-char -std=gnu++11 $(ENDIANNESS_DEFINES)
 
 ifneq (,$(findstring qnx,$(platform)))
 CFLAGS += -Wc,-std=c99
