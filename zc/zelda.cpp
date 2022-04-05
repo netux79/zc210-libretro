@@ -172,7 +172,7 @@ music tunes[MAXMUSIC] =
    { "Zelda 1 - Game Over",   0,  -1,  -1,  1,  224,  NULL },
    { "Zelda 1 - Level 9",     0,  -1,  -1,  1,  255,  NULL },
    { "Zelda 1 - Overworld",   0,  17,  -1,  1,  208,  NULL },
-   { "Zelda 1 - Title",       0,  -1,  -1,  0,   30,  NULL },
+   { "Zelda 1 - Title",       0,  -1,  -1,  0,  168,  NULL },
    { "Zelda 1 - Triforce",    0,  -1,  -1,  0,  168,  NULL },
 };
 
@@ -1171,7 +1171,7 @@ bool zc_init(const char *qpath)
    resolve_password(datapwd);
    packfile_password(datapwd);
    
-   sprintf(temp, "%s%c%s", system_path, OTHER_PATH_SEPARATOR, SYSTEM_FILE);
+   sprintf(temp, "%s%c" ZC_SYS_DIR "%c" SYSTEM_FILE, system_path, OTHER_PATH_SEPARATOR, OTHER_PATH_SEPARATOR);
    
    if ((data = load_datafile(temp)) == NULL)
       RETURN_ERROR_M("Error loading " SYSTEM_FILE " system datafile.");
@@ -1191,13 +1191,18 @@ bool zc_init(const char *qpath)
    packfile_password(NULL);
 
    /* Use custom SFX dat file if required by replacing the internal one */
-   if (custom_sfx)
+   if (strcmp(sfx_file, "Off") != 0)
    {
-      sprintf(temp, "%s%c%s", system_path, OTHER_PATH_SEPARATOR, ZCSFX_FILE);
+      /* Calculate the sound effects file path. */
+      sprintf(temp, "%s%c" ZC_SYS_DIR "%c" ZC_SFX_DIR "%c%s.dat", system_path, 
+              OTHER_PATH_SEPARATOR, OTHER_PATH_SEPARATOR, OTHER_PATH_SEPARATOR, sfx_file);
       if (file_exists(temp))
       {
          if ((sfxdata = load_datafile(temp)) == NULL)
-            RETURN_ERROR_M("Error loading optional " ZCSFX_FILE " file.");
+         {
+            sprintf(temp, "Error loading optional %s.dat file.", sfx_file);
+            RETURN_ERROR_M(temp);
+         }
          
          /* Just check it is a ZC sfx.dat file, no matter its version */
          if (strstr((char *)sfxdata[SFX_SIGNATURE].dat, "SFX.Dat"))
@@ -1207,7 +1212,10 @@ bool zc_init(const char *qpath)
             data[SFX].dat = sfxdata;
          }
          else
-            RETURN_ERROR_M(ZCSFX_FILE " is not a valid ZC sfx.dat file.");
+         {
+            sprintf(temp, "%s.dat is not a valid ZC sfx.dat file.", sfx_file);
+            RETURN_ERROR_M(temp);
+         }
       }
    }
 

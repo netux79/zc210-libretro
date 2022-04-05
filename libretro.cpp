@@ -37,7 +37,8 @@ float sampling_rate;
 char game_path[MAX_STRLEN];
 char *save_path;
 char *system_path;
-bool custom_sfx;
+char sfx_file[16];
+char sf2_file[16];
 
 /* threads stuff */
 static sthread_t *zc_thread;
@@ -107,7 +108,7 @@ void retro_get_system_info(struct retro_system_info *info)
 {
    memset(info, 0, sizeof(*info));
    info->library_name     = "Zelda Classic v2.10";
-   info->library_version  = "Beta 1";
+   info->library_version  = "Beta 4";
    info->need_fullpath    = true;
    info->valid_extensions = "qst";
 }
@@ -129,7 +130,7 @@ void retro_set_environment(retro_environment_t cb)
 
    static const struct retro_variable vars[] =
    {
-      { "zc_samplerate", "Sample Rate (Requires Restart); 22050|32000|44100|48000" },
+      { "zc_samplerate", "Sample Rate (Requires Restart); 44100|48000|22050|32000" },
       { "zc_mix_quality", "Sound Quality (Requires Restart); Normal|High|Low" },
       { "zc_master_vol", "Master Volume; 16|0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15" },
       { "zc_sfx_vol", "SFX Volume; 16|0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15" },
@@ -138,7 +139,8 @@ void retro_set_environment(retro_environment_t cb)
       { "zc_heart_beep", "Enable Low Health Beep; true|false" },
       { "zc_trans_layers", "Show Transparent Layers; true|false" },
       { "zc_allow_cheats", "Allow cheats (press 'Cheat' and L, R, Map, Select, or Start); false|true" },
-      { "zc_custom_sfx", "Use Custom zcsfx.dat If Available in System Dir (Requires Restart); false|true" },
+      { "zc_soundfont", "SF2 soundfont To Use (See GitHub readme - Requires Restart); default|custom0|custom1|custom2|custom3|custom4|custom5|custom6|custom7|custom8|custom9" },
+      { "zc_custom_sfx", "Custom Sound FX To Use (See GitHub readme - Requires Restart); Off|LinkTothePast|LinksAwakening|BSZelda|Metroid|Tortuga|Castle|Elise|SwangSong|Custom" },
       { NULL, NULL },
    };
 
@@ -330,9 +332,13 @@ static void check_variables(bool startup = false)
             mix_quality = 1; /* Normal */
       }
 
+      var.key = "zc_soundfont";
+      if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+         strcpy(sf2_file, var.value);
+         
       var.key = "zc_custom_sfx";
       if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-         custom_sfx = !strcmp(var.value, "true") ? true : false;
+         strcpy(sfx_file, var.value);
    }
    else
    {

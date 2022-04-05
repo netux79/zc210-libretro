@@ -17,9 +17,10 @@
 #include "zcdata.h"
 #include "zc_exports.h"
 
+#define ZC_SYS_DIR      "zc210"           /* Zelda Classic directory within system path */
+#define ZC_SFX_DIR      "sfx"             /* Sound effects directory within system path */
+#define ZC_SF2_DIR      "sf2"             /* Soundfont directory within system path */
 #define SYSTEM_FILE     "zcdata.dat"      /* system file required for ZC */
-#define ZCSFX_FILE      "zcsfx.dat"       /* opt sfx.dat used by some quests */
-#define ZCSF_FILE       "zcsf.sf2"        /* sf2 file required for midi play */
 #define ZELDA_VERSION   0x0210            /* version of the engine */
 #define VERSION_BUILD   1                 /* build number of this version */
 #define DATE_STR        "January 1, 2007" /* Original ZC Engine Build Date */
@@ -29,7 +30,7 @@
 #define ZCDAT_VERSION   0x0210               /* version of zcdata.dat */
 #define ZCDAT_BUILD     1                    /* build of zcdata.dat */
 
-enum {ENC_METHOD_192B104 = 0, ENC_METHOD_192B105, ENC_METHOD_192B185, 
+enum {ENC_METHOD_192B104 = 0, ENC_METHOD_192B105, ENC_METHOD_192B185,
       ENC_METHOD_MAX};
 
 #define PI 3.14159265358979323846

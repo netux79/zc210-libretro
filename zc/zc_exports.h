@@ -33,7 +33,8 @@ extern int pan_style;
 extern bool trans_layers;
 extern bool allow_cheats;
 extern bool heart_beep;
-extern bool custom_sfx;
+extern char sfx_file[16];
+extern char sf2_file[16];
 
 /* input keys */
 extern int Akey, Bkey, Ekey, Skey, Lkey, Rkey, Mkey, Ckey;

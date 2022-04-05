@@ -2231,7 +2231,8 @@ bool zc_initsound(void)
       return false;
 
    /* calculate the Sound Font path to load with the midi engine */
-   sprintf(temp, "%s%c%s", system_path, OTHER_PATH_SEPARATOR, ZCSF_FILE);
+   sprintf(temp, "%s%c" ZC_SYS_DIR "%c" ZC_SF2_DIR "%c%s.sf2", system_path, 
+           OTHER_PATH_SEPARATOR, OTHER_PATH_SEPARATOR, OTHER_PATH_SEPARATOR, sf2_file);
    
    if (!file_exists(temp))
       return false;
