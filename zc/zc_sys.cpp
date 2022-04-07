@@ -2602,16 +2602,6 @@ float vbound(float x, float low, float high)
    return x;
 }
 
-char datapwd[8] = { char('l' + 11), char('o' + 22), char('n' + 33), 
-                    char('g' + 44), char('t' + 55), char('a' + 66), 
-                    char('n' + 77), char(0 + 88) };
-
-void resolve_password(char *pwd)
-{
-   for (int i = 0; i < 8; i++)
-      pwd[i] -= (i + 1) * 11;
-}
-
 void set_bit(uint8_t *bitstr, int bit, uint8_t val)
 {
    bitstr += bit >> 3;

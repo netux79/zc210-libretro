@@ -24,6 +24,7 @@
 #define ZELDA_VERSION   0x0210            /* version of the engine */
 #define VERSION_BUILD   1                 /* build number of this version */
 #define DATE_STR        "January 1, 2007" /* Original ZC Engine Build Date */
+#define DATA_PASSWORD   "longtan"         /* Password used to encrypt the game datafiles */
 
 #define MIN_VERSION     0x0184
 

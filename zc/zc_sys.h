@@ -114,9 +114,6 @@ int  vbound(int x, int low, int high);
 float vbound(float x, float low, float high);
 bool isinRect(int x, int y, int rx1, int ry1, int rx2, int ry2);
 
-extern char datapwd[8];
-void resolve_password(char *pwd);
-
 int encode_file_007(const char *srcfile, const char *destfile, unsigned int key,
                     const char *header, int method);
 int decode_file_007(const char *srcfile, const char *destfile,

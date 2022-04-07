@@ -293,11 +293,7 @@ bool init_section(zquestheader* Header, long section_id) {
 int alloc_qst_buffers(void)
 {
    bool success = true;
-   
-   TheMaps = NULL; MsgStrings = NULL; DoorComboSets = NULL;
-   DMaps = NULL; combobuf = NULL; colordata = NULL; tilebuf = NULL;
-   itemsbuf = NULL; wpnsbuf = NULL; guysbuf = NULL;
-   
+
    if (!(TheMaps = (mapscr *)malloc(sizeof(mapscr) * MAPSCRS)))
       RETURN_ERROR;
 
@@ -336,29 +332,26 @@ error:
    return success;
 }
 
+#define FREE_BUF(a)  if (a) {     \
+                        free(a);  \
+                        a = NULL; \
+                     }
+
 void free_qst_buffers(void)
 {
-   if (TheMaps)
-      free(TheMaps);
-   if (MsgStrings)
-      free(MsgStrings);
-   if (DoorComboSets)
-      free(DoorComboSets);
-   if (DMaps)
-      free(DMaps);
-   if (combobuf)
-      free(combobuf);
-   if (colordata)
-      free(colordata);
-   if (tilebuf)
-      free(tilebuf);
-   if (itemsbuf)
-      free(itemsbuf);
-   if (wpnsbuf)
-      free(wpnsbuf);
-   if (guysbuf)
-      free(guysbuf);
+   FREE_BUF(TheMaps)
+   FREE_BUF(MsgStrings)
+   FREE_BUF(DoorComboSets)
+   FREE_BUF(DMaps)
+   FREE_BUF(combobuf)
+   FREE_BUF(colordata)
+   FREE_BUF(tilebuf)
+   FREE_BUF(itemsbuf)
+   FREE_BUF(wpnsbuf)
+   FREE_BUF(guysbuf)
 }
+
+#undef FREE_BUF
 
 void clear_combo(int i)
 {

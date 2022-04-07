@@ -34,7 +34,7 @@ static retro_input_state_t input_state_cb;
 static retro_log_printf_t log_cb;
 
 float sampling_rate;
-char game_path[MAX_STRLEN];
+char default_path[] = ".";
 char *save_path;
 char *system_path;
 char sfx_file[16];
@@ -60,19 +60,6 @@ void zc_log(bool err, const char *format, ...)
    log_cb(err ? RETRO_LOG_ERROR : RETRO_LOG_INFO, "%s\n", buf);
 }
 
-static void extract_directory(char *buf, const char *path, size_t size)
-{
-   strncpy(buf, path, size - 1);
-   buf[size - 1] = '\0';
-
-   char *base = strrchr(buf, '/');
-
-   if (base)
-      *base = '\0';
-   else
-      strncpy(buf, ".", size);
-}
-
 static void fallback_log(enum retro_log_level level, const char *fmt, ...)
 {
    (void)level;
@@ -86,10 +73,28 @@ void retro_init(void)
 {
    mutex = slock_new();
    cond = scond_new();
+
+   /* Create video buffer for libretro */
+   framebuf = (bpp_t *)calloc(SCR_WIDTH * SCR_HEIGHT, sizeof(bpp_t));
+
+   if (!environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY, &save_path)
+         || !save_path)
+   {
+      log_cb(RETRO_LOG_INFO, "Defaulting save directory to %s\n", default_path);
+      save_path = default_path;
+   }
+
+   if (!environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &system_path)
+         || !system_path)
+   {
+      log_cb(RETRO_LOG_INFO, "Defaulting system directory to %s\n", default_path);
+      system_path = default_path;
+   }
 }
 
 void retro_deinit(void)
 {
+   free(framebuf);
    scond_free(cond);
    slock_free(mutex);
 }
@@ -108,7 +113,7 @@ void retro_get_system_info(struct retro_system_info *info)
 {
    memset(info, 0, sizeof(*info));
    info->library_name     = "Zelda Classic v2.10";
-   info->library_version  = "Beta 4";
+   info->library_version  = "Beta 5";
    info->need_fullpath    = true;
    info->valid_extensions = "qst";
 }
@@ -144,14 +149,39 @@ void retro_set_environment(retro_environment_t cb)
       { NULL, NULL },
    };
 
-   cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void *)vars);
+   environ_cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void *)vars);
 
    static struct retro_log_callback logging;
 
-   if (cb(RETRO_ENVIRONMENT_GET_LOG_INTERFACE, &logging))
+   if (environ_cb(RETRO_ENVIRONMENT_GET_LOG_INTERFACE, &logging))
       log_cb = logging.log;
    else
       log_cb = fallback_log;
+
+   enum retro_pixel_format fmt = RETRO_PIX_FORMAT;
+   if (environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt))
+   {
+      log_cb(RETRO_LOG_INFO, "Using " RETRO_PIX_NAME " pixel format.\n");
+   }
+
+   struct retro_input_descriptor desc[] =
+   {
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   "Left"   },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     "Up"     },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   "Down"   },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  "Right"  },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      "B"      },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      "A"      },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      "Map"    },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      "Cheat"  },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      "L"      },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      "R"      },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  "Start"  },
+      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, "Select" },
+      { 0 },
+   };
+
+   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 }
 
 void retro_set_audio_sample(retro_audio_sample_t cb)
@@ -388,60 +418,17 @@ void retro_run(void)
 
 bool retro_load_game(const struct retro_game_info *info)
 {
-   struct retro_input_descriptor desc[] =
-   {
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   "Left"   },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     "Up"     },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   "Down"   },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  "Right"  },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      "B"      },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      "A"      },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      "Map"    },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      "Cheat"  },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      "L"      },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      "R"      },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  "Start"  },
-      { 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, "Select" },
-      { 0 },
-   };
-
-   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
-
-   enum retro_pixel_format fmt = RETRO_PIX_FORMAT;
-   if (!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt))
-   {
-      log_cb(RETRO_LOG_INFO, RETRO_PIX_NAME " is not supported.\n");
-      return false;
-   }
-
-   extract_directory(game_path, info->path, sizeof(game_path));
-
-   if (!environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY, &save_path)
-         || !save_path)
-   {
-      log_cb(RETRO_LOG_INFO, "Defaulting save directory to %s.\n", game_path);
-      save_path = game_path;
-   }
-
-   if (!environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &system_path)
-         || !system_path)
-   {
-      log_cb(RETRO_LOG_INFO, "Defaulting system directory to %s.\n", game_path);
-      system_path = game_path;
-   }
-
    check_variables(true);
 
-   /* Main libretro buffers, done after check_variables to respect settings */
-   framebuf = (bpp_t *)calloc(SCR_WIDTH * SCR_HEIGHT, sizeof(bpp_t));
+   /* Allocate sound buffer, done after check_variables to respect settings */
    soundbuf = (short *)memalign_alloc_aligned(sampling_rate / TIMING_FPS * 2 * 
                                               sizeof(short));
 
-   /* init zelda classic engine */
+   /* init zelda classic engine and load the qst file */
    if (!zc_init(info->path))
       return false;
 
-   /* Create a thread to generate 1-frame of video & audio */
+   /* Create a thread to generate 1-frame of game video & audio */
    zc_state = ZC_RUN;
    zc_thread = sthread_create(zc_gameloop, NULL);
 
@@ -450,8 +437,7 @@ bool retro_load_game(const struct retro_game_info *info)
 
 void retro_unload_game(void)
 {
-   /* stop zc game loop thread 
-    * from running */
+   /* stop zc game loop thread from running */
    zc_state = ZC_EXIT;
    scond_signal(cond);
    sthread_join(zc_thread);
@@ -459,7 +445,6 @@ void retro_unload_game(void)
    zc_deinit();
 
    memalign_free(soundbuf);
-   free(framebuf);
 }
 
 unsigned retro_get_region(void)

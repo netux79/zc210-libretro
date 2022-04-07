@@ -47,15 +47,16 @@ int strike_hint;
 BITMAP *zc_canvas;
 RGB *zc_palette;
 
-BITMAP *framebuf, *scrollbuf, *tempbuf, *msgdisplaybuf, *pricesdisplaybuf;
+BITMAP *framebuf = NULL, *scrollbuf = NULL, *tempbuf = NULL, *msgdisplaybuf = NULL, 
+       *pricesdisplaybuf = NULL;
 DATAFILE *data = NULL, *sfxdata, *mididata;
 FONT *zfont, *font;
 PALETTE RAMpal;
-uint8_t *tilebuf, *colordata;
-newcombo *combobuf;
-itemdata *itemsbuf;
-wpndata *wpnsbuf;
-guydata *guysbuf;
+uint8_t *tilebuf = NULL, *colordata = NULL;
+newcombo *combobuf = NULL;
+itemdata *itemsbuf = NULL;
+wpndata *wpnsbuf = NULL;
+guydata *guysbuf = NULL;
 ZCHEATS zcheats;
 uint8_t use_tiles, oldflags3;
 uint16_t animated_combo_table[MAXCOMBOS][2];  //[0]=position in act2, [1]=original tile
@@ -123,11 +124,11 @@ zquestheader QHeader;
 uint8_t      quest_rules[QUESTRULES_SIZE];
 uint8_t      midi_flags[MIDIFLAGS_SIZE];
 uint16_t     map_count;
-MsgStr       *MsgStrings;
-DoorComboSet *DoorComboSets;
-dmap         *DMaps;
 miscQdata    QMisc;
-mapscr       *TheMaps;
+MsgStr       *MsgStrings = NULL;
+DoorComboSet *DoorComboSets = NULL;
+dmap         *DMaps = NULL;
+mapscr       *TheMaps = NULL;
 
 char qst_name[256];
 gamedata *saves = NULL;
@@ -1106,26 +1107,25 @@ void game_loop(void)
    }
 }
 
+#define FREE_BITMAP(a)  if (a) {              \
+                           destroy_bitmap(a); \
+                           a = NULL;          \
+                        }
+
 void free_bitmap_buffers(void)
 {
-   if (framebuf)
-      destroy_bitmap(framebuf);
-   if (scrollbuf)
-      destroy_bitmap(scrollbuf);
-   if (tempbuf)
-      destroy_bitmap(tempbuf);
-   if (msgdisplaybuf)
-      destroy_bitmap(msgdisplaybuf);
-   if (pricesdisplaybuf)
-      destroy_bitmap(pricesdisplaybuf);
+   FREE_BITMAP(framebuf)
+   FREE_BITMAP(scrollbuf)
+   FREE_BITMAP(tempbuf)
+   FREE_BITMAP(msgdisplaybuf)
+   FREE_BITMAP(pricesdisplaybuf)
 }
+
+#undef FREE_BITMAP
 
 int alloc_bitmap_buffers(void)
 {
    bool success = true;
-
-   framebuf = NULL; scrollbuf = NULL; tempbuf = NULL; msgdisplaybuf = NULL;
-   pricesdisplaybuf = NULL;
 
    if(!(framebuf = create_bitmap(256, 224)))
       RETURN_ERROR;
@@ -1168,8 +1168,7 @@ bool zc_init(const char *qpath)
    if (!alloc_qst_buffers())
       RETURN_ERROR;
 
-   resolve_password(datapwd);
-   packfile_password(datapwd);
+   packfile_password(DATA_PASSWORD);
    
    sprintf(temp, "%s%c" ZC_SYS_DIR "%c" SYSTEM_FILE, system_path, OTHER_PATH_SEPARATOR, OTHER_PATH_SEPARATOR);
    
