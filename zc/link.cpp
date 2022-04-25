@@ -2264,8 +2264,8 @@ bool LinkClass::animate(int index)
          dosubscr();
          newscr_clk += frame - tmp_subscr_clk;
       }
-      else if (rEbtn())    /* SELECT button, show quit menu */
-         zc_action(ZC_QUIT);
+      else if (rEbtn())    /* SELECT button, show pause menu */
+         zc_action(ZC_PAUSE);
       else if (rMbtn())    /* View Map */
          onViewMap();
       else if (rLbtn())    /* Select "B button" item to the left */
@@ -6998,8 +6998,8 @@ void LinkClass::ganon_intro()
          dosubscr();
          newscr_clk += frame - tmp_subscr_clk;
       }
-      else if (rEbtn()) /* SELECT button, show quit menu */
-         zc_action(ZC_QUIT);
+      else if (rEbtn()) /* SELECT button, show pause menu */
+         zc_action(ZC_PAUSE);
    }
 
    action = none;

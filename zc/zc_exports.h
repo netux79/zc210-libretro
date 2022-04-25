@@ -14,7 +14,7 @@
 #define zc_message(...)    zc_log(false, __VA_ARGS__)
 
 /* game states */
-enum {ZC_RUN, ZC_QUIT, ZC_RESET, ZC_EXIT, ZC_GAMEOVER, ZC_CONT, ZC_WON, ZC_RESUME};
+enum {ZC_RUN, ZC_QUIT, ZC_RESET, ZC_EXIT, ZC_GAMEOVER, ZC_CONTINUE, ZC_WON, ZC_RESUME, ZC_PAUSE};
 
 extern BITMAP *zc_canvas;
 extern RGB *zc_palette;

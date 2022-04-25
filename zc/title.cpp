@@ -925,25 +925,25 @@ static void select_game(void)
 
 void titlescreen(void)
 {
-   int state = zc_state;
+   int action = zc_state;
 
    zc_state = ZC_RUN;
    is_playing = false;
 
-   if (state == ZC_RESUME)
+   if (action == ZC_RESUME)
    {
       resume_game();
       return;
    }
 
-   if (state == ZC_CONT)
+   if (action == ZC_CONTINUE)
    {
       cont_game();
       setup_combo_animations();
       return;
    }
 
-   if (state == ZC_RESET)
+   if (action == ZC_RESET)
       reset_status();
 
    if (!zc_state)
@@ -955,11 +955,16 @@ void titlescreen(void)
    setup_combo_animations();
 }
 
-int selection_menu(void)
+static char gameover_options[][9]   = { "CONTINUE", "SAVE", "QUIT", "\0" };
+static char pause_options[][9]      = { "RESUME", "RETRY", "SAVE", "QUIT", "\0" };
+
+int selection_menu(char options[][9])
 {
-   textout_ex(framebuf, zfont, "CONTINUE", 88, 72, QMisc.colors.text, -1);
-   textout_ex(framebuf, zfont, "SAVE", 88, 96, QMisc.colors.text, -1);
-   textout_ex(framebuf, zfont, "RETRY", 88, 120, QMisc.colors.text, -1);
+   int i;
+   
+   /* Display the option list of the menu */
+   for (i = 0; options[i][0]; i++)
+      textout_ex(framebuf, zfont, options[i], 88, 72 + i * 24, QMisc.colors.text, -1);
 
    int pos = 0;
    int f = -1;
@@ -974,12 +979,12 @@ int selection_menu(void)
          if (rUp())
          {
             sfx(SFX_CHINK);
-            pos = (pos == 0) ? 2 : pos - 1;
+            pos = (pos == 0) ? i - 1 : pos - 1;
          }
          if (rDown())
          {
             sfx(SFX_CHINK);
-            pos = (pos + 1) % 3;
+            pos = (pos + 1) % i;
          }
          if (rSbtn())
             ++f;
@@ -992,23 +997,12 @@ int selection_menu(void)
          if (!(f & 3))
          {
             int c = (f & 4) ? QMisc.colors.text : QMisc.colors.caption;
-            switch (pos)
-            {
-               case 0:
-                  textout_ex(framebuf, zfont, "CONTINUE", 88, 72, c, -1);
-                  break;
-               case 1:
-                  textout_ex(framebuf, zfont, "SAVE", 88, 96, c, -1);
-                  break;
-               case 2:
-                  textout_ex(framebuf, zfont, "RETRY", 88, 120, c, -1);
-                  break;
-            }
+            textout_ex(framebuf, zfont, options[pos], 88, 72 + pos * 24, c, -1);
          }
       }
 
-      rectfill(framebuf, 72, 72, 79, 127, 0);
-      puttile8(framebuf, htile, 72, pos * 24 + 72, 1, 0);
+      rectfill(framebuf, 72, 72, 79, 79 + i * 24, 0);
+      puttile8(framebuf, htile, 72, 72 + pos * 24, 1, 0);
       advanceframe();
    }
    while (!zc_state && !done);
@@ -1025,7 +1019,7 @@ void zc_gameover(void)
    loadfullpal();
    clear_bitmap(framebuf);
 
-   int pos = selection_menu();
+   int pos = selection_menu(gameover_options);
 
    reset_status();
    clear_bitmap(framebuf);
@@ -1036,7 +1030,7 @@ void zc_gameover(void)
       switch (pos)
       {
          case 0:
-            zc_state = ZC_CONT;
+            zc_state = ZC_CONTINUE;
             break;
          case 1:
             game.cheat |= cheat;
@@ -1051,11 +1045,11 @@ void zc_gameover(void)
    }
 }
 
-void zc_quit(void)
+void zc_pause(void)
 {
    clear_bitmap(framebuf);
 
-   int pos = selection_menu();
+   int pos = selection_menu(pause_options);
 
    /* if not resuming... */
    if (pos)
@@ -1072,12 +1066,15 @@ void zc_quit(void)
             zc_state = ZC_RESUME;
             break;
          case 1:
+            zc_state = ZC_CONTINUE;
+            break;
+         case 2:
             game.cheat |= cheat;
             saves[currgame] = game;
             load_game_icon(saves + currgame);
             save_savedgames();
          // fall thru...
-         case 2:
+         case 3:
             zc_state = ZC_QUIT;
             break;
       }

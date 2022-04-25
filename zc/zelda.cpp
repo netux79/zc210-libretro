@@ -1270,7 +1270,7 @@ void zc_gameloop(void *arg)
 
       switch (zc_state)
       {
-         case ZC_QUIT:       zc_quit();     break;
+         case ZC_PAUSE:      zc_pause();    break;
          case ZC_GAMEOVER:   zc_gameover(); break;
          case ZC_WON:        zc_ending();   break;
       }
