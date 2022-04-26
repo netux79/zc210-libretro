@@ -1294,7 +1294,11 @@ void zc_deinit(void)
    }
    free_bitmap_buffers();
    free_qst_buffers();
-   reset_midis(tunes + MUSIC_COUNT); /* free midi memory. */
+   /* free midi memory. */
+   reset_midis(tunes + MUSIC_COUNT);
+   /* reset menu variables */
+   currgame = listpos = 0;
+   
 }
 
 /*** end of zelda.cpp ***/
