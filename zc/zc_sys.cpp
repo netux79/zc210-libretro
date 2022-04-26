@@ -2650,9 +2650,9 @@ static int rand_007(int method)
 {
    short BX = seed >> 8;
    short CX = (seed & 0xFF) << 8;
-   char AL = seed >> 24;
-   char C = AL >> 7;
-   char D = BX >> 15;
+   signed char AL = seed >> 24;
+   signed char C = AL >> 7;
+   signed char D = BX >> 15;
    AL <<= 1;
    BX = (BX << 1) | C;
    CX = (CX << 1) | D;

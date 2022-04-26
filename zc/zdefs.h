@@ -877,7 +877,7 @@ typedef struct dmap
 {
    uint8_t map;
    uint8_t level;
-   char xoff;
+   signed char xoff;
    uint8_t compass;
    uint8_t color;
    uint8_t midi;

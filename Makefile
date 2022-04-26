@@ -194,8 +194,8 @@ include Makefile.common
 
 OBJECTS := $(SOURCES_CXX:.cpp=.o) $(SOURCES_C:.c=.o)
 
-CFLAGS += -Wall -pedantic -fsigned-char $(ENDIANNESS_DEFINES)
-CXXFLAGS += -Wall -pedantic -fsigned-char -std=gnu++11 $(ENDIANNESS_DEFINES)
+CFLAGS += -Wall -pedantic $(ENDIANNESS_DEFINES)
+CXXFLAGS += -Wall -pedantic -std=gnu++11 $(ENDIANNESS_DEFINES)
 
 ifneq (,$(findstring qnx,$(platform)))
 CFLAGS += -Wc,-std=c99

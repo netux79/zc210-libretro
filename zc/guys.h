@@ -633,7 +633,7 @@ public:
 class eManhandla : public enemy
 {
 public:
-   char arm[8];   // side the arm is on
+   signed char arm[8];   // side the arm is on
    int armcnt;
    bool adjusted;
    eManhandla(fix X, fix Y, int Id, int Clk);   // : enemy(X,Y,Id,0)
