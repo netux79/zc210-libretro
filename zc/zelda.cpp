@@ -1298,7 +1298,6 @@ void zc_deinit(void)
    reset_midis(tunes + MUSIC_COUNT);
    /* reset menu variables */
    currgame = listpos = 0;
-   
 }
 
 /*** end of zelda.cpp ***/
